@@ -2,7 +2,7 @@
   "// === 🏷️ 基础站点信息 ===": "",
   "title": "你好博客",
   "subTitle": "你好博客，你好世界！",
-  "displayTitle": "你好博客 - 你好博客，你好世界！",
+  "displayTitle": "你好博客",
   "homeUrl": "https://helloblog.eik.cc",
   "email": "official@tech.asoe.cn",
   "startSite": "09/25/2026",
@@ -11,7 +11,7 @@
 
   "// === 🎨 视觉与主题资源 ===": "",
   "avatarUrl": "https://raw.giteeusercontent.com/tech_5/imgtc/raw/master/Hello-Logo.png",
-  "faviconUrl": "/Hello-Logo.png",
+  "faviconUrl": "https://raw.giteeusercontent.com/tech_5/imgtc/raw/master/Hello-Logo.png",
   "ogImage": "https://raw.giteeusercontent.com/tech_5/imgtc/raw/master/Hello-Logo.png",
   "commentLabelColor": "#006b75",
   "yearColorList": ["#bc4c00", "#0969da", "#1f883d", "#A333D0"],
