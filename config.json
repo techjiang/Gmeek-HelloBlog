@@ -1,6 +1,6 @@
 {
-    "title":"Blog Title",
-    "subTitle":"Blog description",
-    "avatarUrl":"https://github.githubassets.com/favicons/favicon.svg",
+    "title":"你好博客",
+    "subTitle":"你好博客，你好世界！",
+    "avatarUrl":"https://raw.githubusercontent.com/techjiang/Gmeek-HelloBlog/refs/heads/main/Hello-Logo.png",
     "GMEEK_VERSION":"last"
 }
