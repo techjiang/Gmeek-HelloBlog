@@ -1,5 +1,19 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>你好博客</title><link>https://helloblog.eik.cc</link><description>你好博客，你好世界！</description><copyright>你好博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://img2.tofaka.com/autoupload/f/3624q/20260926/caKC/1024X1024/Hello-Logo.png</url><title>avatar</title><link>https://helloblog.eik.cc</link></image><lastBuildDate>Sat, 26 Sep 2026 07:40:17 +0000</lastBuildDate><managingEditor>你好博客</managingEditor><ttl>60</ttl><webMaster>你好博客</webMaster><item><title>装机必备软件(2026.7.25)</title><link>https://helloblog.eik.cc/post/zhuang-ji-bi-bei-ruan-jian-%282026.7.25%29.html</link><description>## 📦 压缩与解压（3款）
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>你好博客</title><link>https://helloblog.eik.cc</link><description>你好博客，你好世界！</description><copyright>你好博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://img2.tofaka.com/autoupload/f/3624q/20260926/caKC/1024X1024/Hello-Logo.png</url><title>avatar</title><link>https://helloblog.eik.cc</link></image><lastBuildDate>Sat, 26 Sep 2026 07:46:22 +0000</lastBuildDate><managingEditor>你好博客</managingEditor><ttl>60</ttl><webMaster>你好博客</webMaster><item><title>Kali Linux 完美中文输入法 | Fcitx5 一键配置教程（2026最新）</title><link>https://helloblog.eik.cc/post/Kali%20Linux%20-wan-mei-zhong-wen-shu-ru-fa-%20-%20Fcitx5%20-yi-jian-pei-zhi-jiao-cheng-%EF%BC%882026-zui-xin-%EF%BC%89.html</link><description>![](https://pic1.imgdb.cn/i/0343whmqwS7Ftylim6SWkJ.webp)
+
+开始之前我推荐飞鸟云VPN机场
+
+200GB流量，不限时，不限速，用完为止，不限设备数量，支持ChatGPT/Claude/Gemini等大模型，支持最新Hysteria2协议，重复购买流量可叠加/10元人民币
+
+还有多种套餐任你选择，点击下方链接获取👇
+
+获取链接：[点击获取👆](https://feiniaoyun.xyz/#/register?code=pl4OIsZ9)
+
+* * *
+
+好的，我们回归正题
+
+在 Kali Linux 上安装中文输入法（通常推荐使用 **Fcitx5** 框架搭配 **Rime** 或 **Pinyin** 引擎，或者 **IBus** 框架），步骤相对标准化。</description><guid isPermaLink="true">https://helloblog.eik.cc/post/Kali%20Linux%20-wan-mei-zhong-wen-shu-ru-fa-%20-%20Fcitx5%20-yi-jian-pei-zhi-jiao-cheng-%EF%BC%882026-zui-xin-%EF%BC%89.html</guid><pubDate>Sat, 26 Sep 2026 07:45:56 +0000</pubDate></item><item><title>装机必备软件(2026.7.25)</title><link>https://helloblog.eik.cc/post/zhuang-ji-bi-bei-ruan-jian-%282026.7.25%29.html</link><description>## 📦 压缩与解压（3款）
 **1. 7-Zip** — 完全免费开源，无广告无捆绑，压缩率极高  
 🔗 官网下载：[点击前往👆](https://www.7-zip.org/)
 
