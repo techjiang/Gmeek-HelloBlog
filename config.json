@@ -29,7 +29,9 @@
   "urlMode": "pinyin",
   "rssSplit": "sentence",
   "showPostSource": 1,
-  "needComment": 0,
+  
+  "// === 💬 评论系统配置 ===": "",
+  "needComment": 1,
 
   "// === 🔌 页面功能插件 (script) ===": "",
   "script": "<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script><script src='https://blog.meekdai.com/Gmeek/plugins/lightbox.js'></script>",
