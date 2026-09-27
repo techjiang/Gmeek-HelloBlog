@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <meta name='description' content='你好博客是一个专注于技术分享、编程笔记与生活感悟的个人博客，提供高质量原创内容。'><meta name='keywords' content='你好博客,技术博客,编程笔记,Gmeek,前端开发,个人网站'><meta name='author' content='你好博客'><meta name='robots' content='index,follow'><link rel='canonical' href='https://helloblog.eik.cc/'><script type='application/ld+json'>{"@context":"https://schema.org","@type":"WebSite","name":"你好博客","url":"https://helloblog.eik.cc/","description":"专注于技术分享、编程笔记与生活感悟的个人博客","author":{"@type":"Person","name":"你好博客","email":"official@tech.asoe.cn"},"potentialAction":{"@type":"SearchAction","target":"https://helloblog.eik.cc/?q={search_term_string}","query-input":"required name=search_term_string"}}</script><script src='https://blog.meekdai.com/Gmeek/plugins/GmeekBSZ.js'></script><script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script>
+    <link rel="icon" href="https://img2.tofaka.com/autoupload/f/3624q/20260926/caKC/1024X1024/Hello-Logo.png"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="涵盖安装、服务管理、核心配置、反向代理、负载均衡、HTTPS、性能优化及故障排查。">
+<meta property="og:title" content="Nginx 常用命令与配置大全">
+<meta property="og:description" content="涵盖安装、服务管理、核心配置、反向代理、负载均衡、HTTPS、性能优化及故障排查。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://helloblog.eik.cc/post/Nginx%20-chang-yong-ming-ling-yu-pei-zhi-da-quan.html">
+<meta property="og:image" content="https://img2.tofaka.com/autoupload/f/3624q/20260926/caKC/1024X1024/Hello-Logo.png">
+<title>Nginx 常用命令与配置大全</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">Nginx 常用命令与配置大全</h1>
+<div class="title-right">
+    <a href="https://helloblog.eik.cc" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/techjiang/Gmeek-HelloBlog/issues/12" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><p>涵盖安装、服务管理、核心配置、反向代理、负载均衡、HTTPS、性能优化及故障排查。</p>
+<hr>
+<h2>一、安装 Nginx</h2>
+<p><strong>Debian / Ubuntu：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">apt update
+apt install nginx</pre></div>
+<p><strong>CentOS / RHEL：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">yum install epel-release
+yum install nginx</pre></div>
+<p><strong>验证安装：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">nginx -v                 <span class="pl-c"><span class="pl-c">#</span> 查看版本</span>
+nginx -V                 <span class="pl-c"><span class="pl-c">#</span> 查看版本及编译参数</span></pre></div>
+<hr>
+<h2>二、服务管理</h2>
+<p><strong>通用命令（nginx 二进制）：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">nginx                    <span class="pl-c"><span class="pl-c">#</span> 启动</span>
+nginx -s reload          <span class="pl-c"><span class="pl-c">#</span> 重载配置（不中断服务）</span>
+nginx -s stop            <span class="pl-c"><span class="pl-c">#</span> 快速停止</span>
+nginx -s quit            <span class="pl-c"><span class="pl-c">#</span> 优雅停止（处理完当前请求）</span>
+nginx -s reopen          <span class="pl-c"><span class="pl-c">#</span> 重新打开日志文件（日志切割用）</span>
+nginx -t                 <span class="pl-c"><span class="pl-c">#</span> 检测配置文件语法</span>
+nginx -T                 <span class="pl-c"><span class="pl-c">#</span> 检测并输出完整配置</span>
+nginx -c /etc/nginx/nginx.conf   <span class="pl-c"><span class="pl-c">#</span> 指定配置文件启动</span>
+nginx -p /usr/local/nginx        <span class="pl-c"><span class="pl-c">#</span> 指定前缀路径</span></pre></div>
+<p><strong>systemd 管理：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">systemctl start nginx
+systemctl stop nginx
+systemctl restart nginx
+systemctl reload nginx
+systemctl status nginx
+systemctl <span class="pl-c1">enable</span> nginx          <span class="pl-c"><span class="pl-c">#</span> 开机自启</span>
+systemctl disable nginx</pre></div>
+<p><strong>日志位置：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">/var/log/nginx/access.log      <span class="pl-c"><span class="pl-c">#</span> 访问日志</span>
+/var/log/nginx/error.log       <span class="pl-c"><span class="pl-c">#</span> 错误日志</span>
+tail -f /var/log/nginx/access.log   <span class="pl-c"><span class="pl-c">#</span> 实时查看访问日志</span></pre></div>
+<hr>
+<h2>三、配置文件结构</h2>
+<p><strong>主配置文件：</strong> <code class="notranslate">/etc/nginx/nginx.conf</code></p>
+<div class="highlight highlight-source-nginx"><pre class="notranslate"><span class="pl-c"># 全局块</span>
+<span class="pl-c1">user</span>  nginx<span class="pl-c1">;</span>                      # 运行用户
+<span class="pl-c1">worker_processes</span>  auto<span class="pl-c1">;</span>           # 工作进程数（一般等于 CPU 核数）
+<span class="pl-c1">error_log</span>  /var/log/nginx/error.log warn<span class="pl-c1">;</span>
+<span class="pl-c1">pid</span>        /run/nginx.<span class="pl-c1">pid</span><span class="pl-c1">;</span>
+
+<span class="pl-c"># events 块</span>
+<span class="pl-c1">events</span> <span class="pl-c1">{</span>
+    <span class="pl-c1">worker_connections</span>  <span class="pl-c1">10240</span><span class="pl-c1">;</span>    # 单进程最大连接数
+    <span class="pl-c1">multi_accept</span> on<span class="pl-c1">;</span>              # 一次接受多个连接
+    <span class="pl-c1">use</span> epoll<span class="pl-c1">;</span>                    # 使用 epoll 模型（Linux）
+<span class="pl-c1">}</span>
+
+<span class="pl-c"># http 块</span>
+<span class="pl-c1">http</span> <span class="pl-c1">{</span>
+    <span class="pl-c1">include</span>       mime.<span class="pl-c1">types</span><span class="pl-c1">;</span>
+    <span class="pl-c1">default_type</span>  application/octet-<span class="pl-c1">stream</span><span class="pl-c1">;</span>
+
+<span class="pl-c">    # 日志格式</span>
+    <span class="pl-c1">log_format</span>  main  <span class="pl-s">'$remote_addr - $remote_user [$time_local] "$request" '</span>
+                      <span class="pl-s">'$status $body_bytes_sent "$http_referer" '</span>
+                      <span class="pl-s">'"$http_user_agent" "$http_x_forwarded_for"'</span><span class="pl-c1">;</span>
+    <span class="pl-c1">access_log</span>  /var/log/nginx/access.log  main<span class="pl-c1">;</span>
+
+    <span class="pl-c1">sendfile</span>        on<span class="pl-c1">;</span>
+    <span class="pl-c1">keepalive_timeout</span>  <span class="pl-c1">65</span><span class="pl-c1">;</span>
+    <span class="pl-c1">gzip</span>  on<span class="pl-c1">;</span>
+
+<span class="pl-c">    # 引入站点配置</span>
+    <span class="pl-c1">include</span> /etc/nginx/conf.d/*.conf<span class="pl-c1">;</span>
+<span class="pl-c1">}</span></pre></div>
+<p><strong>推荐目录结构：</strong></p>
+<pre class="notranslate"><code class="notranslate">/etc/nginx/
+├── nginx.conf              # 主配置
+├── conf.d/                 # 站点配置（推荐放这里）
+│   ├── site1.conf
+│   └── site2.conf
+├── sites-enabled/          # Debian/Ubuntu 启用的站点
+└── ssl/                    # 证书目录
+</code></pre>
+<hr>
+<h2>四、核心配置指令</h2>
+<div class="highlight highlight-source-nginx"><pre class="notranslate"><span class="pl-c"># 性能相关</span>
+<span class="pl-c1">sendfile</span> on<span class="pl-c1">;</span>                 # 高效文件传输
+<span class="pl-c1">tcp_nopush</span> on<span class="pl-c1">;</span>               # 配合 <span class="pl-c1">sendfile</span>，减少网络包
+<span class="pl-c1">tcp_nodelay</span> on<span class="pl-c1">;</span>              # 禁用 Nagle 算法，降低延迟
+<span class="pl-c1">keepalive_timeout</span> <span class="pl-c1">65</span><span class="pl-c1">;</span>        # 长连接超时时间
+<span class="pl-c1">keepalive_requests</span> <span class="pl-c1">1000</span><span class="pl-c1">;</span>     # 单个长连接最大请求数
+<span class="pl-c1">client_max_body_size</span> <span class="pl-c1">50m</span><span class="pl-c1">;</span>    # 最大上传体积
+<span class="pl-c1">client_body_buffer_size</span> <span class="pl-c1">128k</span><span class="pl-c1">;</span>
+
+<span class="pl-c"># 缓冲与超时</span>
+<span class="pl-c1">client_header_timeout</span> <span class="pl-c1">30</span><span class="pl-c1">;</span>
+<span class="pl-c1">client_body_timeout</span> <span class="pl-c1">30</span><span class="pl-c1">;</span>
+<span class="pl-c1">send_timeout</span> <span class="pl-c1">30</span><span class="pl-c1">;</span>
+<span class="pl-c1">proxy_connect_timeout</span> <span class="pl-c1">60</span><span class="pl-c1">;</span>
+<span class="pl-c1">proxy_send_timeout</span> <span class="pl-c1">60</span><span class="pl-c1">;</span>
+<span class="pl-c1">proxy_read_timeout</span> <span class="pl-c1">60</span><span class="pl-c1">;</span>
+
+<span class="pl-c"># 压缩</span>
+<span class="pl-c1">gzip</span> on<span class="pl-c1">;</span>
+<span class="pl-c1">gzip_min_length</span> <span class="pl-c1">1k</span><span class="pl-c1">;</span>
+<span class="pl-c1">gzip_comp_level</span> 4<span class="pl-c1">;</span>
+<span class="pl-c1">gzip_types</span> text/plain text/css application/json application/javascript text/xml<span class="pl-c1">;</span>
+<span class="pl-c1">gzip_vary</span> on<span class="pl-c1">;</span>
+<span class="pl-c1">gzip_disable</span> <span class="pl-s">"MSIE [1-6]<span class="pl-cce">\.</span>"</span><span class="pl-c1">;</span></pre></div>
+<hr>
+<h2>五、虚拟主机（server 块）</h2>
+<div class="highlight highlight-source-nginx"><pre class="notranslate"><span class="pl-c"># 基于域名</span>
+<span class="pl-c1">server</span> <span class="pl-c1">{</span>
+    <span class="pl-c1">listen</span>       <span class="pl-c1">80</span><span class="pl-c1">;</span>
+    <span class="pl-c1">server_name</span>  www.example.com example.com<span class="pl-c1">;</span>
+
+    <span class="pl-c1">root</span>   /var/www/example<span class="pl-c1">;</span>
+    <span class="pl-c1">index</span>  <span class="pl-c1">index</span>.html <span class="pl-c1">index</span>.htm<span class="pl-c1">;</span>
+
+    <span class="pl-c1">location</span> / <span class="pl-c1">{</span>
+        <span class="pl-c1">try_files</span> <span class="pl-v">$uri</span> <span class="pl-v">$uri</span>/ =<span class="pl-c1">404</span><span class="pl-c1">;</span>
+    <span class="pl-c1">}</span>
+<span class="pl-c1">}</span>
+
+<span class="pl-c"># 基于端口</span>
+<span class="pl-c1">server</span> <span class="pl-c1">{</span>
+    <span class="pl-c1">listen</span>       <span class="pl-c1">8080</span><span class="pl-c1">;</span>
+    <span class="pl-c1">server_name</span>  _<span class="pl-c1">;</span>
+    <span class="pl-c1">root</span> /var/www/app<span class="pl-c1">;</span>
+<span class="pl-c1">}</span>
+
+<span class="pl-c"># 默认站点（兜底）</span>
+<span class="pl-c1">server</span> <span class="pl-c1">{</span>
+    <span class="pl-c1">listen</span>       <span class="pl-c1">80</span> default_server<span class="pl-c1">;</span>
+    <span class="pl-c1">server_name</span>  _<span class="pl-c1">;</span>
+    <span class="pl-k">return</span> <span class="pl-c1">444</span><span class="pl-c1">;</span>               # 直接断开连接
+<span class="pl-c1">}</span></pre></div>
+<hr>
+<h2>六、location 匹配规则</h2>
+<div class="highlight highlight-source-nginx"><pre class="notranslate"><span class="pl-c"># 精确匹配（优先级最高）</span>
+<span class="pl-c1">location</span> = /login <span class="pl-c1">{</span>
+<span class="pl-c">    # 仅匹配 /login</span>
+<span class="pl-c1">}</span>
+
+<span class="pl-c"># 前缀匹配（^~ 表示不再检查正则）</span>
+<span class="pl-c1">location</span> ^<span class="pl-sr">~</span> /static/ <span class="pl-c1">{</span>
+    <span class="pl-c1">root</span> /var/www<span class="pl-c1">;</span>
+<span class="pl-c1">}</span>
+
+<span class="pl-c"># 正则匹配（~ 区分大小写，~* 不区分）</span>
+<span class="pl-c1">location</span> <span class="pl-sr">~</span>* <span class="pl-sr">\.(jpg|png|gif|css|js)$ </span><span class="pl-c1">{</span>
+    <span class="pl-c1">expires</span> <span class="pl-c1">30d</span><span class="pl-c1">;</span>
+<span class="pl-c1">}</span>
+
+<span class="pl-c"># 普通前缀匹配</span>
+<span class="pl-c1">location</span> / <span class="pl-c1">{</span>
+    <span class="pl-c1">proxy_pass</span> <span class="pl-c1">http</span>://backend<span class="pl-c1">;</span>
+<span class="pl-c1">}</span>
+
+<span class="pl-c"># 优先级：= &gt; ^~ &gt; ~ / ~* &gt; 普通前缀</span></pre></div>
+<hr>
+<h2>七、反向代理</h2>
+<div class="highlight highlight-source-nginx"><pre class="notranslate"><span class="pl-c1">server</span> <span class="pl-c1">{</span>
+    <span class="pl-c1">listen</span> <span class="pl-c1">80</span><span class="pl-c1">;</span>
+    <span class="pl-c1">server_name</span> api.example.com<span class="pl-c1">;</span>
+
+    <span class="pl-c1">location</span> / <span class="pl-c1">{</span>
+        <span class="pl-c1">proxy_pass</span> <span class="pl-c1">http</span>://<span class="pl-c1">127.0.0.1:8080</span><span class="pl-c1">;</span>
+
+<span class="pl-c">        # 传递真实信息给后端</span>
+        <span class="pl-c1">proxy_set_header</span> Host              <span class="pl-v">$host</span><span class="pl-c1">;</span>
+        <span class="pl-c1">proxy_set_header</span> X-Real-IP         <span class="pl-v">$remote_addr</span><span class="pl-c1">;</span>
+        <span class="pl-c1">proxy_set_header</span> X-Forwarded-For   <span class="pl-v">$proxy_add_x_forwarded_for</span><span class="pl-c1">;</span>
+        <span class="pl-c1">proxy_set_header</span> X-Forwarded-Proto <span class="pl-v">$scheme</span><span class="pl-c1">;</span>
+
+<span class="pl-c">        # WebSocket 支持</span>
+        <span class="pl-c1">proxy_http_version</span> 1.1<span class="pl-c1">;</span>
+        <span class="pl-c1">proxy_set_header</span> Upgrade    <span class="pl-v">$http_upgrade</span><span class="pl-c1">;</span>
+        <span class="pl-c1">proxy_set_header</span> Connection <span class="pl-s">"upgrade"</span><span class="pl-c1">;</span>
+    <span class="pl-c1">}</span>
+<span class="pl-c1">}</span></pre></div>
+<p><strong>多路径代理：</strong></p>
+<div class="highlight highlight-source-nginx"><pre class="notranslate"><span class="pl-c1">location</span> /api/ <span class="pl-c1">{</span>
+    <span class="pl-c1">proxy_pass</span> <span class="pl-c1">http</span>://<span class="pl-c1">127.0.0.1:8080</span>/<span class="pl-c1">;</span>
+<span class="pl-c1">}</span>
+<span class="pl-c1">location</span> /web/ <span class="pl-c1">{</span>
+    <span class="pl-c1">proxy_pass</span> <span class="pl-c1">http</span>://<span class="pl-c1">127.0.0.1:3000</span>/<span class="pl-c1">;</span>
+<span class="pl-c1">}</span>
+<span class="pl-c1">location</span> / <span class="pl-c1">{</span>
+    <span class="pl-c1">proxy_pass</span> <span class="pl-c1">http</span>://<span class="pl-c1">127.0.0.1:5000</span><span class="pl-c1">;</span>
+<span class="pl-c1">}</span></pre></div>
+<hr>
+<h2>八、负载均衡</h2>
+<div class="highlight highlight-source-nginx"><pre class="notranslate"><span class="pl-c1">http</span> <span class="pl-c1">{</span>
+    <span class="pl-c1">upstream</span> backend <span class="pl-c1">{</span>
+<span class="pl-c">        # 负载均衡策略</span>
+<span class="pl-c">        # 默认轮询（round robin）</span>
+<span class="pl-c">        # ip_hash;             # 按 IP 哈希，会话保持</span>
+<span class="pl-c">        # least_conn;          # 最少连接数</span>
+
+        <span class="pl-c1">server</span> <span class="pl-c1">192.168.1.10:8080</span> weight=5<span class="pl-c1">;</span>   # 权重
+        <span class="pl-c1">server</span> <span class="pl-c1">192.168.1.11:8080</span> weight=3<span class="pl-c1">;</span>
+        <span class="pl-c1">server</span> <span class="pl-c1">192.168.1.12:8080</span> backup<span class="pl-c1">;</span>     # 备用服务器
+        <span class="pl-c1">server</span> <span class="pl-c1">192.168.1.13:8080</span> down<span class="pl-c1">;</span>       # 标记下线
+
+        <span class="pl-c1">keepalive</span> <span class="pl-c1">32</span><span class="pl-c1">;</span>          # 保持长连接数
+    <span class="pl-c1">}</span>
+
+    <span class="pl-c1">server</span> <span class="pl-c1">{</span>
+        <span class="pl-c1">listen</span> <span class="pl-c1">80</span><span class="pl-c1">;</span>
+        <span class="pl-c1">server_name</span> www.example.com<span class="pl-c1">;</span>
+
+        <span class="pl-c1">location</span> / <span class="pl-c1">{</span>
+            <span class="pl-c1">proxy_pass</span> <span class="pl-c1">http</span>://backend<span class="pl-c1">;</span>
+            <span class="pl-c1">proxy_set_header</span> Host <span class="pl-v">$host</span><span class="pl-c1">;</span>
+            <span class="pl-c1">proxy_set_header</span> X-Real-IP <span class="pl-v">$remote_addr</span><span class="pl-c1">;</span>
+        <span class="pl-c1">}</span>
+    <span class="pl-c1">}</span>
+<span class="pl-c1">}</span></pre></div>
+<hr>
+<h2>九、HTTPS 配置</h2>
+<div class="highlight highlight-source-nginx"><pre class="notranslate"><span class="pl-c1">server</span> <span class="pl-c1">{</span>
+    <span class="pl-c1">listen</span>       <span class="pl-c1">443</span> <span class="pl-c1">ssl</span> http2<span class="pl-c1">;</span>
+    <span class="pl-c1">server_name</span>  www.example.com<span class="pl-c1">;</span>
+
+<span class="pl-c">    # 证书配置</span>
+    <span class="pl-c1">ssl_certificate</span>      /etc/nginx/<span class="pl-c1">ssl</span>/example.com.pem<span class="pl-c1">;</span>
+    <span class="pl-c1">ssl_certificate_key</span>  /etc/nginx/<span class="pl-c1">ssl</span>/example.com.key<span class="pl-c1">;</span>
+
+<span class="pl-c">    # SSL 优化</span>
+    <span class="pl-c1">ssl_protocols</span> TLSv1.2 TLSv1.3<span class="pl-c1">;</span>
+    <span class="pl-c1">ssl_ciphers</span> HIGH:!aNULL:!MD5<span class="pl-c1">;</span>
+    <span class="pl-c1">ssl_prefer_server_ciphers</span> on<span class="pl-c1">;</span>
+    <span class="pl-c1">ssl_session_cache</span> shared:SSL:<span class="pl-c1">10m</span><span class="pl-c1">;</span>
+    <span class="pl-c1">ssl_session_timeout</span> <span class="pl-c1">10m</span><span class="pl-c1">;</span>
+
+<span class="pl-c">    # HSTS（强制 HTTPS）</span>
+    <span class="pl-c1">add_header</span> Strict-Transport-Security <span class="pl-s">"max-age=31536000; includeSubDomains"</span> always<span class="pl-c1">;</span>
+
+    <span class="pl-c1">root</span> /var/www/example<span class="pl-c1">;</span>
+    <span class="pl-c1">location</span> / <span class="pl-c1">{</span>
+        <span class="pl-c1">try_files</span> <span class="pl-v">$uri</span> <span class="pl-v">$uri</span>/ =<span class="pl-c1">404</span><span class="pl-c1">;</span>
+    <span class="pl-c1">}</span>
+<span class="pl-c1">}</span>
+
+<span class="pl-c"># HTTP 强制跳转 HTTPS</span>
+<span class="pl-c1">server</span> <span class="pl-c1">{</span>
+    <span class="pl-c1">listen</span>       <span class="pl-c1">80</span><span class="pl-c1">;</span>
+    <span class="pl-c1">server_name</span>  www.example.com example.com<span class="pl-c1">;</span>
+    <span class="pl-k">return</span> <span class="pl-c1">301</span> https://<span class="pl-v">$host$request_uri</span><span class="pl-c1">;</span>
+<span class="pl-c1">}</span></pre></div>
+<p><strong>生成自签名证书（测试用）：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout /etc/nginx/ssl/self.key \
+  -out /etc/nginx/ssl/self.crt</pre></div>
+<p><strong>免费证书（Let's Encrypt / certbot）：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">apt install certbot python3-certbot-nginx
+certbot --nginx -d example.com -d www.example.com</pre></div>
+<hr>
+<h2>十、静态资源与缓存</h2>
+<div class="highlight highlight-source-nginx"><pre class="notranslate"><span class="pl-c1">server</span> <span class="pl-c1">{</span>
+    <span class="pl-c1">listen</span> <span class="pl-c1">80</span><span class="pl-c1">;</span>
+    <span class="pl-c1">server_name</span> static.example.com<span class="pl-c1">;</span>
+    <span class="pl-c1">root</span> /var/www/static<span class="pl-c1">;</span>
+
+<span class="pl-c">    # 静态资源缓存</span>
+    <span class="pl-c1">location</span> <span class="pl-sr">~</span>* <span class="pl-sr">\.(jpg|jpeg|png|gif|ico|css|js|woff2)$ </span><span class="pl-c1">{</span>
+        <span class="pl-c1">expires</span> <span class="pl-c1">30d</span><span class="pl-c1">;</span>
+        <span class="pl-c1">add_header</span> Cache-Control <span class="pl-s">"public, immutable"</span><span class="pl-c1">;</span>
+        <span class="pl-c1">access_log</span> off<span class="pl-c1">;</span>
+    <span class="pl-c1">}</span>
+
+<span class="pl-c">    # 禁止访问隐藏文件</span>
+    <span class="pl-c1">location</span> <span class="pl-sr">~</span> /<span class="pl-sr">\. </span><span class="pl-c1">{</span>
+        <span class="pl-c1">deny</span> all<span class="pl-c1">;</span>
+    <span class="pl-c1">}</span>
+
+<span class="pl-c">    # 目录列表（一般关闭）</span>
+    <span class="pl-c1">autoindex</span> off<span class="pl-c1">;</span>
+<span class="pl-c1">}</span></pre></div>
+<p><strong>文件切片/断点续传：</strong></p>
+<div class="highlight highlight-source-nginx"><pre class="notranslate"><span class="pl-c1">location</span> /download/ <span class="pl-c1">{</span>
+    <span class="pl-c1">root</span> /var/www<span class="pl-c1">;</span>
+    <span class="pl-c1">max_ranges</span> 1<span class="pl-c1">;</span>          # 支持 Range 请求
+<span class="pl-c1">}</span></pre></div>
+<hr>
+<h2>十一、URL 重写与跳转</h2>
+<div class="highlight highlight-source-nginx"><pre class="notranslate"><span class="pl-c"># 301 永久重定向</span>
+<span class="pl-c1">location</span> /old <span class="pl-c1">{</span>
+    <span class="pl-k">return</span> <span class="pl-c1">301</span> https://<span class="pl-v">$host</span>/new<span class="pl-c1">;</span>
+<span class="pl-c1">}</span>
+
+<span class="pl-c"># 302 临时重定向</span>
+<span class="pl-c1">location</span> /promo <span class="pl-c1">{</span>
+    <span class="pl-k">return</span> <span class="pl-c1">302</span> https://<span class="pl-v">$host</span>/landing<span class="pl-c1">;</span>
+<span class="pl-c1">}</span>
+
+<span class="pl-c"># rewrite 重写（末尾 last 重新匹配，break 不再匹配）</span>
+<span class="pl-c1">location</span> /blog <span class="pl-c1">{</span>
+    <span class="pl-c1">rewrite</span> ^/blog/<span class="pl-c1">(</span>.*<span class="pl-c1">)</span>$ /articles/<span class="pl-v">$1</span> last<span class="pl-c1">;</span>
+<span class="pl-c1">}</span>
+
+<span class="pl-c"># 强制 HTTPS（方法二）</span>
+<span class="pl-k">if</span> <span class="pl-c1">(</span><span class="pl-v">$scheme</span> = <span class="pl-c1">http</span><span class="pl-c1">)</span> <span class="pl-c1">{</span>
+    <span class="pl-k">return</span> <span class="pl-c1">301</span> https://<span class="pl-v">$host$request_uri</span><span class="pl-c1">;</span>
+<span class="pl-c1">}</span>
+
+<span class="pl-c"># 去掉 www</span>
+<span class="pl-k">if</span> <span class="pl-c1">(</span><span class="pl-v">$host</span> = <span class="pl-s">'www.example.com'</span><span class="pl-c1">)</span> <span class="pl-c1">{</span>
+    <span class="pl-k">return</span> <span class="pl-c1">301</span> https://example.com<span class="pl-v">$request_uri</span><span class="pl-c1">;</span>
+<span class="pl-c1">}</span>
+
+<span class="pl-c"># 禁止 IP 直接访问</span>
+<span class="pl-k">if</span> <span class="pl-c1">(</span><span class="pl-v">$host</span> <span class="pl-sr">!~</span>* ^example<span class="pl-sr">\.com$) </span><span class="pl-c1">{</span>
+    <span class="pl-k">return</span> <span class="pl-c1">444</span><span class="pl-c1">;</span>
+<span class="pl-c1">}</span></pre></div>
+<hr>
+<h2>十二、访问控制</h2>
+<div class="highlight highlight-source-nginx"><pre class="notranslate"><span class="pl-c"># IP 黑白名单</span>
+<span class="pl-c1">location</span> /admin <span class="pl-c1">{</span>
+    <span class="pl-c1">allow</span> <span class="pl-c1">192.168.1.0</span>/<span class="pl-c1">24</span><span class="pl-c1">;</span>
+    <span class="pl-c1">allow</span> <span class="pl-c1">127.0.0.1</span><span class="pl-c1">;</span>
+    <span class="pl-c1">deny</span> all<span class="pl-c1">;</span>
+<span class="pl-c1">}</span>
+
+<span class="pl-c"># 密码认证（HTTP Basic Auth）</span>
+<span class="pl-c1">location</span> /secure <span class="pl-c1">{</span>
+    <span class="pl-c1">auth_basic</span> <span class="pl-s">"Restricted Area"</span><span class="pl-c1">;</span>
+    <span class="pl-c1">auth_basic_user_file</span> /etc/nginx/.htpasswd<span class="pl-c1">;</span>
+<span class="pl-c1">}</span>
+<span class="pl-c"># 生成密码文件：</span>
+<span class="pl-c"># apt install apache2-utils</span>
+<span class="pl-c"># htpasswd -c /etc/nginx/.htpasswd username</span>
+
+<span class="pl-c"># 限制请求速率（防刷）</span>
+<span class="pl-c1">limit_req_zone</span> <span class="pl-v">$binary_remote_addr</span> <span class="pl-c1">zone</span>=login:<span class="pl-c1">10m</span> rate=<span class="pl-c1">5r</span>/m<span class="pl-c1">;</span>
+
+<span class="pl-c1">location</span> /login <span class="pl-c1">{</span>
+    <span class="pl-c1">limit_req</span> <span class="pl-c1">zone</span>=login burst=5 nodelay<span class="pl-c1">;</span>
+    <span class="pl-c1">proxy_pass</span> <span class="pl-c1">http</span>://backend<span class="pl-c1">;</span>
+<span class="pl-c1">}</span>
+
+<span class="pl-c"># 限制并发连接数</span>
+<span class="pl-c1">limit_conn_zone</span> <span class="pl-v">$binary_remote_addr</span> <span class="pl-c1">zone</span>=addr:<span class="pl-c1">10m</span><span class="pl-c1">;</span>
+
+<span class="pl-c1">location</span> /download/ <span class="pl-c1">{</span>
+    <span class="pl-c1">limit_conn</span> addr <span class="pl-c1">10</span><span class="pl-c1">;</span>     # 单 IP 最多 <span class="pl-c1">10</span> 个并发
+<span class="pl-c1">}</span>
+
+<span class="pl-c"># 禁止特定 User-Agent</span>
+<span class="pl-k">if</span> <span class="pl-c1">(</span><span class="pl-v">$http_user_agent</span> <span class="pl-sr">~</span>* <span class="pl-c1">(</span>curl|wget|python<span class="pl-c1">))</span> <span class="pl-c1">{</span>
+    <span class="pl-k">return</span> <span class="pl-c1">403</span><span class="pl-c1">;</span>
+<span class="pl-c1">}</span></pre></div>
+<hr>
+<h2>十三、日志配置</h2>
+<div class="highlight highlight-source-nginx"><pre class="notranslate"><span class="pl-c1">http</span> <span class="pl-c1">{</span>
+<span class="pl-c">    # 自定义日志格式</span>
+    <span class="pl-c1">log_format</span>  json  escape=json <span class="pl-s">'{"time":"$time_iso8601",'</span>
+                      <span class="pl-s">'"remote_addr":"$remote_addr",'</span>
+                      <span class="pl-s">'"request":"$request",'</span>
+                      <span class="pl-s">'"status":"$status",'</span>
+                      <span class="pl-s">'"body_bytes_sent":"$body_bytes_sent",'</span>
+                      <span class="pl-s">'"request_time":"$request_time",'</span>
+                      <span class="pl-s">'"upstream_response_time":"$upstream_response_time"}'</span><span class="pl-c1">;</span>
+
+    <span class="pl-c1">server</span> <span class="pl-c1">{</span>
+        <span class="pl-c1">listen</span> <span class="pl-c1">80</span><span class="pl-c1">;</span>
+        <span class="pl-c1">server_name</span> example.com<span class="pl-c1">;</span>
+
+        <span class="pl-c1">access_log</span> /var/log/nginx/example_access.log json<span class="pl-c1">;</span>
+        <span class="pl-c1">error_log</span>  /var/log/nginx/example_error.log warn<span class="pl-c1">;</span>
+    <span class="pl-c1">}</span>
+<span class="pl-c1">}</span></pre></div>
+<p><strong>日志切割（logrotate 配置）：</strong></p>
+<pre class="notranslate"><code class="notranslate"># /etc/logrotate.d/nginx
+/var/log/nginx/*.log {
+    daily
+    missingok
+    rotate 30
+    compress
+    notifempty
+    create 0640 nginx adm
+    sharedscripts
+    postrotate
+        [ -f /var/run/nginx.pid ] &amp;&amp; kill -USR1 $(cat /var/run/nginx.pid)
+    endscript
+}
+</code></pre>
+<hr>
+<h2>十四、性能优化</h2>
+<div class="highlight highlight-source-nginx"><pre class="notranslate"><span class="pl-c"># 全局优化</span>
+<span class="pl-c1">worker_processes</span>  auto<span class="pl-c1">;</span>                # 一般设为 CPU 核数
+<span class="pl-c1">worker_cpu_affinity</span> auto<span class="pl-c1">;</span>              # 绑定 CPU 核心
+<span class="pl-c1">worker_rlimit_nofile</span> <span class="pl-c1">65535</span><span class="pl-c1">;</span>            # 最大文件描述符
+
+<span class="pl-c1">events</span> <span class="pl-c1">{</span>
+    <span class="pl-c1">worker_connections</span>  <span class="pl-c1">10240</span><span class="pl-c1">;</span>         # 单进程连接数
+    <span class="pl-c1">use</span> epoll<span class="pl-c1">;</span>
+    <span class="pl-c1">multi_accept</span> on<span class="pl-c1">;</span>
+<span class="pl-c1">}</span>
+
+<span class="pl-c1">http</span> <span class="pl-c1">{</span>
+<span class="pl-c">    # 开启高效传输</span>
+    <span class="pl-c1">sendfile</span>        on<span class="pl-c1">;</span>
+    <span class="pl-c1">tcp_nopush</span>      on<span class="pl-c1">;</span>
+    <span class="pl-c1">tcp_nodelay</span>     on<span class="pl-c1">;</span>
+
+<span class="pl-c">    # 长连接</span>
+    <span class="pl-c1">keepalive_timeout</span>  <span class="pl-c1">65</span><span class="pl-c1">;</span>
+    <span class="pl-c1">keepalive_requests</span> <span class="pl-c1">1000</span><span class="pl-c1">;</span>
+
+<span class="pl-c">    # 文件缓存</span>
+    <span class="pl-c1">open_file_cache</span> max=<span class="pl-c1">10000</span> inactive=<span class="pl-c1">20s</span><span class="pl-c1">;</span>
+    <span class="pl-c1">open_file_cache_valid</span> <span class="pl-c1">30s</span><span class="pl-c1">;</span>
+    <span class="pl-c1">open_file_cache_min_uses</span> 2<span class="pl-c1">;</span>
+    <span class="pl-c1">open_file_cache_errors</span> on<span class="pl-c1">;</span>
+
+<span class="pl-c">    # FastCGI 缓存（PHP 等场景）</span>
+    <span class="pl-c1">fastcgi_cache_path</span> /tmp/nginx_cache levels=1:2 keys_zone=fcgi:<span class="pl-c1">100m</span> inactive=<span class="pl-c1">60m</span><span class="pl-c1">;</span>
+    <span class="pl-c1">fastcgi_cache_key</span> <span class="pl-s">"$scheme$request_method$host$request_uri"</span><span class="pl-c1">;</span>
+
+<span class="pl-c">    # Gzip 压缩</span>
+    <span class="pl-c1">gzip</span> on<span class="pl-c1">;</span>
+    <span class="pl-c1">gzip_vary</span> on<span class="pl-c1">;</span>
+    <span class="pl-c1">gzip_proxied</span> any<span class="pl-c1">;</span>
+    <span class="pl-c1">gzip_comp_level</span> 4<span class="pl-c1">;</span>
+    <span class="pl-c1">gzip_min_length</span> <span class="pl-c1">1k</span><span class="pl-c1">;</span>
+    <span class="pl-c1">gzip_types</span> text/plain text/css application/json application/javascript image/svg+xml<span class="pl-c1">;</span>
+<span class="pl-c1">}</span></pre></div>
+<p><strong>系统层配套优化（/etc/sysctl.conf）：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">net.core.somaxconn = 65535
+net.ipv4.tcp_tw_reuse = 1
+net.ipv4.ip_local_port_range = 1024 65535
+net.ipv4.tcp_fin_timeout = 15
+<span class="pl-c"><span class="pl-c">#</span> 执行 sysctl -p 生效</span></pre></div>
+<hr>
+<h2>十五、健康检查与状态监控</h2>
+<div class="highlight highlight-source-nginx"><pre class="notranslate"><span class="pl-c"># Nginx 状态页（需 ngx_http_stub_status_module）</span>
+<span class="pl-c1">location</span> /nginx_status <span class="pl-c1">{</span>
+    <span class="pl-c1">stub_status</span> on<span class="pl-c1">;</span>
+    <span class="pl-c1">allow</span> <span class="pl-c1">127.0.0.1</span><span class="pl-c1">;</span>
+    <span class="pl-c1">deny</span> all<span class="pl-c1">;</span>
+<span class="pl-c1">}</span></pre></div>
+<p><strong>upstream 健康检查参数：</strong></p>
+<div class="highlight highlight-source-nginx"><pre class="notranslate"><span class="pl-c1">upstream</span> backend <span class="pl-c1">{</span>
+    <span class="pl-c1">server</span> <span class="pl-c1">192.168.1.10:8080</span> max_fails=3 fail_timeout=<span class="pl-c1">30s</span><span class="pl-c1">;</span>
+    <span class="pl-c1">server</span> <span class="pl-c1">192.168.1.11:8080</span> max_fails=3 fail_timeout=<span class="pl-c1">30s</span><span class="pl-c1">;</span>
+<span class="pl-c1">}</span></pre></div>
+<hr>
+<h2>十六、故障排查常用命令</h2>
+<div class="highlight highlight-source-shell"><pre class="notranslate">nginx -t                          <span class="pl-c"><span class="pl-c">#</span> 检查配置语法</span>
+nginx -T                          <span class="pl-c"><span class="pl-c">#</span> 输出完整生效配置</span>
+nginx -V <span class="pl-k">2&gt;&amp;1</span> <span class="pl-k">|</span> grep -o with-.<span class="pl-k">*</span>   <span class="pl-c"><span class="pl-c">#</span> 查看编译模块</span>
+
+tail -f /var/log/nginx/error.log  <span class="pl-c"><span class="pl-c">#</span> 查看错误日志</span>
+tail -f /var/log/nginx/access.log <span class="pl-c"><span class="pl-c">#</span> 查看访问日志</span>
+
+ss -tunlp <span class="pl-k">|</span> grep nginx            <span class="pl-c"><span class="pl-c">#</span> 查看 Nginx 监听端口</span>
+ps -ef <span class="pl-k">|</span> grep nginx               <span class="pl-c"><span class="pl-c">#</span> 查看 Nginx 进程</span>
+netstat -tunlp <span class="pl-k">|</span> grep :80         <span class="pl-c"><span class="pl-c">#</span> 查看 80 端口占用</span>
+
+curl -I http://localhost          <span class="pl-c"><span class="pl-c">#</span> 测试本地访问</span>
+curl -H <span class="pl-s"><span class="pl-pds">"</span>Host: example.com<span class="pl-pds">"</span></span> http://127.0.0.1   <span class="pl-c"><span class="pl-c">#</span> 模拟域名访问</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 常见错误排查</span>
+<span class="pl-c"><span class="pl-c">#</span> 1. 403 Forbidden  → 检查目录权限、SELinux、index 文件</span>
+<span class="pl-c"><span class="pl-c">#</span> 2. 502 Bad Gateway → 后端服务未启动或端口错误</span>
+<span class="pl-c"><span class="pl-c">#</span> 3. 504 Gateway Timeout → 调大 proxy_read_timeout</span>
+<span class="pl-c"><span class="pl-c">#</span> 4. 413 Request Entity Too Large → 调大 client_max_body_size</span>
+<span class="pl-c"><span class="pl-c">#</span> 5. worker_connections are not enough → 调大 worker_connections</span></pre></div>
+<p><strong>权限排查（常见坑）：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">ps aux <span class="pl-k">|</span> grep nginx              <span class="pl-c"><span class="pl-c">#</span> 确认运行用户（nginx.conf 中的 user）</span>
+chown -R nginx:nginx /var/www    <span class="pl-c"><span class="pl-c">#</span> 修改网站目录归属</span>
+chmod -R 755 /var/www            <span class="pl-c"><span class="pl-c">#</span> 修改目录权限</span>
+getsebool -a <span class="pl-k">|</span> grep httpd        <span class="pl-c"><span class="pl-c">#</span> SELinux 检查（CentOS）</span>
+setsebool -P httpd_can_network_connect 1   <span class="pl-c"><span class="pl-c">#</span> 允许 Nginx 反向代理</span></pre></div>
+<hr>
+<h2>十七、完整站点配置示例</h2>
+<div class="highlight highlight-source-nginx"><pre class="notranslate"><span class="pl-c1">upstream</span> app_backend <span class="pl-c1">{</span>
+    <span class="pl-c1">least_conn</span><span class="pl-c1">;</span>
+    <span class="pl-c1">server</span> <span class="pl-c1">127.0.0.1:8080</span> weight=5<span class="pl-c1">;</span>
+    <span class="pl-c1">server</span> <span class="pl-c1">127.0.0.1:8081</span> weight=3<span class="pl-c1">;</span>
+    <span class="pl-c1">keepalive</span> <span class="pl-c1">32</span><span class="pl-c1">;</span>
+<span class="pl-c1">}</span>
+
+<span class="pl-c1">server</span> <span class="pl-c1">{</span>
+    <span class="pl-c1">listen</span>       <span class="pl-c1">80</span><span class="pl-c1">;</span>
+    <span class="pl-c1">listen</span>       <span class="pl-c1">443</span> <span class="pl-c1">ssl</span> http2<span class="pl-c1">;</span>
+    <span class="pl-c1">server_name</span>  www.example.com example.com<span class="pl-c1">;</span>
+
+    <span class="pl-c1">ssl_certificate</span>      /etc/nginx/<span class="pl-c1">ssl</span>/example.com.pem<span class="pl-c1">;</span>
+    <span class="pl-c1">ssl_certificate_key</span>  /etc/nginx/<span class="pl-c1">ssl</span>/example.com.key<span class="pl-c1">;</span>
+    <span class="pl-c1">ssl_protocols</span>        TLSv1.2 TLSv1.3<span class="pl-c1">;</span>
+
+    <span class="pl-c1">root</span>   /var/www/example<span class="pl-c1">;</span>
+    <span class="pl-c1">index</span>  <span class="pl-c1">index</span>.html<span class="pl-c1">;</span>
+
+    <span class="pl-c1">client_max_body_size</span> <span class="pl-c1">50m</span><span class="pl-c1">;</span>
+
+<span class="pl-c">    # 静态资源</span>
+    <span class="pl-c1">location</span> <span class="pl-sr">~</span>* <span class="pl-sr">\.(jpg|png|css|js|woff2)$ </span><span class="pl-c1">{</span>
+        <span class="pl-c1">expires</span> <span class="pl-c1">30d</span><span class="pl-c1">;</span>
+        <span class="pl-c1">access_log</span> off<span class="pl-c1">;</span>
+    <span class="pl-c1">}</span>
+
+<span class="pl-c">    # API 反向代理</span>
+    <span class="pl-c1">location</span> /api/ <span class="pl-c1">{</span>
+        <span class="pl-c1">proxy_pass</span> <span class="pl-c1">http</span>://app_backend/<span class="pl-c1">;</span>
+        <span class="pl-c1">proxy_set_header</span> Host              <span class="pl-v">$host</span><span class="pl-c1">;</span>
+        <span class="pl-c1">proxy_set_header</span> X-Real-IP         <span class="pl-v">$remote_addr</span><span class="pl-c1">;</span>
+        <span class="pl-c1">proxy_set_header</span> X-Forwarded-For   <span class="pl-v">$proxy_add_x_forwarded_for</span><span class="pl-c1">;</span>
+        <span class="pl-c1">proxy_set_header</span> X-Forwarded-Proto <span class="pl-v">$scheme</span><span class="pl-c1">;</span>
+    <span class="pl-c1">}</span>
+
+<span class="pl-c">    # 前端路由</span>
+    <span class="pl-c1">location</span> / <span class="pl-c1">{</span>
+        <span class="pl-c1">try_files</span> <span class="pl-v">$uri</span> <span class="pl-v">$uri</span>/ /<span class="pl-c1">index</span>.html<span class="pl-c1">;</span>
+    <span class="pl-c1">}</span>
+
+<span class="pl-c">    # 错误页面</span>
+    <span class="pl-c1">error_page</span> <span class="pl-c1">404</span> /<span class="pl-c1">404</span>.html<span class="pl-c1">;</span>
+    <span class="pl-c1">error_page</span> <span class="pl-c1">500</span> <span class="pl-c1">502</span> <span class="pl-c1">503</span> <span class="pl-c1">504</span> /<span class="pl-c1">50x</span>.html<span class="pl-c1">;</span>
+<span class="pl-c1">}</span></pre></div></div>
+<div style="font-size:small;margin-top:8px;float:right;">转载请注明出处</div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://helloblog.eik.cc">你好博客</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if("09/25/2026"!=""){
+    var startSite=new Date("09/25/2026");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行 "+diffDay+" 天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","techjiang/Gmeek-HelloBlog");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script><script src='https://blog.meekdai.com/Gmeek/plugins/lightbox.js'></script>
+
+</html>
