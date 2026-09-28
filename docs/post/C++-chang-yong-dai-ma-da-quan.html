@@ -1,0 +1,2008 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <meta name='description' content='你好博客是一个专注于技术分享、编程笔记与生活感悟的个人博客，提供高质量原创内容。'><meta name='keywords' content='你好博客,技术博客,编程笔记,Gmeek,前端开发,个人网站'><meta name='author' content='你好博客'><meta name='robots' content='index,follow'><link rel='canonical' href='https://helloblog.eik.cc/'><script type='application/ld+json'>{"@context":"https://schema.org","@type":"WebSite","name":"你好博客","url":"https://helloblog.eik.cc/","description":"专注于技术分享、编程笔记与生活感悟的个人博客","author":{"@type":"Person","name":"你好博客","email":"official@tech.asoe.cn"},"potentialAction":{"@type":"SearchAction","target":"https://helloblog.eik.cc/?q={search_term_string}","query-input":"required name=search_term_string"}}</script><script src='https://blog.meekdai.com/Gmeek/plugins/GmeekBSZ.js'></script><script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script>
+    <link rel="icon" href="https://img2.tofaka.com/autoupload/f/3624q/20260926/caKC/1024X1024/Hello-Logo.png"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="涵盖基础语法、数据类型、流程控制、函数、数组与字符串、指针与引用、面向对象、STL、文件操作、异常处理、多线程及实用技巧。">
+<meta property="og:title" content="C++常用代码大全">
+<meta property="og:description" content="涵盖基础语法、数据类型、流程控制、函数、数组与字符串、指针与引用、面向对象、STL、文件操作、异常处理、多线程及实用技巧。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://helloblog.eik.cc/post/C%2B%2B-chang-yong-dai-ma-da-quan.html">
+<meta property="og:image" content="https://img2.tofaka.com/autoupload/f/3624q/20260926/caKC/1024X1024/Hello-Logo.png">
+<title>C++常用代码大全</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">C++常用代码大全</h1>
+<div class="title-right">
+    <a href="https://helloblog.eik.cc" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/techjiang/Gmeek-HelloBlog/issues/15" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><p>涵盖基础语法、数据类型、流程控制、函数、数组与字符串、指针与引用、面向对象、STL、文件操作、异常处理、多线程及实用技巧。</p>
+<hr>
+<h2>一、基础语法</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>iostream<span class="pl-pds">&gt;</span></span>
+<span class="pl-k">using</span> <span class="pl-k">namespace</span> <span class="pl-en">std</span><span class="pl-k">;</span>
+
+<span class="pl-k">int</span> <span class="pl-en">main</span>() {
+    <span class="pl-c"><span class="pl-c">//</span> 输出</span>
+    cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>Hello, World!<span class="pl-pds">"</span></span> &lt;&lt; endl;       <span class="pl-c"><span class="pl-c">//</span> endl 换行并刷新缓冲区</span>
+    cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>Hello<span class="pl-pds">"</span></span> &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\n</span><span class="pl-pds">"</span></span>;               <span class="pl-c"><span class="pl-c">//</span> \n 换行（更快）</span>
+
+    <span class="pl-c"><span class="pl-c">//</span> 多值输出</span>
+    cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>Name: <span class="pl-pds">"</span></span> &lt;&lt; name &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>, Age: <span class="pl-pds">"</span></span> &lt;&lt; age &lt;&lt; endl;
+
+    <span class="pl-c"><span class="pl-c">//</span> 格式化输出（C 风格）</span>
+    <span class="pl-c1">printf</span>(<span class="pl-s"><span class="pl-pds">"</span>Name: %s, Age: %d, PI: %.2f<span class="pl-cce">\n</span><span class="pl-pds">"</span></span>, name.<span class="pl-c1">c_str</span>(), age, <span class="pl-c1">3.14159</span>);
+
+    <span class="pl-c"><span class="pl-c">//</span> 输入</span>
+    <span class="pl-k">int</span> x;
+    cin &gt;&gt; x;
+
+    string s;
+    <span class="pl-c1">getline</span>(cin, s);           <span class="pl-c"><span class="pl-c">//</span> 读取整行（含空格）</span>
+
+    <span class="pl-k">return</span> <span class="pl-c1">0</span>;
+}</pre></div>
+<p><strong>编译与运行：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">g++ -o main main.cpp          <span class="pl-c"><span class="pl-c">#</span> 编译</span>
+./main                         <span class="pl-c"><span class="pl-c">#</span> 运行</span>
+g++ -std=c++17 -O2 -Wall main.cpp -o main   <span class="pl-c"><span class="pl-c">#</span> 推荐编译选项</span>
+g++ -std=c++20 main.cpp -o main             <span class="pl-c"><span class="pl-c">#</span> C++20</span></pre></div>
+<hr>
+<h2>二、数据类型</h2>
+<h3>基本类型</h3>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c"><span class="pl-c">//</span> 整型</span>
+<span class="pl-k">int</span> a = <span class="pl-c1">10</span>;                    <span class="pl-c"><span class="pl-c">//</span> 通常 4 字节</span>
+<span class="pl-k">short</span> b = <span class="pl-c1">100</span>;                 <span class="pl-c"><span class="pl-c">//</span> 2 字节</span>
+<span class="pl-k">long</span> c = <span class="pl-c1">100000</span>;               <span class="pl-c"><span class="pl-c">//</span> ≥4 字节</span>
+<span class="pl-k">long</span> <span class="pl-k">long</span> d = <span class="pl-c1">10000000000</span>;     <span class="pl-c"><span class="pl-c">//</span> 8 字节</span>
+<span class="pl-k">unsigned</span> <span class="pl-k">int</span> e = <span class="pl-c1">42</span>;           <span class="pl-c"><span class="pl-c">//</span> 无符号</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 浮点型</span>
+<span class="pl-k">float</span> f = <span class="pl-c1">3</span>.<span class="pl-c1">14f</span>;               <span class="pl-c"><span class="pl-c">//</span> 4 字节</span>
+<span class="pl-k">double</span> g = <span class="pl-c1">3.14159265358979</span>;   <span class="pl-c"><span class="pl-c">//</span> 8 字节</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 字符型</span>
+<span class="pl-k">char</span> ch = <span class="pl-s"><span class="pl-pds">'</span>A<span class="pl-pds">'</span></span>;                 <span class="pl-c"><span class="pl-c">//</span> 1 字节</span>
+<span class="pl-k">wchar_t</span> wch = L<span class="pl-s"><span class="pl-pds">'</span>A<span class="pl-pds">'</span></span>;            <span class="pl-c"><span class="pl-c">//</span> 宽字符</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 布尔型</span>
+<span class="pl-k">bool</span> flag = <span class="pl-c1">true</span>;              <span class="pl-c"><span class="pl-c">//</span> 1 字节</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 自动类型推断（C++11）</span>
+<span class="pl-k">auto</span> x = <span class="pl-c1">10</span>;                   <span class="pl-c"><span class="pl-c">//</span> int</span>
+<span class="pl-k">auto</span> y = <span class="pl-c1">3.14</span>;                 <span class="pl-c"><span class="pl-c">//</span> double</span>
+<span class="pl-k">auto</span> s = <span class="pl-s"><span class="pl-pds">"</span>hello<span class="pl-pds">"</span></span>;              <span class="pl-c"><span class="pl-c">//</span> const char*</span>
+<span class="pl-k">auto</span> v = vector&lt;<span class="pl-k">int</span>&gt;{<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>}; <span class="pl-c"><span class="pl-c">//</span> vector&lt;int&gt;</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 常量</span>
+<span class="pl-k">const</span> <span class="pl-k">int</span> <span class="pl-c1">MAX</span> = <span class="pl-c1">100</span>;
+<span class="pl-k">constexpr</span> <span class="pl-k">int</span> <span class="pl-c1">SIZE</span> = <span class="pl-c1">256</span>;      <span class="pl-c"><span class="pl-c">//</span> 编译期常量（C++11）</span>
+#<span class="pl-k">define</span> <span class="pl-en">PI</span> <span class="pl-c1">3.14159</span>             <span class="pl-c"><span class="pl-c">//</span> 宏常量（不推荐）</span></pre></div>
+<h3>类型转换</h3>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c"><span class="pl-c">//</span> C++ 风格（推荐）</span>
+<span class="pl-k">static_cast</span>&lt;<span class="pl-k">int</span>&gt;(<span class="pl-c1">3.14</span>)          <span class="pl-c"><span class="pl-c">//</span> 数值转换</span>
+<span class="pl-k">dynamic_cast</span>&lt;Derived*&gt;(base)    <span class="pl-c"><span class="pl-c">//</span> 多态安全转换</span>
+<span class="pl-k">const_cast</span>&lt;<span class="pl-k">int</span>*&gt;(ptr)           <span class="pl-c"><span class="pl-c">//</span> 去除 const</span>
+<span class="pl-k">reinterpret_cast</span>&lt;<span class="pl-k">void</span>*&gt;(ptr)    <span class="pl-c"><span class="pl-c">//</span> 底层重新解释</span>
+
+<span class="pl-c"><span class="pl-c">//</span> C 风格</span>
+(<span class="pl-k">int</span>)<span class="pl-c1">3.14</span></pre></div>
+<hr>
+<h2>三、流程控制</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c"><span class="pl-c">//</span> 条件判断</span>
+<span class="pl-k">if</span> (score &gt;= <span class="pl-c1">90</span>) {
+    grade = <span class="pl-s"><span class="pl-pds">'</span>A<span class="pl-pds">'</span></span>;
+} <span class="pl-k">else</span> <span class="pl-k">if</span> (score &gt;= <span class="pl-c1">80</span>) {
+    grade = <span class="pl-s"><span class="pl-pds">'</span>B<span class="pl-pds">'</span></span>;
+} <span class="pl-k">else</span> {
+    grade = <span class="pl-s"><span class="pl-pds">'</span>C<span class="pl-pds">'</span></span>;
+}
+
+<span class="pl-c"><span class="pl-c">//</span> 三元表达式</span>
+<span class="pl-k">int</span> result = (score &gt;= <span class="pl-c1">60</span>) ? <span class="pl-c1">1</span> : <span class="pl-c1">0</span>;
+
+<span class="pl-c"><span class="pl-c">//</span> switch</span>
+<span class="pl-k">switch</span> (option) {
+    <span class="pl-k">case</span> <span class="pl-c1">1</span>:
+        cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>选项1<span class="pl-pds">"</span></span> &lt;&lt; endl;
+        <span class="pl-k">break</span>;
+    <span class="pl-k">case</span> <span class="pl-c1">2</span>:
+        cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>选项2<span class="pl-pds">"</span></span> &lt;&lt; endl;
+        <span class="pl-k">break</span>;
+    <span class="pl-k">default</span>:
+        cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>未知<span class="pl-pds">"</span></span> &lt;&lt; endl;
+        <span class="pl-k">break</span>;
+}
+
+<span class="pl-c"><span class="pl-c">//</span> for 循环</span>
+<span class="pl-k">for</span> (<span class="pl-k">int</span> i = <span class="pl-c1">0</span>; i &lt; <span class="pl-c1">10</span>; i++) {
+    cout &lt;&lt; i &lt;&lt; endl;
+}
+
+<span class="pl-c"><span class="pl-c">//</span> for-each（范围 for，C++11）</span>
+vector&lt;<span class="pl-k">int</span>&gt; v = {<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>, <span class="pl-c1">4</span>, <span class="pl-c1">5</span>};
+<span class="pl-k">for</span> (<span class="pl-k">int</span> x : v) {
+    cout &lt;&lt; x &lt;&lt; endl;
+}
+
+<span class="pl-k">for</span> (<span class="pl-k">auto</span>&amp; item : v) {
+    item *= <span class="pl-c1">2</span>;                 <span class="pl-c"><span class="pl-c">//</span> 修改原元素</span>
+}
+
+<span class="pl-c"><span class="pl-c">//</span> while 循环</span>
+<span class="pl-k">while</span> (condition) {
+    <span class="pl-c"><span class="pl-c">//</span> ...</span>
+}
+
+<span class="pl-c"><span class="pl-c">//</span> do-while</span>
+<span class="pl-k">do</span> {
+    <span class="pl-c"><span class="pl-c">//</span> ...</span>
+} <span class="pl-k">while</span> (condition);
+
+<span class="pl-c"><span class="pl-c">//</span> break / continue / goto（尽量避免 goto）</span>
+<span class="pl-k">for</span> (<span class="pl-k">int</span> i = <span class="pl-c1">0</span>; i &lt; <span class="pl-c1">10</span>; i++) {
+    <span class="pl-k">if</span> (i == <span class="pl-c1">5</span>) <span class="pl-k">break</span>;
+    <span class="pl-k">if</span> (i % <span class="pl-c1">2</span> == <span class="pl-c1">0</span>) <span class="pl-k">continue</span>;
+    cout &lt;&lt; i &lt;&lt; endl;
+}</pre></div>
+<hr>
+<h2>四、函数</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c"><span class="pl-c">//</span> 基本函数</span>
+<span class="pl-k">int</span> <span class="pl-en">add</span>(<span class="pl-k">int</span> a, <span class="pl-k">int</span> b) {
+    <span class="pl-k">return</span> a + b;
+}
+
+<span class="pl-c"><span class="pl-c">//</span> 默认参数</span>
+<span class="pl-k">void</span> <span class="pl-en">greet</span>(string name = <span class="pl-s"><span class="pl-pds">"</span>World<span class="pl-pds">"</span></span>) {
+    cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>Hello, <span class="pl-pds">"</span></span> &lt;&lt; name &lt;&lt; endl;
+}
+
+<span class="pl-c"><span class="pl-c">//</span> 函数重载</span>
+<span class="pl-k">int</span> <span class="pl-en">add</span>(<span class="pl-k">int</span> a, <span class="pl-k">int</span> b) { <span class="pl-k">return</span> a + b; }
+<span class="pl-k">double</span> <span class="pl-en">add</span>(<span class="pl-k">double</span> a, <span class="pl-k">double</span> b) { <span class="pl-k">return</span> a + b; }
+
+<span class="pl-c"><span class="pl-c">//</span> 引用参数（避免拷贝）</span>
+<span class="pl-k">void</span> <span class="pl-en">swap</span>(<span class="pl-k">int</span>&amp; a, <span class="pl-k">int</span>&amp; b) {
+    <span class="pl-k">int</span> temp = a;
+    a = b;
+    b = temp;
+}
+
+<span class="pl-c"><span class="pl-c">//</span> const 引用参数（只读，避免拷贝）</span>
+<span class="pl-k">void</span> <span class="pl-en">print</span>(<span class="pl-k">const</span> vector&lt;<span class="pl-k">int</span>&gt;&amp; v) {
+    <span class="pl-k">for</span> (<span class="pl-k">int</span> x : v) cout &lt;&lt; x &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span> <span class="pl-pds">"</span></span>;
+}
+
+<span class="pl-c"><span class="pl-c">//</span> 指针参数</span>
+<span class="pl-k">void</span> <span class="pl-en">modify</span>(<span class="pl-k">int</span>* ptr) {
+    *ptr = <span class="pl-c1">100</span>;
+}
+
+<span class="pl-c"><span class="pl-c">//</span> 内联函数</span>
+<span class="pl-k">inline</span> <span class="pl-k">int</span> <span class="pl-en">square</span>(<span class="pl-k">int</span> x) { <span class="pl-k">return</span> x * x; }
+
+<span class="pl-c"><span class="pl-c">//</span> 递归</span>
+<span class="pl-k">int</span> <span class="pl-en">factorial</span>(<span class="pl-k">int</span> n) {
+    <span class="pl-k">return</span> (n &lt;= <span class="pl-c1">1</span>) ? <span class="pl-c1">1</span> : n * <span class="pl-c1">factorial</span>(n - <span class="pl-c1">1</span>);
+}
+
+<span class="pl-c"><span class="pl-c">//</span> 函数指针</span>
+<span class="pl-k">int</span> (*funcPtr)(<span class="pl-k">int</span>, <span class="pl-k">int</span>) = add;
+<span class="pl-k">int</span> result = funcPtr(<span class="pl-c1">3</span>, <span class="pl-c1">4</span>);
+
+<span class="pl-c"><span class="pl-c">//</span> Lambda 表达式（C++11）</span>
+<span class="pl-k">auto</span> add = [](<span class="pl-k">int</span> a, <span class="pl-k">int</span> b) -&gt; <span class="pl-k">int</span> {
+    <span class="pl-k">return</span> a + b;
+};
+cout &lt;&lt; add(<span class="pl-c1">1</span>, <span class="pl-c1">2</span>) &lt;&lt; endl;
+
+<span class="pl-c"><span class="pl-c">//</span> 捕获外部变量</span>
+<span class="pl-k">int</span> x = <span class="pl-c1">10</span>, y = <span class="pl-c1">20</span>;
+<span class="pl-k">auto</span> f1 = [x, y]() { <span class="pl-k">return</span> x + y; };       <span class="pl-c"><span class="pl-c">//</span> 值捕获</span>
+<span class="pl-k">auto</span> f2 = [&amp;x, &amp;y]() { x += y; };           <span class="pl-c"><span class="pl-c">//</span> 引用捕获</span>
+<span class="pl-k">auto</span> f3 = [=]() { <span class="pl-k">return</span> x + y; };          <span class="pl-c"><span class="pl-c">//</span> 捕获所有外部变量（值）</span>
+<span class="pl-k">auto</span> f4 = [&amp;]() { x += y; };               <span class="pl-c"><span class="pl-c">//</span> 捕获所有外部变量（引用）</span>
+<span class="pl-k">auto</span> f5 = [x, &amp;y]() <span class="pl-k">mutable</span> { x++; <span class="pl-k">return</span> x + y; };  <span class="pl-c"><span class="pl-c">//</span> 可修改值捕获</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 函数对象（仿函数）</span>
+<span class="pl-k">struct</span> <span class="pl-en">Adder</span> {
+    <span class="pl-k">int</span> <span class="pl-en">operator</span>()(<span class="pl-k">int</span> a, <span class="pl-k">int</span> b) <span class="pl-k">const</span> {
+        <span class="pl-k">return</span> a + b;
+    }
+};
+Adder addFunc;
+cout &lt;&lt; addFunc(<span class="pl-c1">1</span>, <span class="pl-c1">2</span>) &lt;&lt; endl;
+
+<span class="pl-c"><span class="pl-c">//</span> std::function（C++11）</span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>functional<span class="pl-pds">&gt;</span></span>
+function&lt;<span class="pl-k">int</span>(<span class="pl-k">int</span>, <span class="pl-k">int</span>)&gt; func = add;
+function&lt;<span class="pl-k">int</span>(<span class="pl-k">int</span>, <span class="pl-k">int</span>)&gt; lambda = [](<span class="pl-k">int</span> a, <span class="pl-k">int</span> b) { <span class="pl-k">return</span> a + b; };</pre></div>
+<hr>
+<h2>五、数组与字符串</h2>
+<h3>数组</h3>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c"><span class="pl-c">//</span> 静态数组</span>
+<span class="pl-k">int</span> arr[<span class="pl-c1">5</span>] = {<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>, <span class="pl-c1">4</span>, <span class="pl-c1">5</span>};
+<span class="pl-k">int</span> arr2[] = {<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>};               <span class="pl-c"><span class="pl-c">//</span> 自动确定大小</span>
+<span class="pl-k">int</span> arr3[<span class="pl-c1">5</span>] = {<span class="pl-c1">0</span>};                    <span class="pl-c"><span class="pl-c">//</span> 全部初始化为 0</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 访问</span>
+arr[<span class="pl-c1">0</span>] = <span class="pl-c1">10</span>;
+<span class="pl-k">int</span> len = <span class="pl-k">sizeof</span>(arr) / <span class="pl-k">sizeof</span>(arr[<span class="pl-c1">0</span>]);   <span class="pl-c"><span class="pl-c">//</span> 数组长度</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 多维数组</span>
+<span class="pl-k">int</span> matrix[<span class="pl-c1">3</span>][<span class="pl-c1">4</span>] = {
+    {<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>, <span class="pl-c1">4</span>},
+    {<span class="pl-c1">5</span>, <span class="pl-c1">6</span>, <span class="pl-c1">7</span>, <span class="pl-c1">8</span>},
+    {<span class="pl-c1">9</span>, <span class="pl-c1">10</span>, <span class="pl-c1">11</span>, <span class="pl-c1">12</span>}
+};
+matrix[<span class="pl-c1">1</span>][<span class="pl-c1">2</span>] = <span class="pl-c1">100</span>;
+
+<span class="pl-c"><span class="pl-c">//</span> 动态数组（C++11，推荐）</span>
+<span class="pl-k">int</span>* dynamicArr = <span class="pl-k">new</span> <span class="pl-k">int</span>[<span class="pl-c1">5</span>];
+<span class="pl-k">delete[]</span> dynamicArr;
+
+<span class="pl-c"><span class="pl-c">//</span> 推荐使用 vector</span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>vector<span class="pl-pds">&gt;</span></span>
+vector&lt;<span class="pl-k">int</span>&gt; vec = {<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>, <span class="pl-c1">4</span>, <span class="pl-c1">5</span>};</pre></div>
+<h3>字符串</h3>
+<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>string<span class="pl-pds">&gt;</span></span>
+
+<span class="pl-c"><span class="pl-c">//</span> 创建</span>
+string s1 = <span class="pl-s"><span class="pl-pds">"</span>Hello<span class="pl-pds">"</span></span>;
+string <span class="pl-en">s2</span>(<span class="pl-s"><span class="pl-pds">"</span>World<span class="pl-pds">"</span></span>);
+string s3 = s1 + <span class="pl-s"><span class="pl-pds">"</span>, <span class="pl-pds">"</span></span> + s2;       <span class="pl-c"><span class="pl-c">//</span> 拼接</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 常用操作</span>
+s1.size();               <span class="pl-c"><span class="pl-c">//</span> 长度</span>
+s1.length();             <span class="pl-c"><span class="pl-c">//</span> 长度（同上）</span>
+s1.empty();              <span class="pl-c"><span class="pl-c">//</span> 是否为空</span>
+s1[<span class="pl-c1">0</span>];                   <span class="pl-c"><span class="pl-c">//</span> 索引访问</span>
+s1.at(<span class="pl-c1">0</span>);                <span class="pl-c"><span class="pl-c">//</span> 带边界检查的访问</span>
+s1.front();              <span class="pl-c"><span class="pl-c">//</span> 首字符</span>
+s1.back();               <span class="pl-c"><span class="pl-c">//</span> 末字符</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 修改</span>
+s1.append(<span class="pl-s"><span class="pl-pds">"</span> C++<span class="pl-pds">"</span></span>);       <span class="pl-c"><span class="pl-c">//</span> 追加</span>
+s1 += <span class="pl-s"><span class="pl-pds">"</span>!!!<span class="pl-pds">"</span></span>;             <span class="pl-c"><span class="pl-c">//</span> 追加</span>
+s1.insert(<span class="pl-c1">5</span>, <span class="pl-s"><span class="pl-pds">"</span> World<span class="pl-pds">"</span></span>);  <span class="pl-c"><span class="pl-c">//</span> 插入</span>
+s1.erase(<span class="pl-c1">5</span>, <span class="pl-c1">6</span>);          <span class="pl-c"><span class="pl-c">//</span> 删除（位置，长度）</span>
+s1.replace(<span class="pl-c1">0</span>, <span class="pl-c1">5</span>, <span class="pl-s"><span class="pl-pds">"</span>Hi<span class="pl-pds">"</span></span>);  <span class="pl-c"><span class="pl-c">//</span> 替换</span>
+s1.clear();              <span class="pl-c"><span class="pl-c">//</span> 清空</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 查找</span>
+s1.find(<span class="pl-s"><span class="pl-pds">"</span>World<span class="pl-pds">"</span></span>);        <span class="pl-c"><span class="pl-c">//</span> 查找子串（返回位置，未找到返回 string::npos）</span>
+s1.rfind(<span class="pl-s"><span class="pl-pds">"</span>o<span class="pl-pds">"</span></span>);           <span class="pl-c"><span class="pl-c">//</span> 从后查找</span>
+s1.find_first_of(<span class="pl-s"><span class="pl-pds">"</span>aeiou<span class="pl-pds">"</span></span>);   <span class="pl-c"><span class="pl-c">//</span> 查找任一字符</span>
+s1.substr(<span class="pl-c1">0</span>, <span class="pl-c1">5</span>);         <span class="pl-c"><span class="pl-c">//</span> 截取子串</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 比较</span>
+s1 == s2;                <span class="pl-c"><span class="pl-c">//</span> 比较</span>
+s1.compare(s2);          <span class="pl-c"><span class="pl-c">//</span> 比较（返回 &lt;0, 0, &gt;0）</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 转换</span>
+<span class="pl-en">stoi</span>(<span class="pl-s"><span class="pl-pds">"</span>123<span class="pl-pds">"</span></span>);             <span class="pl-c"><span class="pl-c">//</span> string → int</span>
+<span class="pl-en">stol</span>(<span class="pl-s"><span class="pl-pds">"</span>123<span class="pl-pds">"</span></span>);             <span class="pl-c"><span class="pl-c">//</span> string → long</span>
+<span class="pl-en">stod</span>(<span class="pl-s"><span class="pl-pds">"</span>3.14<span class="pl-pds">"</span></span>);            <span class="pl-c"><span class="pl-c">//</span> string → double</span>
+<span class="pl-en">to_string</span>(<span class="pl-c1">123</span>);          <span class="pl-c"><span class="pl-c">//</span> int → string</span>
+
+<span class="pl-c"><span class="pl-c">//</span> C 风格字符串</span>
+<span class="pl-k">const</span> <span class="pl-k">char</span>* cs = <span class="pl-s"><span class="pl-pds">"</span>Hello<span class="pl-pds">"</span></span>;
+<span class="pl-k">char</span> buf[<span class="pl-c1">256</span>];
+<span class="pl-en">strcpy</span>(buf, cs);         <span class="pl-c"><span class="pl-c">//</span> 复制</span>
+<span class="pl-en">strcat</span>(buf, <span class="pl-s"><span class="pl-pds">"</span> World<span class="pl-pds">"</span></span>);   <span class="pl-c"><span class="pl-c">//</span> 追加</span>
+<span class="pl-en">strlen</span>(cs);              <span class="pl-c"><span class="pl-c">//</span> 长度</span>
+<span class="pl-en">strcmp</span>(cs, <span class="pl-s"><span class="pl-pds">"</span>Hello<span class="pl-pds">"</span></span>);     <span class="pl-c"><span class="pl-c">//</span> 比较</span>
+<span class="pl-en">sprintf</span>(buf, <span class="pl-s"><span class="pl-pds">"</span>Value: %d<span class="pl-pds">"</span></span>, <span class="pl-c1">42</span>);  <span class="pl-c"><span class="pl-c">//</span> 格式化</span>
+<span class="pl-en">snprintf</span>(buf, <span class="pl-k">sizeof</span>(buf), "Value: %d", 42);  <span class="pl-c"><span class="pl-c">//</span> 安全格式化</span>
+
+<span class="pl-c"><span class="pl-c">//</span> string ↔ const char*</span>
+string str = <span class="pl-s"><span class="pl-pds">"</span>Hello<span class="pl-pds">"</span></span>;
+<span class="pl-k">const</span> <span class="pl-k">char</span>* cstr = str.c_str();
+string <span class="pl-en">from_cstr</span>(cstr);
+
+<span class="pl-c"><span class="pl-c">//</span> 遍历</span>
+<span class="pl-k">for</span> (<span class="pl-k">char</span> c : s1) {
+    cout &lt;&lt; c;
+}
+
+<span class="pl-c"><span class="pl-c">//</span> 一行读入</span>
+string line;
+<span class="pl-en">getline</span>(cin, line);</pre></div>
+<hr>
+<h2>六、指针与引用</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c"><span class="pl-c">//</span> 指针</span>
+<span class="pl-k">int</span> x = <span class="pl-c1">10</span>;
+<span class="pl-k">int</span>* ptr = &amp;x;               <span class="pl-c"><span class="pl-c">//</span> 取地址</span>
+<span class="pl-k">int</span> val = *ptr;              <span class="pl-c"><span class="pl-c">//</span> 解引用（val = 10）</span>
+*ptr = <span class="pl-c1">20</span>;                   <span class="pl-c"><span class="pl-c">//</span> 修改 x 为 20</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 空指针</span>
+<span class="pl-k">int</span>* p1 = <span class="pl-c1">nullptr</span>;           <span class="pl-c"><span class="pl-c">//</span> C++11（推荐）</span>
+<span class="pl-k">int</span>* p2 = <span class="pl-c1">NULL</span>;              <span class="pl-c"><span class="pl-c">//</span> C 风格（不推荐）</span>
+<span class="pl-k">int</span>* p3 = <span class="pl-c1">0</span>;                 <span class="pl-c"><span class="pl-c">//</span> 不推荐</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 指针与数组</span>
+<span class="pl-k">int</span> arr[<span class="pl-c1">5</span>] = {<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>, <span class="pl-c1">4</span>, <span class="pl-c1">5</span>};
+<span class="pl-k">int</span>* p = arr;                <span class="pl-c"><span class="pl-c">//</span> 数组名即首地址</span>
+p[<span class="pl-c1">0</span>]                         <span class="pl-c"><span class="pl-c">//</span> 等价于 arr[0]</span>
+*(p + <span class="pl-c1">2</span>)                     <span class="pl-c"><span class="pl-c">//</span> 等价于 arr[2]</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 指向指针的指针</span>
+<span class="pl-k">int</span>** pp = &amp;ptr;
+
+<span class="pl-c"><span class="pl-c">//</span> 动态内存</span>
+<span class="pl-k">int</span>* p = <span class="pl-k">new</span> <span class="pl-k">int</span>(<span class="pl-c1">42</span>);        <span class="pl-c"><span class="pl-c">//</span> 分配并初始化</span>
+<span class="pl-k">delete</span> p;                     <span class="pl-c"><span class="pl-c">//</span> 释放</span>
+
+<span class="pl-k">int</span>* arr = <span class="pl-k">new</span> <span class="pl-k">int</span>[<span class="pl-c1">10</span>];      <span class="pl-c"><span class="pl-c">//</span> 分配数组</span>
+<span class="pl-k">delete[]</span> arr;                 <span class="pl-c"><span class="pl-c">//</span> 释放数组</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 智能指针（C++11，推荐避免手动管理内存）</span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>memory<span class="pl-pds">&gt;</span></span>
+
+<span class="pl-c"><span class="pl-c">//</span> unique_ptr：独占所有权</span>
+unique_ptr&lt;<span class="pl-k">int</span>&gt; uptr = make_unique&lt;<span class="pl-k">int</span>&gt;(<span class="pl-c1">42</span>);
+unique_ptr&lt;<span class="pl-k">int</span>[]&gt; uarr = make_unique&lt;<span class="pl-k">int</span>[]&gt;(<span class="pl-c1">10</span>);
+
+<span class="pl-c"><span class="pl-c">//</span> shared_ptr：共享所有权（引用计数）</span>
+shared_ptr&lt;<span class="pl-k">int</span>&gt; sptr = make_shared&lt;<span class="pl-k">int</span>&gt;(<span class="pl-c1">42</span>);
+shared_ptr&lt;<span class="pl-k">int</span>&gt; sptr2 = sptr;   <span class="pl-c"><span class="pl-c">//</span> 引用计数 +1</span>
+
+<span class="pl-c"><span class="pl-c">//</span> weak_ptr：弱引用（不增加引用计数）</span>
+weak_ptr&lt;<span class="pl-k">int</span>&gt; wptr = sptr;
+
+<span class="pl-c"><span class="pl-c">//</span> 引用</span>
+<span class="pl-k">int</span>&amp; ref = x;                <span class="pl-c"><span class="pl-c">//</span> 引用（必须初始化，不能改绑）</span>
+ref = <span class="pl-c1">30</span>;                    <span class="pl-c"><span class="pl-c">//</span> 等价于 x = 30</span>
+
+<span class="pl-c"><span class="pl-c">//</span> const 引用</span>
+<span class="pl-k">const</span> <span class="pl-k">int</span>&amp; cref = <span class="pl-c1">42</span>;        <span class="pl-c"><span class="pl-c">//</span> 可绑定临时值</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 引用 vs 指针</span>
+<span class="pl-c"><span class="pl-c">//</span> 引用：必须初始化、不能改绑、无空引用、用 . 访问</span>
+<span class="pl-c"><span class="pl-c">//</span> 指针：可为空、可改指、有算术、用 -&gt; 访问</span></pre></div>
+<hr>
+<h2>七、结构体与联合体</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c"><span class="pl-c">//</span> 结构体</span>
+<span class="pl-k">struct</span> <span class="pl-en">Point</span> {
+    <span class="pl-k">double</span> x;
+    <span class="pl-k">double</span> y;
+
+    <span class="pl-c"><span class="pl-c">//</span> 构造函数</span>
+    <span class="pl-en">Point</span>() : x(<span class="pl-c1">0</span>), y(<span class="pl-c1">0</span>) {}
+    <span class="pl-en">Point</span>(<span class="pl-k">double</span> x, <span class="pl-k">double</span> y) : x(x), y(y) {}
+
+    <span class="pl-c"><span class="pl-c">//</span> 方法</span>
+    <span class="pl-k">double</span> <span class="pl-en">distance</span>(<span class="pl-k">const</span> Point&amp; other) <span class="pl-k">const</span> {
+        <span class="pl-k">double</span> dx = x - other.<span class="pl-smi">x</span>;
+        <span class="pl-k">double</span> dy = y - other.<span class="pl-smi">y</span>;
+        <span class="pl-k">return</span> <span class="pl-c1">sqrt</span>(dx * dx + dy * dy);
+    }
+
+    <span class="pl-c"><span class="pl-c">//</span> 运算符重载</span>
+    Point <span class="pl-k">operator</span>+(<span class="pl-k">const</span> Point&amp; other) <span class="pl-k">const</span> {
+        <span class="pl-k">return</span> <span class="pl-c1">Point</span>(x + other.<span class="pl-smi">x</span>, y + other.<span class="pl-smi">y</span>);
+    }
+};
+
+Point <span class="pl-en">p1</span>(<span class="pl-c1">1</span>, <span class="pl-c1">2</span>), p2(<span class="pl-c1">4</span>, <span class="pl-c1">6</span>);
+Point p3 = p1 + p2;
+
+<span class="pl-c"><span class="pl-c">//</span> 联合体（所有成员共享同一块内存）</span>
+<span class="pl-k">union</span> Data {
+    <span class="pl-k">int</span> i;
+    <span class="pl-k">float</span> f;
+    <span class="pl-k">char</span> str[<span class="pl-c1">20</span>];
+};
+
+<span class="pl-c"><span class="pl-c">//</span> 枚举</span>
+<span class="pl-k">enum</span> Color { <span class="pl-c1">RED</span>, <span class="pl-c1">GREEN</span>, <span class="pl-c1">BLUE</span> };               <span class="pl-c"><span class="pl-c">//</span> 旧式</span>
+<span class="pl-k">enum</span> <span class="pl-k">class</span> <span class="pl-en">Color</span> : <span class="pl-k">int</span> { Red, Green, Blue };    <span class="pl-c"><span class="pl-c">//</span> 强类型枚举（C++11，推荐）</span>
+Color c = Color::Red;
+
+<span class="pl-c"><span class="pl-c">//</span> typedef / using</span>
+<span class="pl-k">typedef</span> <span class="pl-k">unsigned</span> <span class="pl-k">long</span> ulong;
+<span class="pl-k">using</span> ulong = <span class="pl-k">unsigned</span> <span class="pl-k">long</span>;                   <span class="pl-c"><span class="pl-c">//</span> C++11（推荐）</span>
+<span class="pl-k">using</span> VecInt = vector&lt;<span class="pl-k">int</span>&gt;;</pre></div>
+<hr>
+<h2>八、面向对象编程</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>iostream<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>string<span class="pl-pds">&gt;</span></span>
+<span class="pl-k">using</span> <span class="pl-k">namespace</span> <span class="pl-en">std</span><span class="pl-k">;</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 基类</span>
+<span class="pl-k">class</span> <span class="pl-en">Animal</span> {
+<span class="pl-k">protected:</span>                        <span class="pl-c"><span class="pl-c">//</span> 受保护成员</span>
+    string name;
+    <span class="pl-k">int</span> age;
+
+<span class="pl-k">public:</span>
+    <span class="pl-c"><span class="pl-c">//</span> 构造函数</span>
+    <span class="pl-en">Animal</span>(<span class="pl-k">const</span> string&amp; name, <span class="pl-k">int</span> age) : name(name), age(age) {
+        cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>Animal created<span class="pl-pds">"</span></span> &lt;&lt; endl;
+    }
+
+    <span class="pl-c"><span class="pl-c">//</span> 虚析构函数（基类必须有）</span>
+    <span class="pl-k">virtual</span> <span class="pl-en">~Animal</span>() {
+        cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>Animal destroyed<span class="pl-pds">"</span></span> &lt;&lt; endl;
+    }
+
+    <span class="pl-c"><span class="pl-c">//</span> 拷贝构造</span>
+    <span class="pl-en">Animal</span>(<span class="pl-k">const</span> Animal&amp; other) : name(other.name), age(other.age) {}
+
+    <span class="pl-c"><span class="pl-c">//</span> 移动构造（C++11）</span>
+    <span class="pl-en">Animal</span>(Animal&amp;&amp; other) <span class="pl-k">noexcept</span> : name(move(other.name)), age(other.age) {
+        other.<span class="pl-smi">age</span> = <span class="pl-c1">0</span>;
+    }
+
+    <span class="pl-c"><span class="pl-c">//</span> 拷贝赋值</span>
+    Animal&amp; <span class="pl-k">operator</span>=(<span class="pl-k">const</span> Animal&amp; other) {
+        <span class="pl-k">if</span> (<span class="pl-c1">this</span> != &amp;other) {
+            name = other.<span class="pl-smi">name</span>;
+            age = other.<span class="pl-smi">age</span>;
+        }
+        <span class="pl-k">return</span> *<span class="pl-c1">this</span>;
+    }
+
+    <span class="pl-c"><span class="pl-c">//</span> 虚函数（支持多态）</span>
+    <span class="pl-k">virtual</span> <span class="pl-k">void</span> <span class="pl-en">speak</span>() <span class="pl-k">const</span> {
+        cout &lt;&lt; name &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span> makes a sound<span class="pl-pds">"</span></span> &lt;&lt; endl;
+    }
+
+    <span class="pl-c"><span class="pl-c">//</span> 纯虚函数（抽象方法）</span>
+    <span class="pl-c"><span class="pl-c">//</span> virtual void move() const = 0;</span>
+
+    <span class="pl-c"><span class="pl-c">//</span> 普通方法</span>
+    string <span class="pl-en">getName</span>() <span class="pl-k">const</span> { <span class="pl-k">return</span> name; }
+    <span class="pl-k">int</span> <span class="pl-en">getAge</span>() <span class="pl-k">const</span> { <span class="pl-k">return</span> age; }
+
+    <span class="pl-c"><span class="pl-c">//</span> 友元函数</span>
+    <span class="pl-k">friend</span> ostream&amp; <span class="pl-k">operator</span>&lt;&lt;(ostream&amp; os, <span class="pl-k">const</span> Animal&amp; a);
+};
+
+<span class="pl-c"><span class="pl-c">//</span> 友元函数实现</span>
+ostream&amp; <span class="pl-k">operator</span>&lt;&lt;(ostream&amp; os, <span class="pl-k">const</span> Animal&amp; a) {
+    os &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>Animal(<span class="pl-pds">"</span></span> &lt;&lt; a.<span class="pl-smi">name</span> &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>, <span class="pl-pds">"</span></span> &lt;&lt; a.<span class="pl-smi">age</span> &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>)<span class="pl-pds">"</span></span>;
+    <span class="pl-k">return</span> os;
+}
+
+<span class="pl-c"><span class="pl-c">//</span> 派生类（继承）</span>
+<span class="pl-k">class</span> <span class="pl-en">Dog</span> : <span class="pl-k">public</span> <span class="pl-en">Animal</span> {
+<span class="pl-k">private:</span>
+    string breed;
+
+<span class="pl-k">public:</span>
+    <span class="pl-en">Dog</span>(<span class="pl-k">const</span> string&amp; name, <span class="pl-k">int</span> age, <span class="pl-k">const</span> string&amp; breed)
+        : Animal(name, age), breed(breed) {}
+
+    <span class="pl-c"><span class="pl-c">//</span> 重写虚函数</span>
+    <span class="pl-k">void</span> <span class="pl-en">speak</span>() <span class="pl-k">const</span> <span class="pl-k">override</span> {
+        cout &lt;&lt; name &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span> barks!<span class="pl-pds">"</span></span> &lt;&lt; endl;
+    }
+
+    <span class="pl-k">void</span> <span class="pl-en">fetch</span>() <span class="pl-k">const</span> {
+        cout &lt;&lt; name &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span> fetches the ball<span class="pl-pds">"</span></span> &lt;&lt; endl;
+    }
+};
+
+<span class="pl-k">class</span> <span class="pl-en">Cat</span> : <span class="pl-k">public</span> <span class="pl-en">Animal</span> {
+<span class="pl-k">public:</span>
+    <span class="pl-en">Cat</span>(<span class="pl-k">const</span> string&amp; name, <span class="pl-k">int</span> age) : Animal(name, age) {}
+
+    <span class="pl-k">void</span> <span class="pl-en">speak</span>() <span class="pl-k">const</span> <span class="pl-k">override</span> {
+        cout &lt;&lt; name &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span> meows!<span class="pl-pds">"</span></span> &lt;&lt; endl;
+    }
+};
+
+<span class="pl-c"><span class="pl-c">//</span> 多态</span>
+<span class="pl-k">int</span> <span class="pl-en">main</span>() {
+    Animal* animals[] = {
+        <span class="pl-k">new</span> <span class="pl-c1">Dog</span>(<span class="pl-s"><span class="pl-pds">"</span>Buddy<span class="pl-pds">"</span></span>, <span class="pl-c1">5</span>, <span class="pl-s"><span class="pl-pds">"</span>Labrador<span class="pl-pds">"</span></span>),
+        <span class="pl-k">new</span> <span class="pl-c1">Cat</span>(<span class="pl-s"><span class="pl-pds">"</span>Whiskers<span class="pl-pds">"</span></span>, <span class="pl-c1">3</span>)
+    };
+
+    <span class="pl-k">for</span> (<span class="pl-k">const</span> <span class="pl-k">auto</span>&amp; a : animals) {
+        a-&gt;<span class="pl-c1">speak</span>();               <span class="pl-c"><span class="pl-c">//</span> 调用各自版本</span>
+    }
+
+    <span class="pl-k">for</span> (<span class="pl-k">const</span> <span class="pl-k">auto</span>&amp; a : animals) {
+        <span class="pl-k">delete</span> a;
+    }
+
+    <span class="pl-k">return</span> <span class="pl-c1">0</span>;
+}
+
+<span class="pl-c"><span class="pl-c">//</span> 抽象类</span>
+<span class="pl-k">class</span> <span class="pl-en">Shape</span> {
+<span class="pl-k">public:</span>
+    <span class="pl-k">virtual</span> <span class="pl-k">double</span> <span class="pl-en">area</span>() <span class="pl-k">const</span> = 0;           <span class="pl-c"><span class="pl-c">//</span> 纯虚函数</span>
+    <span class="pl-k">virtual</span> <span class="pl-k">double</span> <span class="pl-en">perimeter</span>() <span class="pl-k">const</span> = 0;
+    <span class="pl-k">virtual</span> <span class="pl-en">~Shape</span>() = <span class="pl-k">default</span>;
+};
+
+<span class="pl-k">class</span> <span class="pl-en">Circle</span> : <span class="pl-k">public</span> <span class="pl-en">Shape</span> {
+    <span class="pl-k">double</span> radius;
+<span class="pl-k">public:</span>
+    <span class="pl-en">Circle</span>(<span class="pl-k">double</span> r) : radius(r) {}
+    <span class="pl-k">double</span> <span class="pl-en">area</span>() <span class="pl-k">const</span> <span class="pl-k">override</span> { <span class="pl-k">return</span> <span class="pl-c1">3.14159</span> * radius * radius; }
+    <span class="pl-k">double</span> <span class="pl-en">perimeter</span>() <span class="pl-k">const</span> <span class="pl-k">override</span> { <span class="pl-k">return</span> <span class="pl-c1">2</span> * <span class="pl-c1">3.14159</span> * radius; }
+};
+
+<span class="pl-c"><span class="pl-c">//</span> 运算符重载</span>
+<span class="pl-k">class</span> <span class="pl-en">Vector2D</span> {
+<span class="pl-k">public:</span>
+    <span class="pl-k">double</span> x, y;
+
+    <span class="pl-en">Vector2D</span>(<span class="pl-k">double</span> x = <span class="pl-c1">0</span>, <span class="pl-k">double</span> y = <span class="pl-c1">0</span>) : x(x), y(y) {}
+
+    Vector2D <span class="pl-k">operator</span>+(<span class="pl-k">const</span> Vector2D&amp; v) <span class="pl-k">const</span> {
+        <span class="pl-k">return</span> <span class="pl-c1">Vector2D</span>(x + v.<span class="pl-smi">x</span>, y + v.<span class="pl-smi">y</span>);
+    }
+
+    Vector2D <span class="pl-k">operator</span>-(<span class="pl-k">const</span> Vector2D&amp; v) <span class="pl-k">const</span> {
+        <span class="pl-k">return</span> <span class="pl-c1">Vector2D</span>(x - v.<span class="pl-smi">x</span>, y - v.<span class="pl-smi">y</span>);
+    }
+
+    <span class="pl-k">bool</span> <span class="pl-k">operator</span>==(<span class="pl-k">const</span> Vector2D&amp; v) <span class="pl-k">const</span> {
+        <span class="pl-k">return</span> x == v.<span class="pl-smi">x</span> &amp;&amp; y == v.<span class="pl-smi">y</span>;
+    }
+
+    Vector2D&amp; <span class="pl-k">operator</span>+=(<span class="pl-k">const</span> Vector2D&amp; v) {
+        x += v.<span class="pl-smi">x</span>;
+        y += v.<span class="pl-smi">y</span>;
+        <span class="pl-k">return</span> *<span class="pl-c1">this</span>;
+    }
+
+    <span class="pl-k">double</span> <span class="pl-k">operator</span>*(<span class="pl-k">const</span> Vector2D&amp; v) <span class="pl-k">const</span> {   <span class="pl-c"><span class="pl-c">//</span> 点积</span>
+        <span class="pl-k">return</span> x * v.<span class="pl-smi">x</span> + y * v.<span class="pl-smi">y</span>;
+    }
+
+    <span class="pl-k">friend</span> ostream&amp; <span class="pl-k">operator</span>&lt;&lt;(ostream&amp; os, <span class="pl-k">const</span> Vector2D&amp; v) {
+        os &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>(<span class="pl-pds">"</span></span> &lt;&lt; v.<span class="pl-smi">x</span> &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>, <span class="pl-pds">"</span></span> &lt;&lt; v.<span class="pl-smi">y</span> &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>)<span class="pl-pds">"</span></span>;
+        <span class="pl-k">return</span> os;
+    }
+};
+
+<span class="pl-c"><span class="pl-c">//</span> 模板类</span>
+<span class="pl-k">template</span>&lt;<span class="pl-k">typename</span> T&gt;
+<span class="pl-k">class</span> <span class="pl-en">Container</span> {
+<span class="pl-k">private:</span>
+    vector&lt;T&gt; data;
+<span class="pl-k">public:</span>
+    <span class="pl-k">void</span> <span class="pl-en">add</span>(<span class="pl-k">const</span> T&amp; item) { data.<span class="pl-c1">push_back</span>(item); }
+    T <span class="pl-en">get</span>(<span class="pl-k">int</span> index) <span class="pl-k">const</span> { <span class="pl-k">return</span> data[index]; }
+    <span class="pl-k">int</span> <span class="pl-en">size</span>() <span class="pl-k">const</span> { <span class="pl-k">return</span> data.<span class="pl-c1">size</span>(); }
+};
+
+<span class="pl-c"><span class="pl-c">//</span> 静态成员</span>
+<span class="pl-k">class</span> <span class="pl-en">Counter</span> {
+<span class="pl-k">public:</span>
+    <span class="pl-k">static</span> <span class="pl-k">int</span> count;
+    <span class="pl-en">Counter</span>() { count++; }
+    <span class="pl-en">~Counter</span>() { count--; }
+    <span class="pl-k">static</span> <span class="pl-k">int</span> <span class="pl-en">getCount</span>() { <span class="pl-k">return</span> count; }
+};
+<span class="pl-k">int</span> Counter::count = <span class="pl-c1">0</span>;</pre></div>
+<hr>
+<h2>九、模板</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c"><span class="pl-c">//</span> 函数模板</span>
+<span class="pl-k">template</span>&lt;<span class="pl-k">typename</span> T&gt;
+T <span class="pl-en">maximum</span>(T a, T b) {
+    <span class="pl-k">return</span> (a &gt; b) ? a : b;
+}
+
+<span class="pl-c"><span class="pl-c">//</span> 调用</span>
+<span class="pl-en">maximum</span>(<span class="pl-c1">3</span>, <span class="pl-c1">7</span>);            <span class="pl-c"><span class="pl-c">//</span> int</span>
+<span class="pl-en">maximum</span>(<span class="pl-c1">3.14</span>, <span class="pl-c1">2.72</span>);      <span class="pl-c"><span class="pl-c">//</span> double</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 多参数模板</span>
+<span class="pl-k">template</span>&lt;<span class="pl-k">typename</span> T, <span class="pl-k">typename</span> U&gt;
+<span class="pl-k">auto</span> <span class="pl-en">add</span>(T a, U b) -&gt; decltype(a + b) {
+    <span class="pl-k">return</span> a + b;
+}
+
+<span class="pl-c"><span class="pl-c">//</span> C++14 简化</span>
+<span class="pl-k">template</span>&lt;<span class="pl-k">typename</span> T, <span class="pl-k">typename</span> U&gt;
+<span class="pl-k">auto</span> <span class="pl-en">add</span>(T a, U b) {
+    <span class="pl-k">return</span> a + b;
+}
+
+<span class="pl-c"><span class="pl-c">//</span> 类模板</span>
+<span class="pl-k">template</span>&lt;<span class="pl-k">typename</span> T, <span class="pl-k">int</span> N&gt;
+<span class="pl-k">class</span> <span class="pl-en">FixedArray</span> {
+<span class="pl-k">private:</span>
+    T data[N];
+<span class="pl-k">public:</span>
+    T&amp; <span class="pl-k">operator</span>[](<span class="pl-k">int</span> i) { <span class="pl-k">return</span> data[i]; }
+    <span class="pl-k">int</span> <span class="pl-en">size</span>() <span class="pl-k">const</span> { <span class="pl-k">return</span> N; }
+};
+
+FixedArray&lt;<span class="pl-k">int</span>, <span class="pl-c1">10</span>&gt; arr;
+
+<span class="pl-c"><span class="pl-c">//</span> 可变参数模板（C++11）</span>
+<span class="pl-k">template</span>&lt;<span class="pl-k">typename</span>... Args&gt;
+<span class="pl-k">void</span> <span class="pl-en">print</span>(Args... args) {
+    (cout &lt;&lt; ... &lt;&lt; args) &lt;&lt; endl;    <span class="pl-c"><span class="pl-c">//</span> 折叠表达式（C++17）</span>
+}
+
+<span class="pl-c"><span class="pl-c">//</span> 模板特化</span>
+<span class="pl-k">template</span>&lt;&gt;
+<span class="pl-k">class</span> <span class="pl-en">Container</span>&lt;<span class="pl-k">bool</span>&gt; {
+    <span class="pl-c"><span class="pl-c">//</span> bool 特化版本</span>
+};
+
+<span class="pl-c"><span class="pl-c">//</span> 类型萃取</span>
+<span class="pl-k">template</span>&lt;<span class="pl-k">typename</span> T&gt;
+<span class="pl-k">void</span> <span class="pl-en">process</span>(T value) {
+    <span class="pl-k">if</span> <span class="pl-k">constexpr</span> (is_integral_v&lt;T&gt;) {       <span class="pl-c"><span class="pl-c">//</span> C++17</span>
+        cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>Integer: <span class="pl-pds">"</span></span> &lt;&lt; value &lt;&lt; endl;
+    } <span class="pl-k">else</span> {
+        cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>Other: <span class="pl-pds">"</span></span> &lt;&lt; value &lt;&lt; endl;
+    }
+}</pre></div>
+<hr>
+<h2>十、STL（标准模板库）</h2>
+<h3>容器总览</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>容器</th>
+<th>头文件</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">vector</code></td>
+<td><code class="notranslate">&lt;vector&gt;</code></td>
+<td>动态数组，随机访问 O(1)</td>
+</tr>
+<tr>
+<td><code class="notranslate">list</code></td>
+<td><code class="notranslate">&lt;list&gt;</code></td>
+<td>双向链表，插入/删除 O(1)</td>
+</tr>
+<tr>
+<td><code class="notranslate">deque</code></td>
+<td><code class="notranslate">&lt;deque&gt;</code></td>
+<td>双端队列，两端操作 O(1)</td>
+</tr>
+<tr>
+<td><code class="notranslate">array</code></td>
+<td><code class="notranslate">&lt;array&gt;</code></td>
+<td>固定大小数组（C++11）</td>
+</tr>
+<tr>
+<td><code class="notranslate">set</code> / <code class="notranslate">multiset</code></td>
+<td><code class="notranslate">&lt;set&gt;</code></td>
+<td>有序集合（红黑树）</td>
+</tr>
+<tr>
+<td><code class="notranslate">map</code> / <code class="notranslate">multimap</code></td>
+<td><code class="notranslate">&lt;map&gt;</code></td>
+<td>有序键值对（红黑树）</td>
+</tr>
+<tr>
+<td><code class="notranslate">unordered_set</code></td>
+<td><code class="notranslate">&lt;unordered_set&gt;</code></td>
+<td>哈希集合（C++11）</td>
+</tr>
+<tr>
+<td><code class="notranslate">unordered_map</code></td>
+<td><code class="notranslate">&lt;unordered_map&gt;</code></td>
+<td>哈希键值对（C++11）</td>
+</tr>
+<tr>
+<td><code class="notranslate">stack</code></td>
+<td><code class="notranslate">&lt;stack&gt;</code></td>
+<td>栈（LIFO）</td>
+</tr>
+<tr>
+<td><code class="notranslate">queue</code></td>
+<td><code class="notranslate">&lt;queue&gt;</code></td>
+<td>队列（FIFO）</td>
+</tr>
+<tr>
+<td><code class="notranslate">priority_queue</code></td>
+<td><code class="notranslate">&lt;queue&gt;</code></td>
+<td>优先队列（最大堆）</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>vector（动态数组）</h3>
+<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>vector<span class="pl-pds">&gt;</span></span>
+vector&lt;<span class="pl-k">int</span>&gt; v = {<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>, <span class="pl-c1">4</span>, <span class="pl-c1">5</span>};
+
+<span class="pl-c"><span class="pl-c">//</span> 增</span>
+v.push_back(<span class="pl-c1">6</span>);               <span class="pl-c"><span class="pl-c">//</span> 尾部添加</span>
+v.emplace_back(<span class="pl-c1">7</span>);            <span class="pl-c"><span class="pl-c">//</span> 就地构造（更高效）</span>
+v.insert(v.begin() + <span class="pl-c1">2</span>, <span class="pl-c1">99</span>);  <span class="pl-c"><span class="pl-c">//</span> 指定位置插入</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 删</span>
+v.pop_back();                 <span class="pl-c"><span class="pl-c">//</span> 尾部删除</span>
+v.erase(v.begin());           <span class="pl-c"><span class="pl-c">//</span> 删除指定位置</span>
+v.erase(v.begin(), v.begin() + <span class="pl-c1">2</span>);   <span class="pl-c"><span class="pl-c">//</span> 删除范围</span>
+v.clear();                    <span class="pl-c"><span class="pl-c">//</span> 清空</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 查</span>
+v[<span class="pl-c1">0</span>];                         <span class="pl-c"><span class="pl-c">//</span> 索引访问</span>
+v.at(<span class="pl-c1">0</span>);                      <span class="pl-c"><span class="pl-c">//</span> 带边界检查</span>
+v.front();                    <span class="pl-c"><span class="pl-c">//</span> 首元素</span>
+v.back();                     <span class="pl-c"><span class="pl-c">//</span> 末元素</span>
+v.size();                     <span class="pl-c"><span class="pl-c">//</span> 大小</span>
+v.empty();                    <span class="pl-c"><span class="pl-c">//</span> 是否为空</span>
+v.capacity();                 <span class="pl-c"><span class="pl-c">//</span> 容量</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 遍历</span>
+<span class="pl-k">for</span> (<span class="pl-k">int</span> x : v) cout &lt;&lt; x &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span> <span class="pl-pds">"</span></span>;
+<span class="pl-k">for</span> (<span class="pl-k">auto</span> it = v.begin(); it != v.end(); ++it) cout &lt;&lt; *it &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span> <span class="pl-pds">"</span></span>;
+<span class="pl-k">for</span> (<span class="pl-k">auto</span> it = v.rbegin(); it != v.rend(); ++it) cout &lt;&lt; *it &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span> <span class="pl-pds">"</span></span>;
+
+<span class="pl-c"><span class="pl-c">//</span> 排序与操作</span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>algorithm<span class="pl-pds">&gt;</span></span>
+<span class="pl-en">sort</span>(v.begin(), v.end());
+<span class="pl-en">sort</span>(v.begin(), v.end(), greater&lt;int&gt;());       <span class="pl-c"><span class="pl-c">//</span> 降序</span>
+<span class="pl-en">reverse</span>(v.begin(), v.end());
+<span class="pl-en">unique</span>(v.begin(), v.end());     <span class="pl-c"><span class="pl-c">//</span> 相邻去重（先排序）</span>
+<span class="pl-en">find</span>(v.begin(), v.end(), 3);    <span class="pl-c"><span class="pl-c">//</span> 查找</span>
+<span class="pl-en">count</span>(v.begin(), v.end(), 3);   <span class="pl-c"><span class="pl-c">//</span> 计数</span>
+<span class="pl-en">max_element</span>(v.begin(), v.end());
+<span class="pl-en">min_element</span>(v.begin(), v.end());
+<span class="pl-en">accumulate</span>(v.begin(), v.end(), 0);   <span class="pl-c"><span class="pl-c">//</span> 求和（&lt;numeric&gt;）</span>
+<span class="pl-en">fill</span>(v.begin(), v.end(), 0);</pre></div>
+<h3>string 与其他容器</h3>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c"><span class="pl-c">//</span> array（固定大小）</span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>array<span class="pl-pds">&gt;</span></span>
+array&lt;<span class="pl-k">int</span>, <span class="pl-c1">5</span>&gt; arr = {<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>, <span class="pl-c1">4</span>, <span class="pl-c1">5</span>};
+arr.size();                   <span class="pl-c"><span class="pl-c">//</span> 编译期大小</span>
+
+<span class="pl-c"><span class="pl-c">//</span> list（链表）</span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>list<span class="pl-pds">&gt;</span></span>
+list&lt;<span class="pl-k">int</span>&gt; lst = {<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>};
+lst.push_front(<span class="pl-c1">0</span>);
+lst.push_back(<span class="pl-c1">4</span>);
+lst.sort();
+lst.unique();
+
+<span class="pl-c"><span class="pl-c">//</span> deque（双端队列）</span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>deque<span class="pl-pds">&gt;</span></span>
+deque&lt;<span class="pl-k">int</span>&gt; dq = {<span class="pl-c1">2</span>, <span class="pl-c1">3</span>, <span class="pl-c1">4</span>};
+dq.push_front(<span class="pl-c1">1</span>);
+dq.push_back(<span class="pl-c1">5</span>);</pre></div>
+<h3>map 与 set</h3>
+<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>map<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>set<span class="pl-pds">&gt;</span></span>
+
+<span class="pl-c"><span class="pl-c">//</span> map（有序键值对）</span>
+map&lt;string, <span class="pl-k">int</span>&gt; m;
+m[<span class="pl-s"><span class="pl-pds">"</span>apple<span class="pl-pds">"</span></span>] = <span class="pl-c1">3</span>;
+m[<span class="pl-s"><span class="pl-pds">"</span>banana<span class="pl-pds">"</span></span>] = <span class="pl-c1">5</span>;
+m.insert({<span class="pl-s"><span class="pl-pds">"</span>cherry<span class="pl-pds">"</span></span>, <span class="pl-c1">7</span>});
+m.emplace(<span class="pl-s"><span class="pl-pds">"</span>date<span class="pl-pds">"</span></span>, <span class="pl-c1">10</span>);
+
+m[<span class="pl-s"><span class="pl-pds">"</span>apple<span class="pl-pds">"</span></span>];                   <span class="pl-c"><span class="pl-c">//</span> 访问（不存在会创建）</span>
+m.at(<span class="pl-s"><span class="pl-pds">"</span>apple<span class="pl-pds">"</span></span>);                <span class="pl-c"><span class="pl-c">//</span> 访问（不存在抛异常）</span>
+m.count(<span class="pl-s"><span class="pl-pds">"</span>apple<span class="pl-pds">"</span></span>);             <span class="pl-c"><span class="pl-c">//</span> 0 或 1</span>
+m.find(<span class="pl-s"><span class="pl-pds">"</span>apple<span class="pl-pds">"</span></span>);              <span class="pl-c"><span class="pl-c">//</span> 迭代器</span>
+m.erase(<span class="pl-s"><span class="pl-pds">"</span>apple<span class="pl-pds">"</span></span>);
+m.size();
+
+<span class="pl-c"><span class="pl-c">//</span> 遍历</span>
+<span class="pl-k">for</span> (<span class="pl-k">const</span> <span class="pl-k">auto</span>&amp; [key, value] : m) {    <span class="pl-c"><span class="pl-c">//</span> 结构化绑定（C++17）</span>
+    cout &lt;&lt; key &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>: <span class="pl-pds">"</span></span> &lt;&lt; value &lt;&lt; endl;
+}
+
+<span class="pl-c"><span class="pl-c">//</span> set（有序集合，自动去重）</span>
+set&lt;<span class="pl-k">int</span>&gt; s = {<span class="pl-c1">3</span>, <span class="pl-c1">1</span>, <span class="pl-c1">4</span>, <span class="pl-c1">1</span>, <span class="pl-c1">5</span>, <span class="pl-c1">9</span>, <span class="pl-c1">2</span>, <span class="pl-c1">6</span>};
+s.insert(<span class="pl-c1">7</span>);
+s.erase(<span class="pl-c1">3</span>);
+s.count(<span class="pl-c1">4</span>);                   <span class="pl-c"><span class="pl-c">//</span> 0 或 1</span>
+s.find(<span class="pl-c1">5</span>);
+
+<span class="pl-c"><span class="pl-c">//</span> multiset（允许重复）</span>
+multiset&lt;<span class="pl-k">int</span>&gt; ms = {<span class="pl-c1">1</span>, <span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>, <span class="pl-c1">3</span>};
+ms.count(<span class="pl-c1">1</span>);                  <span class="pl-c"><span class="pl-c">//</span> 2</span>
+
+<span class="pl-c"><span class="pl-c">//</span> unordered_map（哈希表，O(1) 查找）</span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>unordered_map<span class="pl-pds">&gt;</span></span>
+unordered_map&lt;string, <span class="pl-k">int</span>&gt; um;
+um[<span class="pl-s"><span class="pl-pds">"</span>key<span class="pl-pds">"</span></span>] = <span class="pl-c1">42</span>;
+
+<span class="pl-c"><span class="pl-c">//</span> unordered_set</span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>unordered_set<span class="pl-pds">&gt;</span></span>
+unordered_set&lt;<span class="pl-k">int</span>&gt; us = {<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>};</pre></div>
+<h3>stack / queue / priority_queue</h3>
+<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>stack<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>queue<span class="pl-pds">&gt;</span></span>
+
+<span class="pl-c"><span class="pl-c">//</span> stack（栈，LIFO）</span>
+stack&lt;<span class="pl-k">int</span>&gt; st;
+st.push(<span class="pl-c1">1</span>);
+st.push(<span class="pl-c1">2</span>);
+st.top();                     <span class="pl-c"><span class="pl-c">//</span> 2</span>
+st.pop();
+st.size();
+st.empty();
+
+<span class="pl-c"><span class="pl-c">//</span> queue（队列，FIFO）</span>
+queue&lt;<span class="pl-k">int</span>&gt; q;
+q.push(<span class="pl-c1">1</span>);
+q.push(<span class="pl-c1">2</span>);
+q.front();                    <span class="pl-c"><span class="pl-c">//</span> 1</span>
+q.back();                     <span class="pl-c"><span class="pl-c">//</span> 2</span>
+q.pop();
+q.size();
+
+<span class="pl-c"><span class="pl-c">//</span> priority_queue（优先队列，默认最大堆）</span>
+priority_queue&lt;<span class="pl-k">int</span>&gt; pq;                    <span class="pl-c"><span class="pl-c">//</span> 最大堆</span>
+priority_queue&lt;<span class="pl-k">int</span>, vector&lt;<span class="pl-k">int</span>&gt;, greater&lt;<span class="pl-k">int</span>&gt;&gt; minPQ;   <span class="pl-c"><span class="pl-c">//</span> 最小堆</span>
+
+pq.push(<span class="pl-c1">3</span>);
+pq.push(<span class="pl-c1">1</span>);
+pq.push(<span class="pl-c1">4</span>);
+pq.top();                     <span class="pl-c"><span class="pl-c">//</span> 4（最大值）</span>
+pq.pop();
+
+<span class="pl-c"><span class="pl-c">//</span> 自定义优先级</span>
+<span class="pl-k">struct</span> <span class="pl-en">Task</span> {
+    <span class="pl-k">int</span> priority;
+    string name;
+};
+
+<span class="pl-k">struct</span> <span class="pl-en">Compare</span> {
+    <span class="pl-k">bool</span> <span class="pl-en">operator</span>()(<span class="pl-k">const</span> Task&amp; a, <span class="pl-k">const</span> Task&amp; b) {
+        <span class="pl-k">return</span> a.<span class="pl-smi">priority</span> &lt; b.<span class="pl-smi">priority</span>;    <span class="pl-c"><span class="pl-c">//</span> 大的优先</span>
+    }
+};
+priority_queue&lt;Task, vector&lt;Task&gt;, Compare&gt; taskPQ;</pre></div>
+<h3>常用算法（）</h3>
+<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>algorithm<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>numeric<span class="pl-pds">&gt;</span></span>
+
+vector&lt;<span class="pl-k">int</span>&gt; v = {<span class="pl-c1">3</span>, <span class="pl-c1">1</span>, <span class="pl-c1">4</span>, <span class="pl-c1">1</span>, <span class="pl-c1">5</span>, <span class="pl-c1">9</span>, <span class="pl-c1">2</span>, <span class="pl-c1">6</span>};
+
+<span class="pl-c"><span class="pl-c">//</span> 查找</span>
+<span class="pl-en">find</span>(v.begin(), v.end(), 5);
+<span class="pl-en">find_if</span>(v.begin(), v.end(), [](<span class="pl-k">int</span> x) { <span class="pl-k">return</span> x &gt; <span class="pl-c1">3</span>; });
+<span class="pl-en">binary_search</span>(v.begin(), v.end(), 5);    <span class="pl-c"><span class="pl-c">//</span> 需先排序</span>
+<span class="pl-en">lower_bound</span>(v.begin(), v.end(), 3);      <span class="pl-c"><span class="pl-c">//</span> 第一个 ≥ 3 的位置</span>
+<span class="pl-en">upper_bound</span>(v.begin(), v.end(), 3);      <span class="pl-c"><span class="pl-c">//</span> 第一个 &gt; 3 的位置</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 排序</span>
+<span class="pl-en">sort</span>(v.begin(), v.end());
+<span class="pl-en">sort</span>(v.begin(), v.end(), greater&lt;int&gt;());
+<span class="pl-en">sort</span>(v.begin(), v.end(), [](<span class="pl-k">int</span> a, <span class="pl-k">int</span> b) { <span class="pl-k">return</span> a &gt; b; });
+<span class="pl-en">partial_sort</span>(v.begin(), v.begin() + 3, v.end());   <span class="pl-c"><span class="pl-c">//</span> 部分排序</span>
+<span class="pl-en">stable_sort</span>(v.begin(), v.end());                    <span class="pl-c"><span class="pl-c">//</span> 稳定排序</span>
+<span class="pl-en">nth_element</span>(v.begin(), v.begin() + 3, v.end());    <span class="pl-c"><span class="pl-c">//</span> 第 n 小</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 修改</span>
+<span class="pl-en">reverse</span>(v.begin(), v.end());
+<span class="pl-en">rotate</span>(v.begin(), v.begin() + 2, v.end());   <span class="pl-c"><span class="pl-c">//</span> 旋转</span>
+<span class="pl-en">fill</span>(v.begin(), v.end(), 0);
+<span class="pl-en">generate</span>(v.begin(), v.end(), rand);
+<span class="pl-en">transform</span>(v.begin(), v.end(), v.begin(), [](<span class="pl-k">int</span> x) { <span class="pl-k">return</span> x * <span class="pl-c1">2</span>; });
+<span class="pl-en">replace</span>(v.begin(), v.end(), 1, 100);
+<span class="pl-en">remove_if</span>(v.begin(), v.end(), [](<span class="pl-k">int</span> x) { <span class="pl-k">return</span> x &lt; <span class="pl-c1">3</span>; });
+
+<span class="pl-c"><span class="pl-c">//</span> 集合操作（需有序）</span>
+vector&lt;<span class="pl-k">int</span>&gt; a = {<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>, <span class="pl-c1">4</span>}, b = {<span class="pl-c1">3</span>, <span class="pl-c1">4</span>, <span class="pl-c1">5</span>, <span class="pl-c1">6</span>};
+vector&lt;<span class="pl-k">int</span>&gt; result;
+<span class="pl-en">set_union</span>(a.begin(), a.end(), b.begin(), b.end(), back_inserter(result));
+<span class="pl-en">set_intersection</span>(a.begin(), a.end(), b.begin(), b.end(), back_inserter(result));
+
+<span class="pl-c"><span class="pl-c">//</span> 数值</span>
+<span class="pl-en">accumulate</span>(v.begin(), v.end(), 0);           <span class="pl-c"><span class="pl-c">//</span> 求和</span>
+<span class="pl-en">adjacent_difference</span>(v.begin(), v.end(), result.begin());
+<span class="pl-en">inner_product</span>(a.begin(), a.end(), b.begin(), 0);
+
+<span class="pl-c"><span class="pl-c">//</span> 其他</span>
+<span class="pl-en">min_element</span>(v.begin(), v.end());
+<span class="pl-en">max_element</span>(v.begin(), v.end());
+<span class="pl-en">count</span>(v.begin(), v.end(), 1);
+<span class="pl-en">count_if</span>(v.begin(), v.end(), [](<span class="pl-k">int</span> x) { <span class="pl-k">return</span> x &gt; <span class="pl-c1">3</span>; });
+<span class="pl-en">all_of</span>(v.begin(), v.end(), [](<span class="pl-k">int</span> x) { <span class="pl-k">return</span> x &gt; <span class="pl-c1">0</span>; });
+<span class="pl-en">any_of</span>(v.begin(), v.end(), [](<span class="pl-k">int</span> x) { <span class="pl-k">return</span> x &gt; <span class="pl-c1">5</span>; });
+<span class="pl-en">none_of</span>(v.begin(), v.end(), [](<span class="pl-k">int</span> x) { <span class="pl-k">return</span> x &lt; <span class="pl-c1">0</span>; });
+<span class="pl-en">for_each</span>(v.begin(), v.end(), [](<span class="pl-k">int</span> x) { cout &lt;&lt; x &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span> <span class="pl-pds">"</span></span>; });</pre></div>
+<hr>
+<h2>十一、文件操作（）</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>fstream<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>string<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>iostream<span class="pl-pds">&gt;</span></span>
+<span class="pl-k">using</span> <span class="pl-k">namespace</span> <span class="pl-en">std</span><span class="pl-k">;</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 写入文件</span>
+ofstream <span class="pl-en">outFile</span>(<span class="pl-s"><span class="pl-pds">"</span>data.txt<span class="pl-pds">"</span></span>);           <span class="pl-c"><span class="pl-c">//</span> 覆盖模式</span>
+<span class="pl-k">if</span> (outFile.is_open()) {
+    outFile &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>Hello, World!<span class="pl-pds">"</span></span> &lt;&lt; endl;
+    outFile &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>Line 2<span class="pl-pds">"</span></span> &lt;&lt; endl;
+    outFile.<span class="pl-c1">close</span>();
+}
+
+<span class="pl-c"><span class="pl-c">//</span> 追加文件</span>
+ofstream <span class="pl-en">appendFile</span>(<span class="pl-s"><span class="pl-pds">"</span>data.txt<span class="pl-pds">"</span></span>, ios::app);
+appendFile &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>Appended line<span class="pl-pds">"</span></span> &lt;&lt; endl;
+appendFile.close();
+
+<span class="pl-c"><span class="pl-c">//</span> 读取文件</span>
+ifstream <span class="pl-en">inFile</span>(<span class="pl-s"><span class="pl-pds">"</span>data.txt<span class="pl-pds">"</span></span>);
+<span class="pl-k">if</span> (inFile.is_open()) {
+    string line;
+    <span class="pl-k">while</span> (<span class="pl-c1">getline</span>(inFile, line)) {
+        cout &lt;&lt; line &lt;&lt; endl;
+    }
+    inFile.<span class="pl-c1">close</span>();
+}
+
+<span class="pl-c"><span class="pl-c">//</span> 逐词读取</span>
+ifstream <span class="pl-en">inFile</span>(<span class="pl-s"><span class="pl-pds">"</span>data.txt<span class="pl-pds">"</span></span>);
+string word;
+<span class="pl-k">while</span> (inFile &gt;&gt; word) {
+    cout &lt;&lt; word &lt;&lt; endl;
+}
+
+<span class="pl-c"><span class="pl-c">//</span> 读取全部内容</span>
+ifstream <span class="pl-en">inFile</span>(<span class="pl-s"><span class="pl-pds">"</span>data.txt<span class="pl-pds">"</span></span>);
+string <span class="pl-en">content</span>((istreambuf_iterator&lt;<span class="pl-k">char</span>&gt;(inFile)),
+                istreambuf_iterator&lt;char&gt;());
+
+<span class="pl-c"><span class="pl-c">//</span> 二进制文件</span>
+ofstream <span class="pl-en">binOut</span>(<span class="pl-s"><span class="pl-pds">"</span>data.bin<span class="pl-pds">"</span></span>, ios::binary);
+<span class="pl-k">int</span> numbers[] = {<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>, <span class="pl-c1">4</span>, <span class="pl-c1">5</span>};
+binOut.write(<span class="pl-k">reinterpret_cast</span>&lt;<span class="pl-k">char</span>*&gt;(numbers), <span class="pl-k">sizeof</span>(numbers));
+binOut.close();
+
+ifstream <span class="pl-en">binIn</span>(<span class="pl-s"><span class="pl-pds">"</span>data.bin<span class="pl-pds">"</span></span>, ios::binary);
+<span class="pl-k">int</span> readNumbers[<span class="pl-c1">5</span>];
+binIn.read(<span class="pl-k">reinterpret_cast</span>&lt;<span class="pl-k">char</span>*&gt;(readNumbers), <span class="pl-k">sizeof</span>(readNumbers));
+binIn.close();
+
+<span class="pl-c"><span class="pl-c">//</span> 文件状态检查</span>
+ifstream <span class="pl-en">f</span>(<span class="pl-s"><span class="pl-pds">"</span>test.txt<span class="pl-pds">"</span></span>);
+<span class="pl-k">if</span> (!f.is_open()) {
+    cerr &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>无法打开文件<span class="pl-pds">"</span></span> &lt;&lt; endl;
+}
+
+f.good();            <span class="pl-c"><span class="pl-c">//</span> 状态是否正常</span>
+f.eof();             <span class="pl-c"><span class="pl-c">//</span> 是否到末尾</span>
+f.fail();            <span class="pl-c"><span class="pl-c">//</span> 是否出错</span>
+f.bad();             <span class="pl-c"><span class="pl-c">//</span> 是否严重错误</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 文件系统（C++17）</span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>filesystem<span class="pl-pds">&gt;</span></span>
+<span class="pl-k">namespace</span> <span class="pl-en">fs</span> <span class="pl-k">=</span> filesystem;
+
+<span class="pl-en">fs::exists</span>(<span class="pl-s"><span class="pl-pds">"</span>file.txt<span class="pl-pds">"</span></span>);
+<span class="pl-en">fs::is_directory</span>(<span class="pl-s"><span class="pl-pds">"</span>dir<span class="pl-pds">"</span></span>);
+<span class="pl-en">fs::is_regular_file</span>(<span class="pl-s"><span class="pl-pds">"</span>file.txt<span class="pl-pds">"</span></span>);
+<span class="pl-en">fs::file_size</span>(<span class="pl-s"><span class="pl-pds">"</span>file.txt<span class="pl-pds">"</span></span>);
+<span class="pl-en">fs::create_directory</span>(<span class="pl-s"><span class="pl-pds">"</span>newdir<span class="pl-pds">"</span></span>);
+<span class="pl-en">fs::create_directories</span>(<span class="pl-s"><span class="pl-pds">"</span>a/b/c<span class="pl-pds">"</span></span>);
+<span class="pl-en">fs::remove</span>(<span class="pl-s"><span class="pl-pds">"</span>file.txt<span class="pl-pds">"</span></span>);
+<span class="pl-en">fs::remove_all</span>(<span class="pl-s"><span class="pl-pds">"</span>dir<span class="pl-pds">"</span></span>);
+<span class="pl-en">fs::rename</span>(<span class="pl-s"><span class="pl-pds">"</span>old.txt<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>new.txt<span class="pl-pds">"</span></span>);
+<span class="pl-en">fs::copy</span>(<span class="pl-s"><span class="pl-pds">"</span>src.txt<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>dst.txt<span class="pl-pds">"</span></span>);
+
+<span class="pl-c"><span class="pl-c">//</span> 遍历目录</span>
+<span class="pl-k">for</span> (<span class="pl-k">const</span> <span class="pl-k">auto</span>&amp; entry : fs::directory_iterator(<span class="pl-s"><span class="pl-pds">"</span>/path<span class="pl-pds">"</span></span>)) {
+    cout &lt;&lt; entry.<span class="pl-c1">path</span>() &lt;&lt; endl;
+}</pre></div>
+<hr>
+<h2>十二、异常处理</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>iostream<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>stdexcept<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>string<span class="pl-pds">&gt;</span></span>
+<span class="pl-k">using</span> <span class="pl-k">namespace</span> <span class="pl-en">std</span><span class="pl-k">;</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 基本异常处理</span>
+<span class="pl-k">try</span> {
+    <span class="pl-k">int</span> x = -<span class="pl-c1">1</span>;
+    <span class="pl-k">if</span> (x &lt; <span class="pl-c1">0</span>) {
+        <span class="pl-k">throw</span> <span class="pl-smi">invalid_argument</span>(<span class="pl-s"><span class="pl-pds">"</span>数值不能为负<span class="pl-pds">"</span></span>);
+    }
+} <span class="pl-k">catch</span> (<span class="pl-k">const</span> invalid_argument&amp; e) {
+    cerr &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>参数错误: <span class="pl-pds">"</span></span> &lt;&lt; e.<span class="pl-c1">what</span>() &lt;&lt; endl;
+} <span class="pl-k">catch</span> (<span class="pl-k">const</span> exception&amp; e) {
+    cerr &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>异常: <span class="pl-pds">"</span></span> &lt;&lt; e.<span class="pl-c1">what</span>() &lt;&lt; endl;
+} <span class="pl-k">catch</span> (...) {
+    cerr &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>未知异常<span class="pl-pds">"</span></span> &lt;&lt; endl;
+}
+
+<span class="pl-c"><span class="pl-c">//</span> 自定义异常</span>
+<span class="pl-k">class</span> <span class="pl-en">MyException</span> : <span class="pl-k">public</span> <span class="pl-en">exception</span> {
+<span class="pl-k">private:</span>
+    string message;
+    <span class="pl-k">int</span> code;
+<span class="pl-k">public:</span>
+    <span class="pl-en">MyException</span>(<span class="pl-k">const</span> string&amp; msg, <span class="pl-k">int</span> code = <span class="pl-c1">500</span>)
+        : message(msg), code(code) {}
+
+    <span class="pl-k">const</span> <span class="pl-k">char</span>* <span class="pl-en">what</span>() <span class="pl-k">const</span> <span class="pl-k">noexcept</span> <span class="pl-k">override</span> {
+        <span class="pl-k">return</span> message.<span class="pl-c1">c_str</span>();
+    }
+
+    <span class="pl-k">int</span> <span class="pl-en">getCode</span>() <span class="pl-k">const</span> <span class="pl-k">noexcept</span> { <span class="pl-k">return</span> code; }
+};
+
+<span class="pl-c"><span class="pl-c">//</span> 抛出与捕获</span>
+<span class="pl-k">try</span> {
+    <span class="pl-k">throw</span> <span class="pl-smi">MyException</span>(<span class="pl-s"><span class="pl-pds">"</span>自定义错误<span class="pl-pds">"</span></span>, <span class="pl-c1">404</span>);
+} <span class="pl-k">catch</span> (<span class="pl-k">const</span> MyException&amp; e) {
+    cerr &lt;&lt; e.<span class="pl-c1">what</span>() &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span> (code: <span class="pl-pds">"</span></span> &lt;&lt; e.<span class="pl-c1">getCode</span>() &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>)<span class="pl-pds">"</span></span> &lt;&lt; endl;
+}
+
+<span class="pl-c"><span class="pl-c">//</span> 常见标准异常</span>
+<span class="pl-c"><span class="pl-c">//</span> invalid_argument    参数无效</span>
+<span class="pl-c"><span class="pl-c">//</span> out_of_range        越界</span>
+<span class="pl-c"><span class="pl-c">//</span> length_error        长度超限</span>
+<span class="pl-c"><span class="pl-c">//</span> runtime_error       运行时错误</span>
+<span class="pl-c"><span class="pl-c">//</span> logic_error         逻辑错误</span>
+<span class="pl-c"><span class="pl-c">//</span> bad_alloc           内存分配失败</span>
+<span class="pl-c"><span class="pl-c">//</span> bad_cast            类型转换失败</span>
+
+<span class="pl-c"><span class="pl-c">//</span> noexcept（标记不抛异常）</span>
+<span class="pl-k">void</span> <span class="pl-en">safeFunction</span>() <span class="pl-k">noexcept</span> {
+    <span class="pl-c"><span class="pl-c">//</span> 此函数不抛异常</span>
+}</pre></div>
+<hr>
+<h2>十三、多线程（C++11）</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>iostream<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>thread<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>mutex<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>condition_variable<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>future<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>atomic<span class="pl-pds">&gt;</span></span>
+<span class="pl-k">using</span> <span class="pl-k">namespace</span> <span class="pl-en">std</span><span class="pl-k">;</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 创建线程</span>
+<span class="pl-k">void</span> <span class="pl-en">task</span>(<span class="pl-k">int</span> id) {
+    cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>Thread <span class="pl-pds">"</span></span> &lt;&lt; id &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span> running<span class="pl-pds">"</span></span> &lt;&lt; endl;
+}
+
+<span class="pl-k">int</span> <span class="pl-en">main</span>() {
+    thread <span class="pl-smi">t1</span>(task, <span class="pl-c1">1</span>);
+    thread <span class="pl-smi">t2</span>(task, <span class="pl-c1">2</span>);
+
+    t1.<span class="pl-c1">join</span>();                 <span class="pl-c"><span class="pl-c">//</span> 等待线程完成</span>
+    t2.<span class="pl-c1">join</span>();
+
+    <span class="pl-k">return</span> <span class="pl-c1">0</span>;
+}
+
+<span class="pl-c"><span class="pl-c">//</span> Lambda 线程</span>
+thread <span class="pl-en">t</span>([]() {
+    cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>Lambda thread<span class="pl-pds">"</span></span> &lt;&lt; endl;
+});
+t.join();
+
+<span class="pl-c"><span class="pl-c">//</span> 互斥锁</span>
+mutex mtx;
+
+<span class="pl-k">void</span> <span class="pl-en">safeIncrement</span>(<span class="pl-k">int</span>&amp; counter) {
+    lock_guard&lt;mutex&gt; <span class="pl-c1">lock</span>(mtx);       <span class="pl-c"><span class="pl-c">//</span> 自动加锁/解锁（推荐）</span>
+    counter++;
+}
+
+<span class="pl-c"><span class="pl-c">//</span> 可手动控制的锁</span>
+unique_lock&lt;mutex&gt; <span class="pl-en">lock</span>(mtx);
+<span class="pl-c"><span class="pl-c">//</span> ... 操作 ...</span>
+lock.unlock();                         <span class="pl-c"><span class="pl-c">//</span> 提前解锁</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 条件变量</span>
+mutex mtx;
+condition_variable cv;
+<span class="pl-k">bool</span> ready = <span class="pl-c1">false</span>;
+
+<span class="pl-c"><span class="pl-c">//</span> 生产者</span>
+{
+    lock_guard&lt;mutex&gt; <span class="pl-c1">lock</span>(mtx);
+    ready = <span class="pl-c1">true</span>;
+    cv.<span class="pl-c1">notify_one</span>();
+}
+
+<span class="pl-c"><span class="pl-c">//</span> 消费者</span>
+{
+    unique_lock&lt;mutex&gt; <span class="pl-c1">lock</span>(mtx);
+    cv.<span class="pl-c1">wait</span>(lock, [] { <span class="pl-k">return</span> ready; });   <span class="pl-c"><span class="pl-c">//</span> 等待条件满足</span>
+}
+
+<span class="pl-c"><span class="pl-c">//</span> 原子变量</span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>atomic<span class="pl-pds">&gt;</span></span>
+atomic&lt;<span class="pl-k">int</span>&gt; <span class="pl-en">counter</span>(<span class="pl-c1">0</span>);
+counter++;
+counter += <span class="pl-c1">5</span>;
+counter.load();
+counter.store(<span class="pl-c1">10</span>);
+
+<span class="pl-c"><span class="pl-c">//</span> 异步任务</span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>future<span class="pl-pds">&gt;</span></span>
+
+<span class="pl-c"><span class="pl-c">//</span> async</span>
+<span class="pl-k">auto</span> future = async(launch::async, []() {
+    <span class="pl-k">return</span> <span class="pl-c1">42</span>;
+});
+<span class="pl-k">int</span> result = future.get();     <span class="pl-c"><span class="pl-c">//</span> 等待并获取结果</span>
+
+<span class="pl-c"><span class="pl-c">//</span> packaged_task</span>
+packaged_task&lt;<span class="pl-k">int</span>(<span class="pl-k">int</span>, <span class="pl-k">int</span>)&gt; <span class="pl-en">task</span>([](<span class="pl-k">int</span> a, <span class="pl-k">int</span> b) {
+    <span class="pl-k">return</span> a + b;
+});
+<span class="pl-k">auto</span> fut = task.get_future();
+<span class="pl-en">task</span>(<span class="pl-c1">3</span>, <span class="pl-c1">4</span>);
+cout &lt;&lt; fut.get() &lt;&lt; endl;    <span class="pl-c"><span class="pl-c">//</span> 7</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 线程安全的生产者-消费者</span>
+queue&lt;<span class="pl-k">int</span>&gt; q;
+mutex mtx;
+condition_variable cv;
+<span class="pl-k">bool</span> done = <span class="pl-c1">false</span>;
+
+<span class="pl-c"><span class="pl-c">//</span> 生产者</span>
+<span class="pl-k">for</span> (<span class="pl-k">int</span> i = <span class="pl-c1">0</span>; i &lt; <span class="pl-c1">10</span>; i++) {
+    {
+        lock_guard&lt;mutex&gt; <span class="pl-c1">lock</span>(mtx);
+        q.<span class="pl-c1">push</span>(i);
+    }
+    cv.<span class="pl-c1">notify_one</span>();
+}
+{
+    lock_guard&lt;mutex&gt; <span class="pl-c1">lock</span>(mtx);
+    done = <span class="pl-c1">true</span>;
+}
+cv.notify_all();</pre></div>
+<hr>
+<h2>十四、智能指针详解</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>memory<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>iostream<span class="pl-pds">&gt;</span></span>
+<span class="pl-k">using</span> <span class="pl-k">namespace</span> <span class="pl-en">std</span><span class="pl-k">;</span>
+
+<span class="pl-c"><span class="pl-c">//</span> unique_ptr（独占所有权）</span>
+{
+    <span class="pl-k">auto</span> ptr = make_unique&lt;<span class="pl-k">int</span>&gt;(<span class="pl-c1">42</span>);
+    cout &lt;&lt; *ptr &lt;&lt; endl;
+
+    <span class="pl-c"><span class="pl-c">//</span> 转移所有权</span>
+    <span class="pl-k">auto</span> ptr2 = <span class="pl-c1">move</span>(ptr);
+    <span class="pl-c"><span class="pl-c">//</span> ptr 此时为空</span>
+}
+
+<span class="pl-c"><span class="pl-c">//</span> unique_ptr 管理数组</span>
+{
+    <span class="pl-k">auto</span> arr = make_unique&lt;<span class="pl-k">int</span>[]&gt;(<span class="pl-c1">10</span>);
+    arr[<span class="pl-c1">0</span>] = <span class="pl-c1">100</span>;
+}
+
+<span class="pl-c"><span class="pl-c">//</span> shared_ptr（共享所有权，引用计数）</span>
+{
+    <span class="pl-k">auto</span> sp1 = make_shared&lt;<span class="pl-k">int</span>&gt;(<span class="pl-c1">42</span>);
+    cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>计数: <span class="pl-pds">"</span></span> &lt;&lt; sp1.<span class="pl-c1">use_count</span>() &lt;&lt; endl;   <span class="pl-c"><span class="pl-c">//</span> 1</span>
+
+    {
+        <span class="pl-k">auto</span> sp2 = sp1;
+        cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>计数: <span class="pl-pds">"</span></span> &lt;&lt; sp1.<span class="pl-c1">use_count</span>() &lt;&lt; endl;   <span class="pl-c"><span class="pl-c">//</span> 2</span>
+    }
+
+    cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>计数: <span class="pl-pds">"</span></span> &lt;&lt; sp1.<span class="pl-c1">use_count</span>() &lt;&lt; endl;   <span class="pl-c"><span class="pl-c">//</span> 1</span>
+}
+
+<span class="pl-c"><span class="pl-c">//</span> weak_ptr（弱引用，解决循环引用）</span>
+<span class="pl-k">class</span> <span class="pl-en">Node</span> {
+<span class="pl-k">public:</span>
+    shared_ptr&lt;Node&gt; next;
+    weak_ptr&lt;Node&gt; prev;        <span class="pl-c"><span class="pl-c">//</span> 用 weak_ptr 避免循环引用</span>
+    <span class="pl-k">int</span> value;
+
+    <span class="pl-en">Node</span>(<span class="pl-k">int</span> v) : value(v) {}
+    <span class="pl-en">~Node</span>() { cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>Node <span class="pl-pds">"</span></span> &lt;&lt; value &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span> destroyed<span class="pl-pds">"</span></span> &lt;&lt; endl; }
+};
+
+<span class="pl-c"><span class="pl-c">//</span> 自定义删除器</span>
+<span class="pl-k">auto</span> deleter = [](<span class="pl-c1">FILE</span>* fp) {
+    <span class="pl-k">if</span> (fp) <span class="pl-c1">fclose</span>(fp);
+};
+unique_ptr&lt;<span class="pl-c1">FILE</span>, <span class="pl-k">decltype</span>(deleter)&gt; <span class="pl-en">file</span>(fopen(<span class="pl-s"><span class="pl-pds">"</span>test.txt<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>r<span class="pl-pds">"</span></span>), deleter);</pre></div>
+<hr>
+<h2>十五、预处理器与编译</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c"><span class="pl-c">//</span> 头文件包含</span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>iostream<span class="pl-pds">&gt;</span></span>          <span class="pl-c"><span class="pl-c">//</span> 系统头文件</span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">"</span>myheader.h<span class="pl-pds">"</span></span>        <span class="pl-c"><span class="pl-c">//</span> 本地头文件</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 条件编译</span>
+#<span class="pl-k">ifndef</span> MY_HEADER_H
+#<span class="pl-k">define</span> <span class="pl-en">MY_HEADER_H</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 头文件内容</span>
+
+#<span class="pl-k">endif</span>                       <span class="pl-c"><span class="pl-c">//</span> MY_HEADER_H</span>
+
+#<span class="pl-k">pragma</span> once                 <span class="pl-c"><span class="pl-c">//</span> 等价于上面的 include guard（编译器扩展）</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 宏定义</span>
+#<span class="pl-k">define</span> <span class="pl-en">MAX_SIZE</span> <span class="pl-c1">100</span>
+#<span class="pl-k">define</span> <span class="pl-en">SQUARE</span>(<span class="pl-v">x</span>) ((x) * (x))         <span class="pl-c"><span class="pl-c">//</span> 注意括号</span>
+#<span class="pl-k">define</span> <span class="pl-en">LOG</span>(<span class="pl-v">msg</span>) cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>[LOG] <span class="pl-pds">"</span></span> &lt;&lt; msg &lt;&lt; endl
+
+<span class="pl-c"><span class="pl-c">//</span> 条件编译</span>
+#<span class="pl-k">ifdef</span> DEBUG
+    cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>调试模式<span class="pl-pds">"</span></span> &lt;&lt; endl;
+#<span class="pl-k">else</span>
+    cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>发布模式<span class="pl-pds">"</span></span> &lt;&lt; endl;
+#<span class="pl-k">endif</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 预定义宏</span>
+__FILE__        <span class="pl-c"><span class="pl-c">//</span> 当前文件名</span>
+__LINE__        <span class="pl-c"><span class="pl-c">//</span> 当前行号</span>
+__FUNCTION__    <span class="pl-c"><span class="pl-c">//</span> 当前函数名</span>
+__DATE__        <span class="pl-c"><span class="pl-c">//</span> 编译日期</span>
+__TIME__        <span class="pl-c"><span class="pl-c">//</span> 编译时间</span></pre></div>
+<p><strong>头文件保护示例（myheader.h）：</strong></p>
+<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">ifndef</span> MY_HEADER_H
+#<span class="pl-k">define</span> <span class="pl-en">MY_HEADER_H</span>
+
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>string<span class="pl-pds">&gt;</span></span>
+
+<span class="pl-k">class</span> <span class="pl-en">MyClass</span> {
+<span class="pl-k">public:</span>
+    <span class="pl-k">void</span> <span class="pl-en">doSomething</span>();
+};
+
+#<span class="pl-k">endif</span> <span class="pl-c"><span class="pl-c">//</span> MY_HEADER_H</span></pre></div>
+<p><strong>多文件编译：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 分别编译</span>
+g++ -c main.cpp -o main.o
+g++ -c utils.cpp -o utils.o
+g++ main.o utils.o -o program
+
+<span class="pl-c"><span class="pl-c">#</span> 一步编译</span>
+g++ main.cpp utils.cpp -o program
+
+<span class="pl-c"><span class="pl-c">#</span> 使用 Makefile</span>
+make
+
+<span class="pl-c"><span class="pl-c">#</span> CMake（跨平台构建）</span>
+mkdir build <span class="pl-k">&amp;&amp;</span> <span class="pl-c1">cd</span> build
+cmake ..
+make</pre></div>
+<p><strong>简单 Makefile：</strong></p>
+<div class="highlight highlight-source-makefile"><pre class="notranslate"><span class="pl-smi">CC</span> = g++
+<span class="pl-smi">CFLAGS</span> = -std=c++17 -O2 -Wall
+<span class="pl-smi">TARGET</span> = program
+<span class="pl-smi">SRCS</span> = main.cpp utils.cpp
+<span class="pl-smi">OBJS</span> = <span class="pl-s">$(<span class="pl-smi">SRCS:.cpp=.o</span>)</span>
+
+<span class="pl-en"><span class="pl-s">$(<span class="pl-smi">TARGET</span>)</span></span>: <span class="pl-s">$(<span class="pl-smi">OBJS</span>)</span>
+	<span class="pl-s">$(<span class="pl-smi">CC</span>)</span> <span class="pl-s">$(<span class="pl-smi">CFLAGS</span>)</span> -o <span class="pl-s">$(<span class="pl-smi">TARGET</span>)</span> <span class="pl-s">$(<span class="pl-smi">OBJS</span>)</span>
+
+<span class="pl-en"><span class="pl-c1">%</span>.o</span>: <span class="pl-c1">%</span>.cpp
+	<span class="pl-s">$(<span class="pl-smi">CC</span>)</span> <span class="pl-s">$(<span class="pl-smi">CFLAGS</span>)</span> -c <span class="pl-c1">$&lt;</span> -o <span class="pl-c1">$@</span>
+
+<span class="pl-en">clean</span>:
+	rm -f <span class="pl-s">$(<span class="pl-smi">OBJS</span>)</span> <span class="pl-s">$(<span class="pl-smi">TARGET</span>)</span></pre></div>
+<hr>
+<h2>十六、C++11/14/17/20 新特性速查</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c">// ===== C++11 =====</span>
+<span class="pl-k">auto</span> x = <span class="pl-c1">10</span>;                              <span class="pl-c"><span class="pl-c">//</span> 自动类型推断</span>
+vector&lt;<span class="pl-k">int</span>&gt; v = {<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>};               <span class="pl-c"><span class="pl-c">//</span> 初始化列表</span>
+<span class="pl-k">for</span> (<span class="pl-k">auto</span>&amp; item : v) {}                   <span class="pl-c"><span class="pl-c">//</span> 范围 for</span>
+<span class="pl-k">int</span>&amp; ref = x;                             <span class="pl-c"><span class="pl-c">//</span> 引用</span>
+<span class="pl-c1">nullptr</span>;                                  <span class="pl-c"><span class="pl-c">//</span> 空指针</span>
+unique_ptr&lt;<span class="pl-k">int</span>&gt; p = make_unique&lt;<span class="pl-k">int</span>&gt;(<span class="pl-c1">1</span>);  <span class="pl-c"><span class="pl-c">//</span> 智能指针</span>
+thread <span class="pl-en">t</span>(func);                           <span class="pl-c"><span class="pl-c">//</span> 多线程</span>
+lambda: <span class="pl-k">auto</span> f = [](<span class="pl-k">int</span> x) { <span class="pl-k">return</span> x; }; <span class="pl-c"><span class="pl-c">//</span> Lambda</span>
+<span class="pl-k">enum</span> <span class="pl-k">class</span> <span class="pl-en">Color</span> { Red, Green };          <span class="pl-c"><span class="pl-c">//</span> 强类型枚举</span>
+<span class="pl-en">move</span>(x);                                  <span class="pl-c"><span class="pl-c">//</span> 移动语义</span>
+<span class="pl-k">constexpr</span> <span class="pl-k">int</span> N = <span class="pl-c1">10</span>;                     <span class="pl-c"><span class="pl-c">//</span> 编译期常量</span>
+<span class="pl-k">static_assert</span>(N &gt; <span class="pl-c1">0</span>, <span class="pl-s"><span class="pl-pds">"</span>N must be positive<span class="pl-pds">"</span></span>); <span class="pl-c"><span class="pl-c">//</span> 静态断言</span>
+<span class="pl-en">decltype</span>(x) y = 10;                       <span class="pl-c"><span class="pl-c">//</span> 获取类型</span>
+tuple&lt;<span class="pl-k">int</span>, string, <span class="pl-k">double</span>&gt; <span class="pl-en">t</span>(<span class="pl-c1">1</span>, <span class="pl-s"><span class="pl-pds">"</span>a<span class="pl-pds">"</span></span>, <span class="pl-c1">2.0</span>); <span class="pl-c"><span class="pl-c">//</span> 元组</span>
+unordered_map&lt;string, <span class="pl-k">int</span>&gt; um;            <span class="pl-c"><span class="pl-c">//</span> 哈希表</span>
+
+<span class="pl-c">// ===== C++14 =====</span>
+<span class="pl-k">auto</span> add = [](<span class="pl-k">auto</span> a, <span class="pl-k">auto</span> b) { <span class="pl-k">return</span> a + b; };  <span class="pl-c"><span class="pl-c">//</span> 泛型 Lambda</span>
+<span class="pl-k">auto</span> <span class="pl-en">func</span>() { <span class="pl-k">return</span> <span class="pl-c1">42</span>; }                        <span class="pl-c"><span class="pl-c">//</span> 自动返回类型</span>
+make_unique&lt;<span class="pl-k">int</span>&gt;(<span class="pl-c1">42</span>);                             <span class="pl-c"><span class="pl-c">//</span> make_unique</span>
+shared_lock&lt;mutex&gt; <span class="pl-en">lock</span>(mtx);                     <span class="pl-c"><span class="pl-c">//</span> 共享锁</span>
+
+<span class="pl-c">// ===== C++17 =====</span>
+<span class="pl-k">if</span> (<span class="pl-k">auto</span> it = m.find(key); it != m.end()) {}      <span class="pl-c"><span class="pl-c">//</span> if 初始化语句</span>
+<span class="pl-k">if</span> <span class="pl-k">constexpr</span> (is_integral_v&lt;T&gt;) {}                <span class="pl-c"><span class="pl-c">//</span> 编译期 if</span>
+<span class="pl-k">auto</span> [x, y, z] = getTuple();                      <span class="pl-c"><span class="pl-c">//</span> 结构化绑定</span>
+string_view sv = <span class="pl-s"><span class="pl-pds">"</span>Hello<span class="pl-pds">"</span></span>;                         <span class="pl-c"><span class="pl-c">//</span> 字符串视图</span>
+optional&lt;<span class="pl-k">int</span>&gt; opt = <span class="pl-c1">42</span>;                           <span class="pl-c"><span class="pl-c">//</span> 可选值</span>
+any a = <span class="pl-c1">42</span>;                                       <span class="pl-c"><span class="pl-c">//</span> 任意类型</span>
+variant&lt;<span class="pl-k">int</span>, string&gt; var = <span class="pl-s"><span class="pl-pds">"</span>hello<span class="pl-pds">"</span></span>;               <span class="pl-c"><span class="pl-c">//</span> 类型安全联合</span>
+<span class="pl-en">filesystem::exists</span>(<span class="pl-s"><span class="pl-pds">"</span>file.txt<span class="pl-pds">"</span></span>);                   <span class="pl-c"><span class="pl-c">//</span> 文件系统</span>
+<span class="pl-en">reduce</span>(v.begin(), v.end());                       <span class="pl-c"><span class="pl-c">//</span> 并行归约</span>
+<span class="pl-en">clamp</span>(x, <span class="pl-c1">0</span>, <span class="pl-c1">100</span>);                                 <span class="pl-c"><span class="pl-c">//</span> 值限制</span>
+<span class="pl-k">[[nodiscard]]</span> <span class="pl-k">int</span> <span class="pl-en">func</span>();                         <span class="pl-c"><span class="pl-c">//</span> 属性</span>
+
+<span class="pl-c">// ===== C++20 =====</span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>ranges<span class="pl-pds">&gt;</span></span>
+<span class="pl-k">for</span> (<span class="pl-k">auto</span> x : views::iota(<span class="pl-c1">1</span>, <span class="pl-c1">10</span>) | views::filter([](<span class="pl-k">int</span> n) { <span class="pl-k">return</span> n % <span class="pl-c1">2</span> == <span class="pl-c1">0</span>; })) {}
+
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>concepts<span class="pl-pds">&gt;</span></span>
+<span class="pl-k">template</span>&lt;<span class="pl-k">typename</span> T&gt;
+<span class="pl-k">concept </span>Numeric = is_arithmetic_v&lt;T&gt;;
+<span class="pl-k">template</span>&lt;Numeric T&gt;
+T <span class="pl-en">add</span>(T a, T b) { <span class="pl-k">return</span> a + b; }
+
+<span class="pl-c"><span class="pl-c">//</span> 协程</span>
+generator&lt;<span class="pl-k">int</span>&gt; <span class="pl-en">fibonacci</span>() {
+    <span class="pl-k">int</span> a = <span class="pl-c1">0</span>, b = <span class="pl-c1">1</span>;
+    <span class="pl-k">while</span> (<span class="pl-c1">true</span>) {
+        <span class="pl-k">co_yield</span> a;
+        <span class="pl-c1">tie</span>(a, b) = pair{b, a + b};
+    }
+}
+
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>format<span class="pl-pds">&gt;</span></span>
+string s = format(<span class="pl-s"><span class="pl-pds">"</span>Name: {}, Age: {}<span class="pl-pds">"</span></span>, name, age);   <span class="pl-c"><span class="pl-c">//</span> 格式化</span>
+
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>span<span class="pl-pds">&gt;</span></span>
+<span class="pl-k">void</span> <span class="pl-en">process</span>(span&lt;<span class="pl-k">int</span>&gt; data) { ... }                 <span class="pl-c"><span class="pl-c">//</span> 数组视图</span>
+
+<span class="pl-k">consteval</span> <span class="pl-k">int</span> <span class="pl-en">factorial</span>(<span class="pl-k">int</span> n) { ... }               <span class="pl-c"><span class="pl-c">//</span> 编译期函数</span>
+three_way_comparison: a &lt;=&gt; b                        <span class="pl-c"><span class="pl-c">//</span> 太空船运算符</span></pre></div>
+<hr>
+<h2>十七、实用技巧与最佳实践</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c"><span class="pl-c">//</span> 1. 使用 auto 减少冗长类型</span>
+<span class="pl-k">auto</span> it = v.begin();
+<span class="pl-k">auto</span> result = func();
+
+<span class="pl-c"><span class="pl-c">//</span> 2. 使用 emplace_back 代替 push_back（减少拷贝）</span>
+v.emplace_back(<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>);      <span class="pl-c"><span class="pl-c">//</span> 直接构造</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 3. 使用 emplace 代替 insert / map[]</span>
+m.emplace(<span class="pl-s"><span class="pl-pds">"</span>key<span class="pl-pds">"</span></span>, <span class="pl-c1">42</span>);
+
+<span class="pl-c"><span class="pl-c">//</span> 4. 用 range-for 遍历</span>
+<span class="pl-k">for</span> (<span class="pl-k">const</span> <span class="pl-k">auto</span>&amp; item : vec) { }
+
+<span class="pl-c"><span class="pl-c">//</span> 5. 用 unique_ptr / shared_ptr 代替裸指针</span>
+<span class="pl-k">auto</span> ptr = make_unique&lt;MyClass&gt;();
+
+<span class="pl-c"><span class="pl-c">//</span> 6. 用 string_view 避免不必要的字符串拷贝（C++17）</span>
+<span class="pl-k">void</span> <span class="pl-en">print</span>(string_view sv) { }
+
+<span class="pl-c"><span class="pl-c">//</span> 7. 用 optional 处理可能缺失的值（C++17）</span>
+optional&lt;<span class="pl-k">int</span>&gt; <span class="pl-en">find</span>(<span class="pl-k">const</span> string&amp; key) {
+    <span class="pl-k">if</span> (found) <span class="pl-k">return</span> <span class="pl-c1">42</span>;
+    <span class="pl-k">return</span> <span class="pl-c1">nullopt</span>;
+}
+
+<span class="pl-c"><span class="pl-c">//</span> 8. 用 constexpr 编译期计算</span>
+<span class="pl-k">constexpr</span> <span class="pl-k">int</span> <span class="pl-en">factorial</span>(<span class="pl-k">int</span> n) {
+    <span class="pl-k">return</span> (n &lt;= <span class="pl-c1">1</span>) ? <span class="pl-c1">1</span> : n * <span class="pl-c1">factorial</span>(n - <span class="pl-c1">1</span>);
+}
+<span class="pl-k">constexpr</span> <span class="pl-k">int</span> f10 = factorial(<span class="pl-c1">10</span>);   <span class="pl-c"><span class="pl-c">//</span> 编译期计算</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 9. 用结构化绑定（C++17）</span>
+<span class="pl-k">auto</span> [key, value] = *m.begin();
+
+<span class="pl-c"><span class="pl-c">//</span> 10. 用 if constexpr 处理编译期分支</span>
+<span class="pl-k">template</span>&lt;<span class="pl-k">typename</span> T&gt;
+<span class="pl-k">auto</span> <span class="pl-en">serialize</span>(T value) {
+    <span class="pl-k">if</span> <span class="pl-k">constexpr</span> (is_integral_v&lt;T&gt;) {
+        <span class="pl-k">return</span> <span class="pl-c1">to_string</span>(value);
+    } <span class="pl-k">else</span> {
+        <span class="pl-k">return</span> value;
+    }
+}
+
+<span class="pl-c"><span class="pl-c">//</span> 11. 用 std::array 代替 C 数组</span>
+array&lt;<span class="pl-k">int</span>, <span class="pl-c1">5</span>&gt; arr = {<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>, <span class="pl-c1">4</span>, <span class="pl-c1">5</span>};
+
+<span class="pl-c"><span class="pl-c">//</span> 12. 用 delegate 构造函数减少重复</span>
+<span class="pl-k">class</span> <span class="pl-en">Foo</span> {
+    <span class="pl-en">Foo</span>() : Foo(<span class="pl-c1">0</span>, <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>) {}
+    <span class="pl-en">Foo</span>(<span class="pl-k">int</span> a, string b) : x(a), y(b) {}
+};
+
+<span class="pl-c"><span class="pl-c">//</span> 13. 用 nullptr 代替 NULL / 0</span>
+<span class="pl-k">int</span>* p = <span class="pl-c1">nullptr</span>;
+
+<span class="pl-c"><span class="pl-c">//</span> 14. 用 enum class 代替 enum</span>
+<span class="pl-k">enum</span> <span class="pl-k">class</span> <span class="pl-en">Status</span> { Active, Inactive, Deleted };
+
+<span class="pl-c"><span class="pl-c">//</span> 15. 用 override / final 标记虚函数</span>
+<span class="pl-k">class</span> <span class="pl-en">Base</span> {
+    <span class="pl-k">virtual</span> <span class="pl-k">void</span> <span class="pl-en">foo</span>() {}
+    <span class="pl-k">virtual</span> <span class="pl-k">void</span> <span class="pl-en">bar</span>() <span class="pl-k">final</span> {}
+};
+<span class="pl-k">class</span> <span class="pl-en">Derived</span> : <span class="pl-k">public</span> <span class="pl-en">Base</span> {
+    <span class="pl-k">void</span> <span class="pl-en">foo</span>() <span class="pl-k">override</span> {}     <span class="pl-c"><span class="pl-c">//</span> 明确重写</span>
+};
+
+<span class="pl-c"><span class="pl-c">//</span> 16. 用 noexcept 标记不抛异常的函数</span>
+<span class="pl-k">void</span> <span class="pl-en">swap</span>(<span class="pl-k">int</span>&amp; a, <span class="pl-k">int</span>&amp; b) <span class="pl-k">noexcept</span> { ... }
+
+<span class="pl-c"><span class="pl-c">//</span> 17. 移动语义（避免不必要的拷贝）</span>
+vector&lt;<span class="pl-k">int</span>&gt; <span class="pl-en">createData</span>() {
+    vector&lt;<span class="pl-k">int</span>&gt; result = {<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>};
+    <span class="pl-k">return</span> result;              <span class="pl-c"><span class="pl-c">//</span> RVO / 移动构造</span>
+}
+<span class="pl-k">auto</span> data = createData();
+<span class="pl-k">auto</span> newData = move(data);      <span class="pl-c"><span class="pl-c">//</span> 转移所有权</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 18. RAII（资源获取即初始化）</span>
+{
+    lock_guard&lt;mutex&gt; <span class="pl-c1">lock</span>(mtx);     <span class="pl-c"><span class="pl-c">//</span> 自动加锁/解锁</span>
+    <span class="pl-c"><span class="pl-c">//</span> 临界区</span>
+}   <span class="pl-c"><span class="pl-c">//</span> 自动解锁</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 19. 编译警告</span>
+<span class="pl-c"><span class="pl-c">//</span> g++ -Wall -Wextra -Werror</span></pre></div>
+<hr>
+<h2>十八、常见报错与解决</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>错误</th>
+<th>原因</th>
+<th>解决</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">undefined reference</code></td>
+<td>链接错误</td>
+<td>检查函数声明与定义，添加 <code class="notranslate">-l</code> 链接库</td>
+</tr>
+<tr>
+<td><code class="notranslate">segmentation fault</code></td>
+<td>非法内存访问</td>
+<td>检查指针、数组越界</td>
+</tr>
+<tr>
+<td><code class="notranslate">no matching function</code></td>
+<td>参数类型不匹配</td>
+<td>检查函数签名</td>
+</tr>
+<tr>
+<td><code class="notranslate">use of undeclared identifier</code></td>
+<td>未声明</td>
+<td>添加头文件 / 声明</td>
+</tr>
+<tr>
+<td><code class="notranslate">expected ';'</code></td>
+<td>缺少分号</td>
+<td>检查上一行</td>
+</tr>
+<tr>
+<td><code class="notranslate">redefinition of</code></td>
+<td>重复定义</td>
+<td>添加 <code class="notranslate">#pragma once</code> / include guard</td>
+</tr>
+<tr>
+<td><code class="notranslate">cannot bind non-const lvalue</code></td>
+<td>引用绑定问题</td>
+<td>使用 <code class="notranslate">const&amp;</code> 或右值引用</td>
+</tr>
+<tr>
+<td><code class="notranslate">pure virtual method called</code></td>
+<td>调用纯虚函数</td>
+<td>检查析构函数、继承链</td>
+</tr>
+<tr>
+<td><code class="notranslate">stack overflow</code></td>
+<td>递归过深 / 栈变量过大</td>
+<td>改用迭代 / 堆分配</td>
+</tr>
+<tr>
+<td><code class="notranslate">memory leak</code></td>
+<td>内存未释放</td>
+<td>使用智能指针 / valgrind 检测</td>
+</tr>
+<tr>
+<td><code class="notranslate">double free</code></td>
+<td>重复释放</td>
+<td>检查指针管理</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><strong>调试工具：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> GDB 调试</span>
+g++ -g -O0 main.cpp -o main
+gdb ./main
+(gdb) run
+(gdb) backtrace
+(gdb) <span class="pl-c1">break</span> main
+(gdb) watch x
+(gdb) print x
+
+<span class="pl-c"><span class="pl-c">#</span> Valgrind 内存检测</span>
+valgrind --leak-check=full ./main
+
+<span class="pl-c"><span class="pl-c">#</span> AddressSanitizer（编译时检测）</span>
+g++ -fsanitize=address -g main.cpp -o main
+
+<span class="pl-c"><span class="pl-c">#</span> 静态分析</span>
+cppcheck main.cpp
+clang-tidy main.cpp</pre></div>
+<hr>
+<h2>十九、常用标准库速查</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>头文件</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">&lt;iostream&gt;</code></td>
+<td>输入输出</td>
+</tr>
+<tr>
+<td><code class="notranslate">&lt;string&gt;</code></td>
+<td>字符串</td>
+</tr>
+<tr>
+<td><code class="notranslate">&lt;vector&gt;</code></td>
+<td>动态数组</td>
+</tr>
+<tr>
+<td><code class="notranslate">&lt;map&gt;</code></td>
+<td>有序键值对</td>
+</tr>
+<tr>
+<td><code class="notranslate">&lt;unordered_map&gt;</code></td>
+<td>哈希键值对</td>
+</tr>
+<tr>
+<td><code class="notranslate">&lt;set&gt;</code></td>
+<td>有序集合</td>
+</tr>
+<tr>
+<td><code class="notranslate">&lt;algorithm&gt;</code></td>
+<td>算法（排序、查找等）</td>
+</tr>
+<tr>
+<td><code class="notranslate">&lt;numeric&gt;</code></td>
+<td>数值算法（求和等）</td>
+</tr>
+<tr>
+<td><code class="notranslate">&lt;cmath&gt;</code></td>
+<td>数学函数</td>
+</tr>
+<tr>
+<td><code class="notranslate">&lt;ctime&gt;</code></td>
+<td>时间</td>
+</tr>
+<tr>
+<td><code class="notranslate">&lt;fstream&gt;</code></td>
+<td>文件操作</td>
+</tr>
+<tr>
+<td><code class="notranslate">&lt;sstream&gt;</code></td>
+<td>字符串流</td>
+</tr>
+<tr>
+<td><code class="notranslate">&lt;memory&gt;</code></td>
+<td>智能指针</td>
+</tr>
+<tr>
+<td><code class="notranslate">&lt;thread&gt;</code></td>
+<td>多线程</td>
+</tr>
+<tr>
+<td><code class="notranslate">&lt;mutex&gt;</code></td>
+<td>互斥锁</td>
+</tr>
+<tr>
+<td><code class="notranslate">&lt;future&gt;</code></td>
+<td>异步任务</td>
+</tr>
+<tr>
+<td><code class="notranslate">&lt;functional&gt;</code></td>
+<td>函数对象、bind</td>
+</tr>
+<tr>
+<td><code class="notranslate">&lt;regex&gt;</code></td>
+<td>正则表达式</td>
+</tr>
+<tr>
+<td><code class="notranslate">&lt;tuple&gt;</code></td>
+<td>元组</td>
+</tr>
+<tr>
+<td><code class="notranslate">&lt;optional&gt;</code></td>
+<td>可选值（C++17）</td>
+</tr>
+<tr>
+<td><code class="notranslate">&lt;variant&gt;</code></td>
+<td>类型安全联合（C++17）</td>
+</tr>
+<tr>
+<td><code class="notranslate">&lt;any&gt;</code></td>
+<td>任意类型（C++17）</td>
+</tr>
+<tr>
+<td><code class="notranslate">&lt;filesystem&gt;</code></td>
+<td>文件系统（C++17）</td>
+</tr>
+<tr>
+<td><code class="notranslate">&lt;format&gt;</code></td>
+<td>格式化（C++20）</td>
+</tr>
+<tr>
+<td><code class="notranslate">&lt;ranges&gt;</code></td>
+<td>范围库（C++20）</td>
+</tr>
+<tr>
+<td><code class="notranslate">&lt;concepts&gt;</code></td>
+<td>概念（C++20）</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<h2>二十、完整示例：学生管理系统</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>iostream<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>string<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>vector<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>algorithm<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>fstream<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>sstream<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>iomanip<span class="pl-pds">&gt;</span></span>
+<span class="pl-k">using</span> <span class="pl-k">namespace</span> <span class="pl-en">std</span><span class="pl-k">;</span>
+
+<span class="pl-k">class</span> <span class="pl-en">Student</span> {
+<span class="pl-k">private:</span>
+    <span class="pl-k">int</span> id;
+    string name;
+    <span class="pl-k">double</span> score;
+
+<span class="pl-k">public:</span>
+    <span class="pl-en">Student</span>(<span class="pl-k">int</span> id, <span class="pl-k">const</span> string&amp; name, <span class="pl-k">double</span> score)
+        : id(id), name(name), score(score) {}
+
+    <span class="pl-k">int</span> <span class="pl-en">getId</span>() <span class="pl-k">const</span> { <span class="pl-k">return</span> id; }
+    string <span class="pl-en">getName</span>() <span class="pl-k">const</span> { <span class="pl-k">return</span> name; }
+    <span class="pl-k">double</span> <span class="pl-en">getScore</span>() <span class="pl-k">const</span> { <span class="pl-k">return</span> score; }
+
+    <span class="pl-k">void</span> <span class="pl-en">setScore</span>(<span class="pl-k">double</span> s) { score = s; }
+
+    <span class="pl-k">void</span> <span class="pl-en">display</span>() <span class="pl-k">const</span> {
+        cout &lt;&lt; <span class="pl-c1">setw</span>(<span class="pl-c1">6</span>) &lt;&lt; id
+             &lt;&lt; <span class="pl-c1">setw</span>(<span class="pl-c1">12</span>) &lt;&lt; name
+             &lt;&lt; <span class="pl-c1">setw</span>(<span class="pl-c1">8</span>) &lt;&lt; fixed &lt;&lt; <span class="pl-c1">setprecision</span>(<span class="pl-c1">1</span>) &lt;&lt; score
+             &lt;&lt; endl;
+    }
+
+    string <span class="pl-en">toCSV</span>() <span class="pl-k">const</span> {
+        <span class="pl-k">return</span> <span class="pl-c1">to_string</span>(id) + <span class="pl-s"><span class="pl-pds">"</span>,<span class="pl-pds">"</span></span> + name + <span class="pl-s"><span class="pl-pds">"</span>,<span class="pl-pds">"</span></span> + <span class="pl-c1">to_string</span>(score);
+    }
+};
+
+<span class="pl-k">class</span> <span class="pl-en">StudentManager</span> {
+<span class="pl-k">private:</span>
+    vector&lt;Student&gt; students;
+
+<span class="pl-k">public:</span>
+    <span class="pl-k">void</span> <span class="pl-en">add</span>(<span class="pl-k">int</span> id, <span class="pl-k">const</span> string&amp; name, <span class="pl-k">double</span> score) {
+        students.<span class="pl-c1">emplace_back</span>(id, name, score);
+    }
+
+    <span class="pl-k">bool</span> <span class="pl-en">remove</span>(<span class="pl-k">int</span> id) {
+        <span class="pl-k">auto</span> it = <span class="pl-c1">remove_if</span>(students.<span class="pl-c1">begin</span>(), students.<span class="pl-c1">end</span>(),
+            [id](<span class="pl-k">const</span> Student&amp; s) { <span class="pl-k">return</span> s.<span class="pl-c1">getId</span>() == id; });
+        <span class="pl-k">if</span> (it != students.<span class="pl-c1">end</span>()) {
+            students.<span class="pl-c1">erase</span>(it, students.<span class="pl-c1">end</span>());
+            <span class="pl-k">return</span> <span class="pl-c1">true</span>;
+        }
+        <span class="pl-k">return</span> <span class="pl-c1">false</span>;
+    }
+
+    Student* <span class="pl-en">findById</span>(<span class="pl-k">int</span> id) {
+        <span class="pl-k">for</span> (<span class="pl-k">auto</span>&amp; s : students) {
+            <span class="pl-k">if</span> (s.<span class="pl-c1">getId</span>() == id) <span class="pl-k">return</span> &amp;s;
+        }
+        <span class="pl-k">return</span> <span class="pl-c1">nullptr</span>;
+    }
+
+    <span class="pl-k">void</span> <span class="pl-en">sortByScore</span>(<span class="pl-k">bool</span> ascending = <span class="pl-c1">true</span>) {
+        <span class="pl-k">if</span> (ascending) {
+            <span class="pl-c1">sort</span>(students.<span class="pl-c1">begin</span>(), students.<span class="pl-c1">end</span>(),
+                [](<span class="pl-k">const</span> Student&amp; a, <span class="pl-k">const</span> Student&amp; b) {
+                    <span class="pl-k">return</span> a.<span class="pl-c1">getScore</span>() &lt; b.<span class="pl-c1">getScore</span>();
+                });
+        } <span class="pl-k">else</span> {
+            <span class="pl-c1">sort</span>(students.<span class="pl-c1">begin</span>(), students.<span class="pl-c1">end</span>(),
+                [](<span class="pl-k">const</span> Student&amp; a, <span class="pl-k">const</span> Student&amp; b) {
+                    <span class="pl-k">return</span> a.<span class="pl-c1">getScore</span>() &gt; b.<span class="pl-c1">getScore</span>();
+                });
+        }
+    }
+
+    <span class="pl-k">void</span> <span class="pl-en">displayAll</span>() <span class="pl-k">const</span> {
+        cout &lt;&lt; <span class="pl-c1">setw</span>(<span class="pl-c1">6</span>) &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>ID<span class="pl-pds">"</span></span>
+             &lt;&lt; <span class="pl-c1">setw</span>(<span class="pl-c1">12</span>) &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>Name<span class="pl-pds">"</span></span>
+             &lt;&lt; <span class="pl-c1">setw</span>(<span class="pl-c1">8</span>) &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>Score<span class="pl-pds">"</span></span> &lt;&lt; endl;
+        cout &lt;&lt; <span class="pl-c1">string</span>(<span class="pl-c1">26</span>, <span class="pl-s"><span class="pl-pds">'</span>-<span class="pl-pds">'</span></span>) &lt;&lt; endl;
+        <span class="pl-k">for</span> (<span class="pl-k">const</span> <span class="pl-k">auto</span>&amp; s : students) {
+            s.<span class="pl-c1">display</span>();
+        }
+    }
+
+    <span class="pl-k">void</span> <span class="pl-en">saveToFile</span>(<span class="pl-k">const</span> string&amp; filename) <span class="pl-k">const</span> {
+        ofstream <span class="pl-smi">ofs</span>(filename);
+        <span class="pl-k">for</span> (<span class="pl-k">const</span> <span class="pl-k">auto</span>&amp; s : students) {
+            ofs &lt;&lt; s.<span class="pl-c1">toCSV</span>() &lt;&lt; endl;
+        }
+    }
+
+    <span class="pl-k">void</span> <span class="pl-en">loadFromFile</span>(<span class="pl-k">const</span> string&amp; filename) {
+        ifstream <span class="pl-smi">ifs</span>(filename);
+        string line;
+        <span class="pl-k">while</span> (<span class="pl-c1">getline</span>(ifs, line)) {
+            stringstream <span class="pl-smi">ss</span>(line);
+            string token;
+            <span class="pl-k">int</span> id;
+            string name;
+            <span class="pl-k">double</span> score;
+
+            <span class="pl-c1">getline</span>(ss, token, <span class="pl-s"><span class="pl-pds">'</span>,<span class="pl-pds">'</span></span>);
+            id = <span class="pl-c1">stoi</span>(token);
+            <span class="pl-c1">getline</span>(ss, name, <span class="pl-s"><span class="pl-pds">'</span>,<span class="pl-pds">'</span></span>);
+            <span class="pl-c1">getline</span>(ss, token, <span class="pl-s"><span class="pl-pds">'</span>,<span class="pl-pds">'</span></span>);
+            score = <span class="pl-c1">stod</span>(token);
+
+            students.<span class="pl-c1">emplace_back</span>(id, name, score);
+        }
+    }
+};
+
+<span class="pl-k">int</span> <span class="pl-en">main</span>() {
+    StudentManager mgr;
+
+    mgr.<span class="pl-c1">add</span>(<span class="pl-c1">1</span>, <span class="pl-s"><span class="pl-pds">"</span>Alice<span class="pl-pds">"</span></span>, <span class="pl-c1">92.5</span>);
+    mgr.<span class="pl-c1">add</span>(<span class="pl-c1">2</span>, <span class="pl-s"><span class="pl-pds">"</span>Bob<span class="pl-pds">"</span></span>, <span class="pl-c1">85.0</span>);
+    mgr.<span class="pl-c1">add</span>(<span class="pl-c1">3</span>, <span class="pl-s"><span class="pl-pds">"</span>Charlie<span class="pl-pds">"</span></span>, <span class="pl-c1">97.8</span>);
+
+    cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>=== 所有学生 ===<span class="pl-pds">"</span></span> &lt;&lt; endl;
+    mgr.<span class="pl-c1">displayAll</span>();
+
+    cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\n</span>=== 按成绩排序（降序） ===<span class="pl-pds">"</span></span> &lt;&lt; endl;
+    mgr.<span class="pl-c1">sortByScore</span>(<span class="pl-c1">false</span>);
+    mgr.<span class="pl-c1">displayAll</span>();
+
+    mgr.<span class="pl-c1">saveToFile</span>(<span class="pl-s"><span class="pl-pds">"</span>students.csv<span class="pl-pds">"</span></span>);
+    cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\n</span>已保存到 students.csv<span class="pl-pds">"</span></span> &lt;&lt; endl;
+
+    <span class="pl-k">return</span> <span class="pl-c1">0</span>;
+}</pre></div></div>
+<div style="font-size:small;margin-top:8px;float:right;">转载请注明出处</div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://helloblog.eik.cc">你好博客</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if("09/25/2026"!=""){
+    var startSite=new Date("09/25/2026");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行 "+diffDay+" 天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","techjiang/Gmeek-HelloBlog");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script><script src='https://blog.meekdai.com/Gmeek/plugins/lightbox.js'></script>
+
+</html>
