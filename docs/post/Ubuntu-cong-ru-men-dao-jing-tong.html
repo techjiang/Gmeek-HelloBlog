@@ -1,0 +1,3177 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <meta name='description' content='你好博客是一个专注于技术分享、编程笔记与生活感悟的个人博客，提供高质量原创内容。'><meta name='keywords' content='你好博客,技术博客,编程笔记,Gmeek,前端开发,个人网站'><meta name='author' content='你好博客'><meta name='robots' content='index,follow'><link rel='canonical' href='https://helloblog.eik.cc/'><script type='application/ld+json'>{"@context":"https://schema.org","@type":"WebSite","name":"你好博客","url":"https://helloblog.eik.cc/","description":"专注于技术分享、编程笔记与生活感悟的个人博客","author":{"@type":"Person","name":"你好博客","email":"official@tech.asoe.cn"},"potentialAction":{"@type":"SearchAction","target":"https://helloblog.eik.cc/?q={search_term_string}","query-input":"required name=search_term_string"}}</script><script src='https://blog.meekdai.com/Gmeek/plugins/GmeekBSZ.js'></script><script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script>
+    <link rel="icon" href="https://img2.tofaka.com/autoupload/f/3624q/20260926/caKC/1024X1024/Hello-Logo.png"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="> 全面涵盖安装、桌面使用、命令行、系统管理、网络配置、服务管理、开发环境搭建、Shell 脚本、安全加固、性能优化及故障排查。">
+<meta property="og:title" content="Ubuntu从入门到精通">
+<meta property="og:description" content="> 全面涵盖安装、桌面使用、命令行、系统管理、网络配置、服务管理、开发环境搭建、Shell 脚本、安全加固、性能优化及故障排查。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://helloblog.eik.cc/post/Ubuntu-cong-ru-men-dao-jing-tong.html">
+<meta property="og:image" content="https://img2.tofaka.com/autoupload/f/3624q/20260926/caKC/1024X1024/Hello-Logo.png">
+<title>Ubuntu从入门到精通</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">Ubuntu从入门到精通</h1>
+<div class="title-right">
+    <a href="https://helloblog.eik.cc" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/techjiang/Gmeek-HelloBlog/issues/18" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><blockquote>
+<p>全面涵盖安装、桌面使用、命令行、系统管理、网络配置、服务管理、开发环境搭建、Shell 脚本、安全加固、性能优化及故障排查。</p>
+</blockquote>
+<hr>
+<h2>目录</h2>
+<ul>
+<li><a href="#%E4%B8%80ubuntu-%E7%AE%80%E4%BB%8B">一、Ubuntu 简介</a></li>
+<li><a href="#%E4%BA%8C%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85">二、系统安装</a></li>
+<li><a href="#%E4%B8%89%E5%88%9D%E5%A7%8B%E9%85%8D%E7%BD%AE">三、初始配置</a></li>
+<li><a href="#%E5%9B%9B%E6%A1%8C%E9%9D%A2%E7%8E%AF%E5%A2%83%E4%B8%8E%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8">四、桌面环境与日常使用</a></li>
+<li><a href="#%E4%BA%94%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%9F%BA%E7%A1%80">五、命令行基础</a></li>
+<li><a href="#%E5%85%AD%E6%96%87%E4%BB%B6%E4%B8%8E%E7%9B%AE%E5%BD%95%E7%AE%A1%E7%90%86">六、文件与目录管理</a></li>
+<li><a href="#%E4%B8%83%E7%94%A8%E6%88%B7%E4%B8%8E%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86">七、用户与权限管理</a></li>
+<li><a href="#%E5%85%AB%E8%BD%AF%E4%BB%B6%E5%8C%85%E7%AE%A1%E7%90%86">八、软件包管理</a></li>
+<li><a href="#%E4%B9%9D%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE%E4%B8%8E%E7%AE%A1%E7%90%86">九、网络配置与管理</a></li>
+<li><a href="#%E5%8D%81%E6%9C%8D%E5%8A%A1%E4%B8%8E%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86">十、服务与进程管理</a></li>
+<li><a href="#%E5%8D%81%E4%B8%80%E7%A3%81%E7%9B%98%E4%B8%8E%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86">十一、磁盘与存储管理</a></li>
+<li><a href="#%E5%8D%81%E4%BA%8Cshell-%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B">十二、Shell 脚本编程</a></li>
+<li><a href="#%E5%8D%81%E4%B8%89%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA">十三、开发环境搭建</a></li>
+<li><a href="#%E5%8D%81%E5%9B%9B%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%90%E7%BB%B4">十四、服务器运维</a></li>
+<li><a href="#%E5%8D%81%E4%BA%94%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA">十五、安全加固</a></li>
+<li><a href="#%E5%8D%81%E5%85%AD%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B8%8E%E7%9B%91%E6%8E%A7">十六、性能优化与监控</a></li>
+<li><a href="#%E5%8D%81%E4%B8%83%E5%A4%87%E4%BB%BD%E4%B8%8E%E6%81%A2%E5%A4%8D">十七、备份与恢复</a></li>
+<li><a href="#%E5%8D%81%E5%85%AB%E6%95%85%E9%9A%9C%E6%8E%92%E6%9F%A5">十八、故障排查</a></li>
+<li><a href="#%E5%8D%81%E4%B9%9Dubuntu-%E7%89%88%E6%9C%AC%E4%B8%8E%E5%8D%87%E7%BA%A7">十九、Ubuntu 版本与升级</a></li>
+<li><a href="#%E4%BA%8C%E5%8D%81%E5%AE%8C%E6%95%B4%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B">二十、完整实战示例</a></li>
+</ul>
+<hr>
+<h2>一、Ubuntu 简介</h2>
+<h3>什么是 Ubuntu</h3>
+<p>Ubuntu 是基于 Debian 的开源 Linux 发行版，由 Canonical 公司维护。它是全球最受欢迎的 Linux 发行版之一，广泛用于桌面、服务器、云计算和物联网。</p>
+<h3>版本类型</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>类型</th>
+<th>版本号示例</th>
+<th>支持周期</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>LTS（长期支持）</strong></td>
+<td>20.04、22.04、24.04</td>
+<td>5 年（桌面/服务器）</td>
+<td>稳定、生产推荐</td>
+</tr>
+<tr>
+<td><strong>非 LTS</strong></td>
+<td>23.04、23.10、24.10</td>
+<td>9 个月</td>
+<td>新特性、尝鲜</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<blockquote>
+<p>版本号规则：<code class="notranslate">YY.MM</code>（年.月），如 <code class="notranslate">24.04</code> 表示 2024 年 4 月发布。</p>
+</blockquote>
+<h3>桌面环境</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>桌面环境</th>
+<th>适合人群</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>GNOME</strong>（默认）</td>
+<td>普通用户、开发者</td>
+<td>现代化、可扩展</td>
+</tr>
+<tr>
+<td><strong>KDE Plasma</strong></td>
+<td>追求定制</td>
+<td>高度可定制、华丽</td>
+</tr>
+<tr>
+<td><strong>Xfce</strong></td>
+<td>低配机器</td>
+<td>轻量、资源占用少</td>
+</tr>
+<tr>
+<td><strong>MATE</strong></td>
+<td>习惯传统界面</td>
+<td>类似 GNOME 2</td>
+</tr>
+<tr>
+<td><strong>LXQt</strong></td>
+<td>极低配机器</td>
+<td>最轻量</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>适用场景</h3>
+<ul>
+<li>桌面办公与日常使用</li>
+<li>Web / 数据库 / 应用服务器</li>
+<li>云计算（AWS、Azure、GCP 首选）</li>
+<li>开发工作站</li>
+<li>Docker / Kubernetes 容器平台</li>
+<li>IoT 嵌入式设备</li>
+</ul>
+<h3>官方资源</h3>
+<ul>
+<li>官网：<a href="https://ubuntu.com" rel="nofollow">https://ubuntu.com</a></li>
+<li>文档：<a href="https://help.ubuntu.com" rel="nofollow">https://help.ubuntu.com</a></li>
+<li>社区论坛：<a href="https://discourse.ubuntu.com" rel="nofollow">https://discourse.ubuntu.com</a></li>
+<li>Ask Ubuntu：<a href="https://askubuntu.com" rel="nofollow">https://askubuntu.com</a></li>
+<li>软件包搜索：<a href="https://packages.ubuntu.com" rel="nofollow">https://packages.ubuntu.com</a></li>
+</ul>
+<hr>
+<h2>二、系统安装</h2>
+<h3>2.1 下载镜像</h3>
+<p>从官网下载：<a href="https://ubuntu.com/download/desktop" rel="nofollow">https://ubuntu.com/download/desktop</a></p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>镜像</th>
+<th>大小</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Desktop ISO</td>
+<td>~5GB</td>
+<td>桌面安装（图形化）</td>
+</tr>
+<tr>
+<td>Server ISO</td>
+<td>~2GB</td>
+<td>服务器安装（命令行）</td>
+</tr>
+<tr>
+<td>Netboot</td>
+<td>~100MB</td>
+<td>网络安装</td>
+</tr>
+<tr>
+<td>Cloud Image</td>
+<td>~600MB</td>
+<td>云/虚拟机使用</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><strong>验证镜像完整性：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 校验 SHA256</span>
+sha256sum -c SHA256SUMS <span class="pl-k">2&gt;&amp;1</span> <span class="pl-k">|</span> grep -v <span class="pl-s"><span class="pl-pds">'</span>FAILED<span class="pl-pds">'</span></span> <span class="pl-k">|</span> grep OK
+
+<span class="pl-c"><span class="pl-c">#</span> 校验 GPG 签名（更安全）</span>
+gpg --verify SHA256SUMS.gpg SHA256SUMS</pre></div>
+<h3>2.2 制作启动盘</h3>
+<p><strong>Linux 下使用 dd：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 确认 U 盘设备名</span>
+lsblk
+
+<span class="pl-c"><span class="pl-c">#</span> 制作启动盘（注意替换 /dev/sdX 为你的 U 盘）</span>
+sudo dd if=ubuntu-24.04-desktop-amd64.iso of=/dev/sdX bs=4M status=progress
+sync</pre></div>
+<p><strong>Linux 下使用 Startup Disk Creator（图形化）：</strong></p>
+<pre class="notranslate"><code class="notranslate">应用程序 → 启动盘创建工具 → 选择 ISO → 选择 U 盘 → 创建
+</code></pre>
+<p><strong>Windows 下使用 Rufus：</strong></p>
+<pre class="notranslate"><code class="notranslate">1. 打开 Rufus
+2. 选择 U 盘
+3. 选择 Ubuntu ISO
+4. 分区类型：GPT（UEFI）/ MBR（Legacy BIOS）
+5. 点击"开始"
+</code></pre>
+<p><strong>跨平台 balenaEtcher：</strong></p>
+<pre class="notranslate"><code class="notranslate">1. 打开 balenaEtcher
+2. Flash from file → 选择 ISO
+3. Select target → 选择 U 盘
+4. Flash!
+</code></pre>
+<h3>2.3 虚拟机安装（推荐入门）</h3>
+<h4>VMware Workstation</h4>
+<pre class="notranslate"><code class="notranslate">1. 文件 → 新建虚拟机 → 典型
+2. 选择"稍后安装操作系统"
+3. 客户机操作系统：Linux → Ubuntu 64-bit
+4. 命名虚拟机 → 选择存储位置
+5. 磁盘大小：≥ 40GB（桌面）/ ≥ 20GB（服务器）
+6. 自定义硬件：
+   - 内存：≥ 4GB（推荐 8GB）
+   - 处理器：≥ 2 核
+   - 网络：NAT（推荐）或桥接
+7. 选择 ISO 镜像 → 开启虚拟机
+</code></pre>
+<h4>VirtualBox</h4>
+<pre class="notranslate"><code class="notranslate">1. 新建 → 名称：Ubuntu
+2. 类型：Linux，版本：Ubuntu (64-bit)
+3. 内存：≥ 4096MB
+4. 创建虚拟硬盘：VDI，动态分配，≥ 40GB
+5. 设置 → 存储 → 选择 ISO 镜像
+6. 启动 → 进入安装
+</code></pre>
+<h3>2.4 桌面版安装步骤</h3>
+<pre class="notranslate"><code class="notranslate">1. 选择语言 → 中文（简体）或 English
+2. 选择"安装 Ubuntu"
+3. 键盘布局：Chinese 或 English (US)
+4. 安装类型：
+   - 正常安装（推荐，包含常用软件）
+   - 最小安装（仅浏览器和基础工具）
+5. 更新选项：
+   - ☑ 安装 Ubuntu 时下载更新
+   - ☑ 为图形或 WiFi 硬件安装第三方软件
+6. 分区方案：
+   - 清除整个磁盘并安装 Ubuntu（最简单）
+   - 其他选项（手动分区）
+   - 与 Windows 共存（双系统）
+7. 设置时区：Asia/Shanghai
+8. 创建用户：用户名 + 密码
+9. 等待安装完成 → 重启
+</code></pre>
+<p><strong>推荐手动分区方案：</strong></p>
+<pre class="notranslate"><code class="notranslate">EFI 系统分区    512MB    fat32    /boot/efi（UEFI 引导）
+交换分区        内存大小  swap     swap（内存 ≥ 16GB 可省略）
+根分区          40-60GB  ext4     /
+home 分区       剩余空间  ext4     /home（可选，方便重装）
+</code></pre>
+<h3>2.5 服务器版安装步骤</h3>
+<pre class="notranslate"><code class="notranslate">1. 选择语言 → English
+2. 选择"Install Ubuntu Server"
+3. 键盘布局：English (US)
+4. 网络配置：DHCP 或手动配置静态 IP
+5. 代理：留空
+6. 镜像源：使用默认或填入国内镜像源
+7. 分区方案：
+   - Use an entire disk（整个磁盘）
+   - Custom storage layout（自定义分区）
+8. 设置用户名和密码
+9. 安装 OpenSSH server（勾选）
+10. 选择要安装的软件（如 Docker、Kubernetes 等）
+11. 安装完成 → 重启
+</code></pre>
+<h3>2.6 WSL 安装（Windows 用户）</h3>
+<div class="highlight highlight-source-powershell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> Windows 10/11 启用 WSL</span>
+wsl <span class="pl-k">--</span>install
+
+<span class="pl-c"><span class="pl-c">#</span> 或手动启用</span>
+<span class="pl-c1">dism.exe</span> <span class="pl-k">/</span>online <span class="pl-k">/</span><span class="pl-c1">enable-feature</span> <span class="pl-k">/</span>featurename:Microsoft<span class="pl-k">-</span>Windows<span class="pl-k">-</span>Subsystem<span class="pl-k">-</span>Linux <span class="pl-k">/</span>all <span class="pl-k">/</span>norestart
+<span class="pl-c1">dism.exe</span> <span class="pl-k">/</span>online <span class="pl-k">/</span><span class="pl-c1">enable-feature</span> <span class="pl-k">/</span>featurename:VirtualMachinePlatform <span class="pl-k">/</span>all <span class="pl-k">/</span>norestart
+
+<span class="pl-c"><span class="pl-c">#</span> 重启后</span>
+wsl <span class="pl-k">--</span><span class="pl-c1">set-default</span><span class="pl-k">-</span>version <span class="pl-c1">2</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 安装 Ubuntu</span>
+wsl <span class="pl-k">--</span>install <span class="pl-k">-</span>d Ubuntu<span class="pl-k">-</span><span class="pl-c1">24.04</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 或从 Microsoft Store 安装</span></pre></div>
+<h3>2.7 双系统安装（Windows + Ubuntu）</h3>
+<pre class="notranslate"><code class="notranslate">1. Windows 中压缩磁盘，留出 ≥ 60GB 未分配空间
+2. BIOS/UEFI 设置：
+   - 关闭 Secure Boot（Ubuntu 可能需要）
+   - 关闭 Fast Boot
+   - 设置从 U 盘启动
+3. 安装 Ubuntu，选择"安装 Ubuntu，与 Windows 共存"
+   或手动分区（在未分配空间上创建分区）
+4. 安装 GRUB 引导（自动识别 Windows）
+5. 重启后 GRUB 菜单可选择 Ubuntu 或 Windows
+</code></pre>
+<hr>
+<h2>三、初始配置</h2>
+<h3>3.1 系统更新</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 更新软件包索引</span>
+sudo apt update
+
+<span class="pl-c"><span class="pl-c">#</span> 升级所有软件包</span>
+sudo apt upgrade -y
+
+<span class="pl-c"><span class="pl-c">#</span> 完整升级（处理依赖变化、内核更新）</span>
+sudo apt full-upgrade -y
+
+<span class="pl-c"><span class="pl-c">#</span> 清理不需要的包</span>
+sudo apt autoremove -y
+sudo apt autoclean
+
+<span class="pl-c"><span class="pl-c">#</span> 重启（内核更新后）</span>
+sudo reboot</pre></div>
+<h3>3.2 更换国内镜像源</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 备份原文件</span>
+sudo cp /etc/apt/sources.list /etc/apt/sources.list.bak
+
+<span class="pl-c"><span class="pl-c">#</span> Ubuntu 24.04 使用新格式（deb822）</span>
+<span class="pl-c"><span class="pl-c">#</span> 编辑 /etc/apt/sources.list.d/ubuntu.sources</span>
+sudo nano /etc/apt/sources.list.d/ubuntu.sources
+
+<span class="pl-c"><span class="pl-c">#</span> 替换为阿里云源（以 24.04 noble 为例）</span>
+<span class="pl-c"><span class="pl-c">#</span> Types: deb</span>
+<span class="pl-c"><span class="pl-c">#</span> URIs: http://mirrors.aliyun.com/ubuntu/</span>
+<span class="pl-c"><span class="pl-c">#</span> Suites: noble noble-updates noble-backports</span>
+<span class="pl-c"><span class="pl-c">#</span> Components: main restricted universe multiverse</span>
+<span class="pl-c"><span class="pl-c">#</span> Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 或使用一键更换脚本</span>
+sudo sed -i <span class="pl-s"><span class="pl-pds">'</span>s|http://archive.ubuntu.com|http://mirrors.aliyun.com|g<span class="pl-pds">'</span></span> /etc/apt/sources.list
+sudo sed -i <span class="pl-s"><span class="pl-pds">'</span>s|http://security.ubuntu.com|http://mirrors.aliyun.com|g<span class="pl-pds">'</span></span> /etc/apt/sources.list
+
+<span class="pl-c"><span class="pl-c">#</span> 更新</span>
+sudo apt update</pre></div>
+<p><strong>常用国内镜像源：</strong></p>
+<pre class="notranslate"><code class="notranslate">阿里云：http://mirrors.aliyun.com/ubuntu/
+清华源：https://mirrors.tuna.tsinghua.edu.cn/ubuntu/
+中科大：http://mirrors.ustc.edu.cn/ubuntu/
+华为云：https://mirrors.huaweicloud.com/ubuntu/
+网易源：http://mirrors.163.com/ubuntu/
+</code></pre>
+<h3>3.3 安装基础软件</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 常用开发与系统工具</span>
+sudo apt install -y \
+    build-essential \
+    curl \
+    wget \
+    git \
+    vim \
+    nano \
+    htop \
+    tree \
+    unzip \
+    zip \
+    net-tools \
+    openssh-server \
+    software-properties-common \
+    apt-transport-https \
+    ca-certificates \
+    gnupg \
+    lsb-release
+
+<span class="pl-c"><span class="pl-c">#</span> 中文输入法（Fcitx5）</span>
+sudo apt install -y fcitx5 fcitx5-chinese-addons
+
+<span class="pl-c"><span class="pl-c">#</span> 设置环境变量</span>
+cat <span class="pl-k">&gt;&gt;</span> <span class="pl-k">~</span>/.profile <span class="pl-s"><span class="pl-k">&lt;&lt;</span> '<span class="pl-k">EOF</span>'</span>
+<span class="pl-s">export GTK_IM_MODULE=fcitx</span>
+<span class="pl-s">export QT_IM_MODULE=fcitx</span>
+<span class="pl-s">export XMODIFIERS=@im=fcitx</span>
+<span class="pl-s"><span class="pl-k">EOF</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> 中文字体</span>
+sudo apt install -y fonts-wqy-zenhei fonts-wqy-microhei fonts-noto-cjk
+
+<span class="pl-c"><span class="pl-c">#</span> 设置系统语言</span>
+sudo dpkg-reconfigure locales
+<span class="pl-c"><span class="pl-c">#</span> 选择 zh_CN.UTF-8 UTF-8</span></pre></div>
+<h3>3.4 配置主机名</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 查看主机名</span>
+hostname
+
+<span class="pl-c"><span class="pl-c">#</span> 修改主机名（临时）</span>
+sudo hostname new-hostname
+
+<span class="pl-c"><span class="pl-c">#</span> 修改主机名（永久）</span>
+sudo hostnamectl set-hostname new-hostname
+
+<span class="pl-c"><span class="pl-c">#</span> 修改 /etc/hosts</span>
+sudo nano /etc/hosts
+<span class="pl-c"><span class="pl-c">#</span> 127.0.1.1    new-hostname</span></pre></div>
+<h3>3.5 时间与时区</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 查看时区</span>
+timedatectl
+
+<span class="pl-c"><span class="pl-c">#</span> 设置时区</span>
+sudo timedatectl set-timezone Asia/Shanghai
+
+<span class="pl-c"><span class="pl-c">#</span> 同步时间（NTP）</span>
+sudo timedatectl set-ntp <span class="pl-c1">true</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 查看时间</span>
+date
+date +<span class="pl-s"><span class="pl-pds">"</span>%Y-%m-%d %H:%M:%S<span class="pl-pds">"</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> 手动设置时间</span>
+sudo date -s <span class="pl-s"><span class="pl-pds">"</span>2024-01-15 10:30:00<span class="pl-pds">"</span></span></pre></div>
+<h3>3.6 SSH 配置</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 安装 SSH 服务</span>
+sudo apt install -y openssh-server
+
+<span class="pl-c"><span class="pl-c">#</span> 启动并设置开机自启</span>
+sudo systemctl <span class="pl-c1">enable</span> ssh
+sudo systemctl start ssh
+
+<span class="pl-c"><span class="pl-c">#</span> 查看状态</span>
+sudo systemctl status ssh
+
+<span class="pl-c"><span class="pl-c">#</span> 远程连接</span>
+ssh username@192.168.1.100
+
+<span class="pl-c"><span class="pl-c">#</span> SSH 密钥登录（更安全）</span>
+ssh-keygen -t ed25519 -C <span class="pl-s"><span class="pl-pds">"</span>your_email@example.com<span class="pl-pds">"</span></span>
+ssh-copy-id username@192.168.1.100
+
+<span class="pl-c"><span class="pl-c">#</span> SSH 配置文件：~/.ssh/config</span>
+Host myserver
+    HostName 192.168.1.100
+    User username
+    Port 22
+    IdentityFile <span class="pl-k">~</span>/.ssh/id_ed25519
+<span class="pl-c"><span class="pl-c">#</span> 之后可以用 ssh myserver 直接连接</span></pre></div>
+<p><strong>SSH 服务端安全配置（/etc/ssh/sshd_config）：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo nano /etc/ssh/sshd_config
+
+<span class="pl-c"><span class="pl-c">#</span> 常用安全配置</span>
+Port 2222                       <span class="pl-c"><span class="pl-c">#</span> 修改端口（减少扫描攻击）</span>
+PermitRootLogin no              <span class="pl-c"><span class="pl-c">#</span> 禁止 root 直接登录</span>
+PasswordAuthentication no       <span class="pl-c"><span class="pl-c">#</span> 仅允许密钥登录（更安全）</span>
+MaxAuthTries 3                  <span class="pl-c"><span class="pl-c">#</span> 最大尝试次数</span>
+ClientAliveInterval 300         <span class="pl-c"><span class="pl-c">#</span> 空闲超时</span>
+ClientAliveCountMax 2           <span class="pl-c"><span class="pl-c">#</span> 超时次数</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 重启 SSH</span>
+sudo systemctl restart ssh</pre></div>
+<h3>3.7 桌面环境优化</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 安装 GNOME 扩展工具</span>
+sudo apt install -y gnome-tweaks gnome-shell-extensions
+
+<span class="pl-c"><span class="pl-c">#</span> 安装常用桌面软件</span>
+sudo apt install -y \
+    vlc \
+    flameshot \
+    terminator \
+    gparted \
+    timeshift \
+    stacer \
+    synaptic
+
+<span class="pl-c"><span class="pl-c">#</span> 安装 Chrome 浏览器</span>
+wget -q -O - https://dl.google.com/linux/linux_signing_key.pub <span class="pl-k">|</span> sudo gpg --dearmor -o /usr/share/keyrings/google-chrome.gpg
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main<span class="pl-pds">"</span></span> <span class="pl-k">|</span> sudo tee /etc/apt/sources.list.d/google-chrome.list
+sudo apt update <span class="pl-k">&amp;&amp;</span> sudo apt install -y google-chrome-stable
+
+<span class="pl-c"><span class="pl-c">#</span> 安装 VS Code</span>
+wget -qO- https://packages.microsoft.com/keys/microsoft.asc <span class="pl-k">|</span> gpg --dearmor <span class="pl-k">&gt;</span> packages.microsoft.gpg
+sudo install -o root -g root -m 644 packages.microsoft.gpg /usr/share/keyrings/
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>deb [arch=amd64 signed-by=/usr/share/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/vscode stable main<span class="pl-pds">"</span></span> <span class="pl-k">|</span> sudo tee /etc/apt/sources.list.d/vscode.list
+sudo apt update <span class="pl-k">&amp;&amp;</span> sudo apt install -y code</pre></div>
+<hr>
+<h2>四、桌面环境与日常使用</h2>
+<h3>4.1 GNOME 桌面基础</h3>
+<pre class="notranslate"><code class="notranslate">常用快捷键：
+Super（Win 键）        打开活动概览
+Super + A             显示所有应用程序
+Super + D             显示桌面
+Super + L             锁屏
+Super + ↑/↓/←/→      窗口最大化/还原/半屏
+Ctrl + Alt + T        打开终端
+Ctrl + Alt + D        显示桌面
+Alt + Tab             切换窗口
+Alt + `               切换同应用窗口
+PrtSc                截图（全屏）
+Shift + PrtSc         截图（区域）
+Ctrl + Shift + PrtSc  截图（自定义）
+</code></pre>
+<h3>4.2 文件管理器（Nautilus）</h3>
+<pre class="notranslate"><code class="notranslate">Ctrl + N              新建窗口
+Ctrl + T              新建标签
+Ctrl + H              显示/隐藏隐藏文件
+Ctrl + L              编辑路径栏
+Ctrl + Shift + N      新建文件夹
+F2                    重命名
+Delete                移到回收站
+Ctrl + Delete         永久删除
+Ctrl + A              全选
+Ctrl + C/V/X          复制/粘贴/剪切
+Ctrl + Z              撤销
+Alt + ↑               返回上级目录
+Alt + ←               返回上一页
+</code></pre>
+<h3>4.3 软件安装方式</h3>
+<pre class="notranslate"><code class="notranslate">1. Ubuntu Software（图形化软件中心）
+   - 最简单，适合新手
+   - 搜索 → 安装
+
+2. APT 命令行（推荐）
+   - sudo apt install package_name
+
+3. Snap 包
+   - sudo snap install package_name
+   - 自动更新，隔离运行
+
+4. Flatpak
+   - sudo apt install flatpak
+   - flatpak install flathub package_name
+
+5. .deb 包
+   - sudo dpkg -i package.deb
+   - sudo apt install -f
+
+6. AppImage
+   - chmod +x app.AppImage
+   - ./app.AppImage
+
+7. 源码编译
+   - ./configure &amp;&amp; make &amp;&amp; sudo make install
+
+8. PPA（个人软件源）
+   - sudo add-apt-repository ppa:user/ppa-name
+   - sudo apt update
+   - sudo apt install package_name
+</code></pre>
+<h3>4.4 常用桌面应用推荐</h3>
+<pre class="notranslate"><code class="notranslate">办公：LibreOffice、WPS Office、OnlyOffice
+浏览器：Firefox（默认）、Google Chrome、Chromium
+通讯：微信（Deepin Wine）、Telegram、Slack
+媒体：VLC、Audacity、GIMP（图片编辑）、Inkscape（矢量图）
+开发：VS Code、IntelliJ IDEA、Docker Desktop
+虚拟机：VirtualBox、VMware Workstation Player
+密码管理：KeePassXC
+下载：aria2、Motrix
+远程：Remmina（RDP/VNC/SSH）、TeamViewer
+</code></pre>
+<hr>
+<h2>五、命令行基础</h2>
+<h3>5.1 终端使用</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 打开终端</span>
+<span class="pl-c"><span class="pl-c">#</span> 快捷键：Ctrl + Alt + T</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 常用快捷键</span>
+Ctrl + C              <span class="pl-c"><span class="pl-c">#</span> 终止当前命令</span>
+Ctrl + Z              <span class="pl-c"><span class="pl-c">#</span> 暂停任务（fg 恢复 / bg 后台）</span>
+Ctrl + D              <span class="pl-c"><span class="pl-c">#</span> 退出终端 / 发送 EOF</span>
+Ctrl + R              <span class="pl-c"><span class="pl-c">#</span> 搜索历史命令</span>
+Ctrl + L              <span class="pl-c"><span class="pl-c">#</span> 清屏</span>
+Ctrl + A              <span class="pl-c"><span class="pl-c">#</span> 光标移到行首</span>
+Ctrl + E              <span class="pl-c"><span class="pl-c">#</span> 光标移到行尾</span>
+Ctrl + U              <span class="pl-c"><span class="pl-c">#</span> 删除光标前内容</span>
+Ctrl + K              <span class="pl-c"><span class="pl-c">#</span> 删除光标后内容</span>
+Ctrl + W              <span class="pl-c"><span class="pl-c">#</span> 删除前一个单词</span>
+Ctrl + Y              <span class="pl-c"><span class="pl-c">#</span> 粘贴已删除内容</span>
+Tab                   <span class="pl-c"><span class="pl-c">#</span> 自动补全（按两次显示所有选项）</span>
+<span class="pl-k">!!</span>                    <span class="pl-c"><span class="pl-c">#</span> 重复上一条命令</span>
+sudo <span class="pl-k">!!</span>               <span class="pl-c"><span class="pl-c">#</span> 以 sudo 权限执行上一条命令</span></pre></div>
+<h3>5.2 命令帮助</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">man <span class="pl-c1">command</span>           <span class="pl-c"><span class="pl-c">#</span> 查看手册（按 q 退出）</span>
+man -k keyword        <span class="pl-c"><span class="pl-c">#</span> 搜索手册</span>
+<span class="pl-c1">command</span> --help        <span class="pl-c"><span class="pl-c">#</span> 查看简要帮助</span>
+info <span class="pl-c1">command</span>          <span class="pl-c"><span class="pl-c">#</span> 查看 info 文档</span>
+whatis <span class="pl-c1">command</span>        <span class="pl-c"><span class="pl-c">#</span> 简要说明</span>
+which <span class="pl-c1">command</span>         <span class="pl-c"><span class="pl-c">#</span> 查找命令位置</span>
+whereis <span class="pl-c1">command</span>       <span class="pl-c"><span class="pl-c">#</span> 查找命令相关文件</span>
+<span class="pl-c1">type</span> <span class="pl-c1">command</span>          <span class="pl-c"><span class="pl-c">#</span> 查看命令类型</span>
+apropos keyword       <span class="pl-c"><span class="pl-c">#</span> 搜索相关命令</span></pre></div>
+<h3>5.3 Shell 类型</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c1">echo</span> <span class="pl-smi">$SHELL</span>           <span class="pl-c"><span class="pl-c">#</span> 查看当前 Shell</span>
+cat /etc/shells       <span class="pl-c"><span class="pl-c">#</span> 查看可用 Shell</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 安装 Zsh</span>
+sudo apt install -y zsh
+
+<span class="pl-c"><span class="pl-c">#</span> 安装 Oh My Zsh（美化 Zsh）</span>
+sh -c <span class="pl-s"><span class="pl-pds">"</span><span class="pl-s"><span class="pl-pds">$(</span>curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh<span class="pl-pds">)</span></span><span class="pl-pds">"</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> 设置 Zsh 为默认 Shell</span>
+chsh -s <span class="pl-s"><span class="pl-pds">$(</span>which zsh<span class="pl-pds">)</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> Oh My Zsh 常用插件</span>
+<span class="pl-c"><span class="pl-c">#</span> git、zsh-autosuggestions、zsh-syntax-highlighting</span>
+git clone https://github.com/zsh-users/zsh-autosuggestions <span class="pl-smi">${ZSH_CUSTOM<span class="pl-k">:-</span>~<span class="pl-k">/</span>.oh-my-zsh<span class="pl-k">/</span>custom}</span>/plugins/zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-syntax-highlighting <span class="pl-smi">${ZSH_CUSTOM<span class="pl-k">:-</span>~<span class="pl-k">/</span>.oh-my-zsh<span class="pl-k">/</span>custom}</span>/plugins/zsh-syntax-highlighting
+<span class="pl-c"><span class="pl-c">#</span> 编辑 ~/.zshrc → plugins=(git zsh-autosuggestions zsh-syntax-highlighting)</span></pre></div>
+<hr>
+<h2>六、文件与目录管理</h2>
+<h3>6.1 文件系统结构</h3>
+<pre class="notranslate"><code class="notranslate">/                 根目录
+├── bin           基本命令（所有用户可用）
+├── boot          引导文件（内核、GRUB）
+├── dev           设备文件
+├── etc           系统配置文件
+├── home          用户主目录
+│   └── username  用户家目录
+├── lib / lib64   系统库
+├── media         可移动设备挂载点
+├── mnt           临时挂载点
+├── opt           第三方软件
+├── proc          进程信息（虚拟）
+├── root          root 用户家目录
+├── run           运行时数据
+├── sbin          系统管理命令
+├── snap          Snap 包目录
+├── srv           服务数据
+├── sys           系统信息（虚拟）
+├── tmp           临时文件
+├── usr           用户程序
+│   ├── bin       用户命令
+│   ├── lib       库文件
+│   ├── local     本地安装
+│   ├── sbin      系统管理
+│   └── share     共享数据
+└── var           可变数据
+    ├── cache     缓存
+    ├── log       日志
+    ├── lib       状态数据
+    └── www       Web 数据
+</code></pre>
+<h3>6.2 目录操作</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c1">pwd</span>                   <span class="pl-c"><span class="pl-c">#</span> 当前路径</span>
+ls                    <span class="pl-c"><span class="pl-c">#</span> 列出文件</span>
+ls -lha               <span class="pl-c"><span class="pl-c">#</span> 详细信息 + 隐藏文件 + 人类可读大小</span>
+ls -lt                <span class="pl-c"><span class="pl-c">#</span> 按时间排序</span>
+ls -lS                <span class="pl-c"><span class="pl-c">#</span> 按大小排序</span>
+ls -R                 <span class="pl-c"><span class="pl-c">#</span> 递归列出</span>
+ls -d <span class="pl-k">*</span>/              <span class="pl-c"><span class="pl-c">#</span> 只列出目录</span>
+
+<span class="pl-c1">cd</span> /path              <span class="pl-c"><span class="pl-c">#</span> 切换目录</span>
+<span class="pl-c1">cd</span> <span class="pl-k">~</span>                  <span class="pl-c"><span class="pl-c">#</span> 回到家目录</span>
+<span class="pl-c1">cd</span> -                  <span class="pl-c"><span class="pl-c">#</span> 回到上一个目录</span>
+<span class="pl-c1">cd</span> ..                 <span class="pl-c"><span class="pl-c">#</span> 上级目录</span>
+<span class="pl-c1">cd</span> /                  <span class="pl-c"><span class="pl-c">#</span> 根目录</span>
+
+mkdir dirname         <span class="pl-c"><span class="pl-c">#</span> 创建目录</span>
+mkdir -p a/b/c        <span class="pl-c"><span class="pl-c">#</span> 递归创建</span>
+mkdir dir1 dir2 dir3  <span class="pl-c"><span class="pl-c">#</span> 同时创建多个</span>
+
+rmdir dirname         <span class="pl-c"><span class="pl-c">#</span> 删除空目录</span>
+rm -rf dirname        <span class="pl-c"><span class="pl-c">#</span> 强制递归删除（慎用！）</span></pre></div>
+<h3>6.3 文件操作</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">touch file.txt        <span class="pl-c"><span class="pl-c">#</span> 创建空文件 / 更新时间戳</span>
+cp file1 file2        <span class="pl-c"><span class="pl-c">#</span> 复制文件</span>
+cp -a src/ dest/      <span class="pl-c"><span class="pl-c">#</span> 递归复制（保留属性）</span>
+cp -r src/ dest/      <span class="pl-c"><span class="pl-c">#</span> 递归复制目录</span>
+mv file1 file2        <span class="pl-c"><span class="pl-c">#</span> 移动/重命名</span>
+mv file /path/        <span class="pl-c"><span class="pl-c">#</span> 移动到目录</span>
+rm file.txt           <span class="pl-c"><span class="pl-c">#</span> 删除文件</span>
+rm -i file.txt        <span class="pl-c"><span class="pl-c">#</span> 交互式删除（确认）</span>
+rm -f file.txt        <span class="pl-c"><span class="pl-c">#</span> 强制删除</span>
+ln -s /path/file link <span class="pl-c"><span class="pl-c">#</span> 创建软链接</span>
+ln /path/file link    <span class="pl-c"><span class="pl-c">#</span> 创建硬链接</span></pre></div>
+<h3>6.4 文件查看</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">cat file.txt          <span class="pl-c"><span class="pl-c">#</span> 显示全部内容</span>
+tac file.txt          <span class="pl-c"><span class="pl-c">#</span> 反向显示</span>
+less file.txt         <span class="pl-c"><span class="pl-c">#</span> 分页查看（/ 搜索，q 退出）</span>
+more file.txt         <span class="pl-c"><span class="pl-c">#</span> 分页查看</span>
+head -n 20 file.txt   <span class="pl-c"><span class="pl-c">#</span> 前 20 行</span>
+tail -n 20 file.txt   <span class="pl-c"><span class="pl-c">#</span> 后 20 行</span>
+tail -f file.txt      <span class="pl-c"><span class="pl-c">#</span> 实时追踪（看日志）</span>
+wc -l file.txt        <span class="pl-c"><span class="pl-c">#</span> 统计行数</span>
+wc -w file.txt        <span class="pl-c"><span class="pl-c">#</span> 统计单词数</span>
+wc -c file.txt        <span class="pl-c"><span class="pl-c">#</span> 统计字节数</span>
+file file.txt         <span class="pl-c"><span class="pl-c">#</span> 查看文件类型</span>
+stat file.txt         <span class="pl-c"><span class="pl-c">#</span> 查看文件详细信息</span></pre></div>
+<h3>6.5 查找文件</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> find 命令（强大）</span>
+find /path -name <span class="pl-s"><span class="pl-pds">"</span>*.log<span class="pl-pds">"</span></span>                  <span class="pl-c"><span class="pl-c">#</span> 按名称查找</span>
+find /path -type f -size +100M            <span class="pl-c"><span class="pl-c">#</span> 查找大于 100M 的文件</span>
+find /path -type d -name <span class="pl-s"><span class="pl-pds">"</span>src<span class="pl-pds">"</span></span>            <span class="pl-c"><span class="pl-c">#</span> 查找目录</span>
+find /path -mtime -7                      <span class="pl-c"><span class="pl-c">#</span> 7 天内修改的文件</span>
+find /path -user username                 <span class="pl-c"><span class="pl-c">#</span> 按用户查找</span>
+find /path -perm 755                      <span class="pl-c"><span class="pl-c">#</span> 按权限查找</span>
+find /path -name <span class="pl-s"><span class="pl-pds">"</span>*.tmp<span class="pl-pds">"</span></span> -delete          <span class="pl-c"><span class="pl-c">#</span> 查找并删除</span>
+find /path -name <span class="pl-s"><span class="pl-pds">"</span>*.log<span class="pl-pds">"</span></span> -exec grep <span class="pl-s"><span class="pl-pds">"</span>error<span class="pl-pds">"</span></span> {} <span class="pl-cce">\;</span>   <span class="pl-c"><span class="pl-c">#</span> 查找并执行</span>
+
+<span class="pl-c"><span class="pl-c">#</span> locate（快速，需先 updatedb）</span>
+sudo updatedb
+locate filename
+
+<span class="pl-c"><span class="pl-c">#</span> which / whereis</span>
+which python3
+whereis nginx</pre></div>
+<h3>6.6 文本处理</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> grep（搜索）</span>
+grep <span class="pl-s"><span class="pl-pds">"</span>keyword<span class="pl-pds">"</span></span> file.txt
+grep -r <span class="pl-s"><span class="pl-pds">"</span>keyword<span class="pl-pds">"</span></span> /path/          <span class="pl-c"><span class="pl-c">#</span> 递归搜索</span>
+grep -i <span class="pl-s"><span class="pl-pds">"</span>keyword<span class="pl-pds">"</span></span> file.txt        <span class="pl-c"><span class="pl-c">#</span> 忽略大小写</span>
+grep -n <span class="pl-s"><span class="pl-pds">"</span>keyword<span class="pl-pds">"</span></span> file.txt        <span class="pl-c"><span class="pl-c">#</span> 显示行号</span>
+grep -v <span class="pl-s"><span class="pl-pds">"</span>keyword<span class="pl-pds">"</span></span> file.txt        <span class="pl-c"><span class="pl-c">#</span> 反向匹配</span>
+grep -c <span class="pl-s"><span class="pl-pds">"</span>keyword<span class="pl-pds">"</span></span> file.txt        <span class="pl-c"><span class="pl-c">#</span> 统计匹配数</span>
+grep -E <span class="pl-s"><span class="pl-pds">"</span>error|warn<span class="pl-pds">"</span></span> file.txt     <span class="pl-c"><span class="pl-c">#</span> 正则（多模式）</span>
+grep -A 3 <span class="pl-s"><span class="pl-pds">"</span>error<span class="pl-pds">"</span></span> file.txt        <span class="pl-c"><span class="pl-c">#</span> 匹配行后 3 行</span>
+grep -B 3 <span class="pl-s"><span class="pl-pds">"</span>error<span class="pl-pds">"</span></span> file.txt        <span class="pl-c"><span class="pl-c">#</span> 匹配行前 3 行</span>
+
+<span class="pl-c"><span class="pl-c">#</span> sed（流编辑）</span>
+sed <span class="pl-s"><span class="pl-pds">'</span>s/old/new/g<span class="pl-pds">'</span></span> file.txt        <span class="pl-c"><span class="pl-c">#</span> 全局替换</span>
+sed -i <span class="pl-s"><span class="pl-pds">'</span>s/old/new/g<span class="pl-pds">'</span></span> file.txt     <span class="pl-c"><span class="pl-c">#</span> 原地替换</span>
+sed -n <span class="pl-s"><span class="pl-pds">'</span>5,10p<span class="pl-pds">'</span></span> file.txt           <span class="pl-c"><span class="pl-c">#</span> 打印 5-10 行</span>
+sed <span class="pl-s"><span class="pl-pds">'</span>3d<span class="pl-pds">'</span></span> file.txt                 <span class="pl-c"><span class="pl-c">#</span> 删除第 3 行</span>
+sed <span class="pl-s"><span class="pl-pds">'</span>/^#/d<span class="pl-pds">'</span></span> file.txt              <span class="pl-c"><span class="pl-c">#</span> 删除注释行</span>
+
+<span class="pl-c"><span class="pl-c">#</span> awk（文本分析）</span>
+awk <span class="pl-s"><span class="pl-pds">'</span>{print $1}<span class="pl-pds">'</span></span> file.txt         <span class="pl-c"><span class="pl-c">#</span> 打印第 1 列</span>
+awk -F: <span class="pl-s"><span class="pl-pds">'</span>{print $1}<span class="pl-pds">'</span></span> /etc/passwd  <span class="pl-c"><span class="pl-c">#</span> 指定分隔符</span>
+awk <span class="pl-s"><span class="pl-pds">'</span>$3 &gt; 100<span class="pl-pds">'</span></span> file.txt           <span class="pl-c"><span class="pl-c">#</span> 条件过滤</span>
+awk <span class="pl-s"><span class="pl-pds">'</span>{sum+=$1} END {print sum}<span class="pl-pds">'</span></span>   <span class="pl-c"><span class="pl-c">#</span> 求和</span>
+awk <span class="pl-s"><span class="pl-pds">'</span>NR==1{print}<span class="pl-pds">'</span></span> file.txt       <span class="pl-c"><span class="pl-c">#</span> 打印第 1 行</span>
+
+<span class="pl-c"><span class="pl-c">#</span> sort / uniq</span>
+sort file.txt                     <span class="pl-c"><span class="pl-c">#</span> 排序</span>
+sort -n file.txt                  <span class="pl-c"><span class="pl-c">#</span> 数值排序</span>
+sort -r file.txt                  <span class="pl-c"><span class="pl-c">#</span> 降序</span>
+sort -k2 file.txt                 <span class="pl-c"><span class="pl-c">#</span> 按第 2 列排序</span>
+uniq file.txt                     <span class="pl-c"><span class="pl-c">#</span> 去重（相邻）</span>
+sort file.txt <span class="pl-k">|</span> uniq -c           <span class="pl-c"><span class="pl-c">#</span> 去重并计数</span>
+
+<span class="pl-c"><span class="pl-c">#</span> cut</span>
+cut -d: -f1 /etc/passwd           <span class="pl-c"><span class="pl-c">#</span> 按分隔符切割</span>
+cut -c1-10 file.txt               <span class="pl-c"><span class="pl-c">#</span> 按字符切割</span>
+
+<span class="pl-c"><span class="pl-c">#</span> tr（字符转换）</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>hello<span class="pl-pds">"</span></span> <span class="pl-k">|</span> tr <span class="pl-s"><span class="pl-pds">'</span>a-z<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>A-Z<span class="pl-pds">'</span></span>     <span class="pl-c"><span class="pl-c">#</span> 转大写</span>
+cat file.txt <span class="pl-k">|</span> tr -d <span class="pl-s"><span class="pl-pds">'</span>\n<span class="pl-pds">'</span></span>         <span class="pl-c"><span class="pl-c">#</span> 删除换行</span></pre></div>
+<h3>6.7 压缩与解压</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> tar</span>
+tar -czvf a.tar.gz dir/           <span class="pl-c"><span class="pl-c">#</span> 打包 gzip 压缩</span>
+tar -xzvf a.tar.gz                <span class="pl-c"><span class="pl-c">#</span> 解压 .tar.gz</span>
+tar -xjvf a.tar.bz2               <span class="pl-c"><span class="pl-c">#</span> 解压 .tar.bz2</span>
+tar -xJvf a.tar.xz                <span class="pl-c"><span class="pl-c">#</span> 解压 .tar.xz</span>
+tar -tf a.tar.gz                  <span class="pl-c"><span class="pl-c">#</span> 查看内容</span>
+
+<span class="pl-c"><span class="pl-c">#</span> zip / unzip</span>
+zip -r a.zip dir/                 <span class="pl-c"><span class="pl-c">#</span> 打包 zip</span>
+unzip a.zip                       <span class="pl-c"><span class="pl-c">#</span> 解压 zip</span>
+unzip a.zip -d /path/             <span class="pl-c"><span class="pl-c">#</span> 解压到指定目录</span>
+
+<span class="pl-c"><span class="pl-c">#</span> gzip / gunzip</span>
+gzip file                         <span class="pl-c"><span class="pl-c">#</span> 压缩</span>
+gunzip file.gz                    <span class="pl-c"><span class="pl-c">#</span> 解压</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 7z</span>
+sudo apt install p7zip-full
+7z x a.7z                         <span class="pl-c"><span class="pl-c">#</span> 解压</span>
+7z a a.7z dir/                    <span class="pl-c"><span class="pl-c">#</span> 压缩</span>
+
+<span class="pl-c"><span class="pl-c">#</span> zstd（新格式，高效）</span>
+sudo apt install zstd
+zstd file                         <span class="pl-c"><span class="pl-c">#</span> 压缩</span>
+zstd -d file.zst                  <span class="pl-c"><span class="pl-c">#</span> 解压</span>
+tar --zstd -cf a.tar.zst dir/     <span class="pl-c"><span class="pl-c">#</span> tar + zstd</span></pre></div>
+<hr>
+<h2>七、用户与权限管理</h2>
+<h3>7.1 用户管理</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 创建用户</span>
+sudo adduser username             <span class="pl-c"><span class="pl-c">#</span> 交互式创建（推荐）</span>
+sudo useradd -m -s /bin/bash username  <span class="pl-c"><span class="pl-c">#</span> 命令式创建</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 修改密码</span>
+sudo passwd username              <span class="pl-c"><span class="pl-c">#</span> 修改指定用户密码</span>
+passwd                            <span class="pl-c"><span class="pl-c">#</span> 修改自己的密码</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 删除用户</span>
+sudo deluser username             <span class="pl-c"><span class="pl-c">#</span> 删除用户</span>
+sudo userdel -r username          <span class="pl-c"><span class="pl-c">#</span> 删除用户及家目录</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 修改用户信息</span>
+sudo usermod -l newname oldname   <span class="pl-c"><span class="pl-c">#</span> 修改用户名</span>
+sudo usermod -d /new/home username  <span class="pl-c"><span class="pl-c">#</span> 修改家目录</span>
+sudo usermod -s /bin/zsh username    <span class="pl-c"><span class="pl-c">#</span> 修改默认 Shell</span>
+sudo usermod -aG sudo username    <span class="pl-c"><span class="pl-c">#</span> 添加到 sudo 组</span>
+sudo usermod -G group1,group2 username  <span class="pl-c"><span class="pl-c">#</span> 设置附加组</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 查看用户</span>
+whoami                            <span class="pl-c"><span class="pl-c">#</span> 当前用户</span>
+who                               <span class="pl-c"><span class="pl-c">#</span> 当前登录用户</span>
+w                                 <span class="pl-c"><span class="pl-c">#</span> 详细登录信息</span>
+id username                       <span class="pl-c"><span class="pl-c">#</span> UID/GID/组</span>
+groups username                   <span class="pl-c"><span class="pl-c">#</span> 所属组</span>
+last                              <span class="pl-c"><span class="pl-c">#</span> 登录历史</span>
+lastlog                           <span class="pl-c"><span class="pl-c">#</span> 用户最后登录</span>
+cat /etc/passwd                   <span class="pl-c"><span class="pl-c">#</span> 用户列表</span>
+cat /etc/group                    <span class="pl-c"><span class="pl-c">#</span> 组列表</span></pre></div>
+<h3>7.2 用户组管理</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo addgroup groupname           <span class="pl-c"><span class="pl-c">#</span> 创建组</span>
+sudo groupadd groupname           <span class="pl-c"><span class="pl-c">#</span> 创建组</span>
+sudo delgroup groupname           <span class="pl-c"><span class="pl-c">#</span> 删除组</span>
+sudo groupdel groupname           <span class="pl-c"><span class="pl-c">#</span> 删除组</span>
+sudo usermod -aG groupname username  <span class="pl-c"><span class="pl-c">#</span> 添加用户到组</span>
+sudo gpasswd -d username groupname   <span class="pl-c"><span class="pl-c">#</span> 从组中移除用户</span>
+cat /etc/group <span class="pl-k">|</span> grep groupname   <span class="pl-c"><span class="pl-c">#</span> 查看组成员</span></pre></div>
+<h3>7.3 sudo 配置</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 编辑 sudo 配置（推荐使用 visudo）</span>
+sudo visudo
+
+<span class="pl-c"><span class="pl-c">#</span> 常用配置</span>
+username ALL=(ALL:ALL) ALL                <span class="pl-c"><span class="pl-c">#</span> 允许 sudo（需密码）</span>
+username ALL=(ALL:ALL) NOPASSWD: ALL      <span class="pl-c"><span class="pl-c">#</span> 免密码 sudo</span>
+%admin ALL=(ALL:ALL) ALL                  <span class="pl-c"><span class="pl-c">#</span> admin 组所有成员</span>
+username ALL=(ALL) /usr/bin/apt, /bin/systemctl  <span class="pl-c"><span class="pl-c">#</span> 只允许特定命令</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 配置 sudo 日志</span>
+sudo visudo
+<span class="pl-c"><span class="pl-c">#</span> Defaults logfile="/var/log/sudo.log"</span></pre></div>
+<h3>7.4 文件权限</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 权限表示</span>
+<span class="pl-c"><span class="pl-c">#</span> r(4) w(2) x(1)  所有者/组/其他</span>
+<span class="pl-c"><span class="pl-c">#</span> 例：rwxr-xr-x = 755</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 修改权限</span>
+chmod 755 file                    <span class="pl-c"><span class="pl-c">#</span> rwxr-xr-x</span>
+chmod 644 file                    <span class="pl-c"><span class="pl-c">#</span> rw-r--r--</span>
+chmod +x script.sh                <span class="pl-c"><span class="pl-c">#</span> 添加执行权限</span>
+chmod -R 755 directory/           <span class="pl-c"><span class="pl-c">#</span> 递归修改</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 符号模式</span>
+chmod u+x file                    <span class="pl-c"><span class="pl-c">#</span> 所有者添加执行权限</span>
+chmod g-w file                    <span class="pl-c"><span class="pl-c">#</span> 组去掉写权限</span>
+chmod o=r file                    <span class="pl-c"><span class="pl-c">#</span> 其他用户只读</span>
+chmod a+r file                    <span class="pl-c"><span class="pl-c">#</span> 所有人添加读权限</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 修改所有者</span>
+sudo chown user:group file
+sudo chown -R user:group directory/
+
+<span class="pl-c"><span class="pl-c">#</span> 修改组</span>
+sudo chgrp groupname file
+
+<span class="pl-c"><span class="pl-c">#</span> 特殊权限</span>
+chmod u+s file                    <span class="pl-c"><span class="pl-c">#</span> SUID（以文件所有者身份执行）</span>
+chmod g+s directory               <span class="pl-c"><span class="pl-c">#</span> SGID（新建文件继承组）</span>
+chmod +t directory                <span class="pl-c"><span class="pl-c">#</span> Sticky bit（只有所有者能删除）</span>
+
+<span class="pl-c"><span class="pl-c">#</span> umask（默认权限掩码）</span>
+<span class="pl-c1">umask</span>                             <span class="pl-c"><span class="pl-c">#</span> 查看</span>
+<span class="pl-c1">umask</span> 022                         <span class="pl-c"><span class="pl-c">#</span> 设置（新文件 644，新目录 755）</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 查看权限</span>
+ls -la file
+stat file
+getfacl file                      <span class="pl-c"><span class="pl-c">#</span> 查看 ACL</span>
+setfacl -m u:username:rw file     <span class="pl-c"><span class="pl-c">#</span> 设置 ACL</span>
+setfacl -x u:username file        <span class="pl-c"><span class="pl-c">#</span> 删除 ACL</span></pre></div>
+<hr>
+<h2>八、软件包管理</h2>
+<h3>8.1 APT 包管理</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 基本操作</span>
+sudo apt update                              <span class="pl-c"><span class="pl-c">#</span> 更新索引</span>
+sudo apt upgrade                             <span class="pl-c"><span class="pl-c">#</span> 升级已安装包</span>
+sudo apt full-upgrade                        <span class="pl-c"><span class="pl-c">#</span> 完整升级</span>
+sudo apt install package_name               <span class="pl-c"><span class="pl-c">#</span> 安装</span>
+sudo apt install -y package_name            <span class="pl-c"><span class="pl-c">#</span> 自动确认</span>
+sudo apt install package1 package2          <span class="pl-c"><span class="pl-c">#</span> 安装多个</span>
+sudo apt remove package_name                <span class="pl-c"><span class="pl-c">#</span> 卸载（保留配置）</span>
+sudo apt purge package_name                 <span class="pl-c"><span class="pl-c">#</span> 彻底卸载</span>
+sudo apt autoremove                         <span class="pl-c"><span class="pl-c">#</span> 清理不需要的依赖</span>
+sudo apt autoclean                          <span class="pl-c"><span class="pl-c">#</span> 清理旧包缓存</span>
+sudo apt clean                              <span class="pl-c"><span class="pl-c">#</span> 清理所有包缓存</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 查询</span>
+apt search keyword                           <span class="pl-c"><span class="pl-c">#</span> 搜索</span>
+apt show package_name                        <span class="pl-c"><span class="pl-c">#</span> 查看详情</span>
+apt list --installed                        <span class="pl-c"><span class="pl-c">#</span> 已安装列表</span>
+apt list --upgradable                       <span class="pl-c"><span class="pl-c">#</span> 可升级列表</span>
+apt list --all-versions package_name        <span class="pl-c"><span class="pl-c">#</span> 所有版本</span>
+dpkg -l <span class="pl-k">|</span> grep keyword                      <span class="pl-c"><span class="pl-c">#</span> 查询已安装</span>
+dpkg -L package_name                        <span class="pl-c"><span class="pl-c">#</span> 查看安装的文件</span>
+dpkg -S /path/to/file                       <span class="pl-c"><span class="pl-c">#</span> 查找文件属于哪个包</span>
+apt-cache depends package_name              <span class="pl-c"><span class="pl-c">#</span> 查看依赖</span>
+apt-cache rdepends package_name             <span class="pl-c"><span class="pl-c">#</span> 查看反向依赖</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 修复</span>
+sudo apt --fix-broken install              <span class="pl-c"><span class="pl-c">#</span> 修复依赖</span>
+sudo dpkg --configure -a                    <span class="pl-c"><span class="pl-c">#</span> 配置未完成的包</span>
+sudo apt reinstall package_name            <span class="pl-c"><span class="pl-c">#</span> 重装</span></pre></div>
+<h3>8.2 dpkg 包管理</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo dpkg -i package.deb                   <span class="pl-c"><span class="pl-c">#</span> 安装 .deb 包</span>
+sudo dpkg -r package_name                  <span class="pl-c"><span class="pl-c">#</span> 卸载</span>
+sudo dpkg -P package_name                  <span class="pl-c"><span class="pl-c">#</span> 彻底卸载</span>
+sudo dpkg -l                               <span class="pl-c"><span class="pl-c">#</span> 已安装列表</span>
+dpkg -L package_name                       <span class="pl-c"><span class="pl-c">#</span> 文件列表</span>
+dpkg -s package_name                       <span class="pl-c"><span class="pl-c">#</span> 包状态</span></pre></div>
+<h3>8.3 Snap 包管理</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo snap install package_name             <span class="pl-c"><span class="pl-c">#</span> 安装</span>
+sudo snap install package_name --classic   <span class="pl-c"><span class="pl-c">#</span> 经典模式</span>
+sudo snap list                             <span class="pl-c"><span class="pl-c">#</span> 已安装列表</span>
+sudo snap refresh                          <span class="pl-c"><span class="pl-c">#</span> 更新所有</span>
+sudo snap refresh package_name             <span class="pl-c"><span class="pl-c">#</span> 更新指定</span>
+sudo snap remove package_name              <span class="pl-c"><span class="pl-c">#</span> 卸载</span>
+snap info package_name                     <span class="pl-c"><span class="pl-c">#</span> 查看信息</span>
+snap find keyword                          <span class="pl-c"><span class="pl-c">#</span> 搜索</span></pre></div>
+<h3>8.4 Flatpak 包管理</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt install flatpak
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+flatpak install flathub package_name
+flatpak list
+flatpak update
+flatpak uninstall package_name
+flatpak run package_name</pre></div>
+<h3>8.5 PPA（个人软件包存档）</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 添加 PPA</span>
+sudo add-apt-repository ppa:user/ppa-name
+sudo apt update
+
+<span class="pl-c"><span class="pl-c">#</span> 删除 PPA</span>
+sudo add-apt-repository --remove ppa:user/ppa-name
+
+<span class="pl-c"><span class="pl-c">#</span> 列出已添加的 PPA</span>
+ls /etc/apt/sources.list.d/</pre></div>
+<hr>
+<h2>九、网络配置与管理</h2>
+<h3>9.1 网络信息查看</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> IP 地址</span>
+ip addr show                   <span class="pl-c"><span class="pl-c">#</span> 推荐</span>
+ip a                           <span class="pl-c"><span class="pl-c">#</span> 简写</span>
+ifconfig                       <span class="pl-c"><span class="pl-c">#</span> 旧命令（需安装 net-tools）</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 路由表</span>
+ip route show
+route -n
+
+<span class="pl-c"><span class="pl-c">#</span> DNS</span>
+cat /etc/resolv.conf
+systemd-resolve --status
+
+<span class="pl-c"><span class="pl-c">#</span> 连接状态</span>
+ss -tlnp                       <span class="pl-c"><span class="pl-c">#</span> TCP 监听端口</span>
+ss -ulnp                       <span class="pl-c"><span class="pl-c">#</span> UDP 监听端口</span>
+ss -tunap                      <span class="pl-c"><span class="pl-c">#</span> 所有连接</span>
+netstat -tlnp                  <span class="pl-c"><span class="pl-c">#</span> 旧命令</span>
+
+<span class="pl-c"><span class="pl-c">#</span> ARP 表</span>
+ip neigh show
+arp -a
+
+<span class="pl-c"><span class="pl-c">#</span> 网络接口</span>
+ip link show
+ethtool eth0                   <span class="pl-c"><span class="pl-c">#</span> 网卡信息</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 流量监控</span>
+nload                          <span class="pl-c"><span class="pl-c">#</span> 实时流量</span>
+iftop                          <span class="pl-c"><span class="pl-c">#</span> 连接流量</span>
+nethogs                        <span class="pl-c"><span class="pl-c">#</span> 按进程流量</span>
+vnstat                         <span class="pl-c"><span class="pl-c">#</span> 流量统计</span></pre></div>
+<h3>9.2 Netplan 网络配置（Ubuntu 18.04+）</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> Netplan 配置文件位置</span>
+/etc/netplan/<span class="pl-k">*</span>.yaml
+
+<span class="pl-c"><span class="pl-c">#</span> 编辑配置</span>
+sudo nano /etc/netplan/01-netcfg.yaml</pre></div>
+<p><strong>DHCP 配置：</strong></p>
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">network</span>:
+  <span class="pl-ent">version</span>: <span class="pl-c1">2</span>
+  <span class="pl-ent">renderer</span>: <span class="pl-s">networkd</span>
+  <span class="pl-ent">ethernets</span>:
+    <span class="pl-ent">eth0</span>:
+      <span class="pl-ent">dhcp4</span>: <span class="pl-c1">true</span>
+      <span class="pl-ent">dhcp6</span>: <span class="pl-c1">false</span></pre></div>
+<p><strong>静态 IP 配置：</strong></p>
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">network</span>:
+  <span class="pl-ent">version</span>: <span class="pl-c1">2</span>
+  <span class="pl-ent">renderer</span>: <span class="pl-s">networkd</span>
+  <span class="pl-ent">ethernets</span>:
+    <span class="pl-ent">eth0</span>:
+      <span class="pl-ent">dhcp4</span>: <span class="pl-s">no</span>
+      <span class="pl-ent">addresses</span>:
+        - <span class="pl-s">192.168.1.100/24</span>
+      <span class="pl-ent">routes</span>:
+        - <span class="pl-ent">to</span>: <span class="pl-s">default</span>
+          <span class="pl-ent">via</span>: <span class="pl-s">192.168.1.1</span>
+      <span class="pl-ent">nameservers</span>:
+        <span class="pl-ent">addresses</span>:
+          - <span class="pl-s">8.8.8.8</span>
+          - <span class="pl-s">8.8.4.4</span>
+          - <span class="pl-s">223.5.5.5</span></pre></div>
+<p><strong>WiFi 配置：</strong></p>
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">network</span>:
+  <span class="pl-ent">version</span>: <span class="pl-c1">2</span>
+  <span class="pl-ent">renderer</span>: <span class="pl-s">networkd</span>
+  <span class="pl-ent">wifis</span>:
+    <span class="pl-ent">wlan0</span>:
+      <span class="pl-ent">dhcp4</span>: <span class="pl-c1">true</span>
+      <span class="pl-ent">access-points</span>:
+        <span class="pl-s"><span class="pl-pds">"</span><span class="pl-ent">WiFi名称</span><span class="pl-pds">"</span></span>:
+          <span class="pl-ent">password</span>: <span class="pl-s"><span class="pl-pds">"</span>WiFi密码<span class="pl-pds">"</span></span></pre></div>
+<p><strong>多网卡配置：</strong></p>
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">network</span>:
+  <span class="pl-ent">version</span>: <span class="pl-c1">2</span>
+  <span class="pl-ent">renderer</span>: <span class="pl-s">networkd</span>
+  <span class="pl-ent">ethernets</span>:
+    <span class="pl-ent">eth0</span>:
+      <span class="pl-ent">dhcp4</span>: <span class="pl-c1">true</span>
+    <span class="pl-ent">eth1</span>:
+      <span class="pl-ent">dhcp4</span>: <span class="pl-s">no</span>
+      <span class="pl-ent">addresses</span>:
+        - <span class="pl-s">10.0.0.1/24</span></pre></div>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 应用配置</span>
+sudo netplan apply
+
+<span class="pl-c"><span class="pl-c">#</span> 调试配置</span>
+sudo netplan --debug apply
+
+<span class="pl-c"><span class="pl-c">#</span> 查看当前配置</span>
+sudo netplan status</pre></div>
+<h3>9.3 DNS 配置</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 使用 systemd-resolved（默认）</span>
+sudo nano /etc/systemd/resolved.conf
+<span class="pl-c"><span class="pl-c">#</span> DNS=8.8.8.8 8.8.4.4 223.5.5.5</span>
+<span class="pl-c"><span class="pl-c">#</span> FallbackDNS=114.114.114.114</span>
+sudo systemctl restart systemd-resolved
+
+<span class="pl-c"><span class="pl-c">#</span> 传统方式（/etc/resolv.conf）</span>
+<span class="pl-c"><span class="pl-c">#</span> 注意：systemd-resolved 会覆盖此文件</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>nameserver 8.8.8.8<span class="pl-pds">"</span></span> <span class="pl-k">|</span> sudo tee /etc/resolv.conf
+
+<span class="pl-c"><span class="pl-c">#</span> hosts 文件</span>
+sudo nano /etc/hosts
+<span class="pl-c"><span class="pl-c">#</span> 192.168.1.100   myserver.local   myserver</span>
+
+<span class="pl-c"><span class="pl-c">#</span> DNS 查询工具</span>
+nslookup google.com
+dig google.com
+dig +short google.com
+dig @8.8.8.8 google.com         <span class="pl-c"><span class="pl-c">#</span> 指定 DNS 服务器</span>
+host google.com</pre></div>
+<h3>9.4 网络排查</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 连通性测试</span>
+ping -c 4 8.8.8.8
+ping -c 4 google.com
+
+<span class="pl-c"><span class="pl-c">#</span> 路由追踪</span>
+traceroute google.com
+mtr google.com                   <span class="pl-c"><span class="pl-c">#</span> 实时路由追踪（更好）</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 端口测试</span>
+nc -zv 192.168.1.100 22         <span class="pl-c"><span class="pl-c">#</span> 测试端口</span>
+telnet 192.168.1.100 80         <span class="pl-c"><span class="pl-c">#</span> 测试端口（旧）</span>
+nmap -p 22,80,443 192.168.1.100 <span class="pl-c"><span class="pl-c">#</span> 端口扫描</span>
+
+<span class="pl-c"><span class="pl-c">#</span> HTTP 测试</span>
+curl -I https://google.com
+curl -v https://google.com
+wget --spider https://google.com
+
+<span class="pl-c"><span class="pl-c">#</span> 抓包</span>
+sudo tcpdump -i eth0 -nn
+sudo tcpdump -i eth0 port 80 -nn
+sudo tcpdump -i any -w capture.pcap
+sudo wireshark                   <span class="pl-c"><span class="pl-c">#</span> 图形化抓包</span></pre></div>
+<h3>9.5 防火墙（UFW）</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> UFW（Uncomplicated Firewall）</span>
+sudo apt install ufw
+
+<span class="pl-c"><span class="pl-c">#</span> 基本操作</span>
+sudo ufw <span class="pl-c1">enable</span>                  <span class="pl-c"><span class="pl-c">#</span> 启用防火墙</span>
+sudo ufw disable                 <span class="pl-c"><span class="pl-c">#</span> 禁用防火墙</span>
+sudo ufw status                  <span class="pl-c"><span class="pl-c">#</span> 查看状态</span>
+sudo ufw status verbose          <span class="pl-c"><span class="pl-c">#</span> 详细状态</span>
+sudo ufw status numbered         <span class="pl-c"><span class="pl-c">#</span> 编号显示</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 规则管理</span>
+sudo ufw allow 22/tcp            <span class="pl-c"><span class="pl-c">#</span> 允许 SSH</span>
+sudo ufw allow 80/tcp            <span class="pl-c"><span class="pl-c">#</span> 允许 HTTP</span>
+sudo ufw allow 443/tcp           <span class="pl-c"><span class="pl-c">#</span> 允许 HTTPS</span>
+sudo ufw allow 3306/tcp          <span class="pl-c"><span class="pl-c">#</span> 允许 MySQL</span>
+sudo ufw allow from 192.168.1.0/24  <span class="pl-c"><span class="pl-c">#</span> 允许某个网段</span>
+sudo ufw allow from 192.168.1.100 to any port 3306  <span class="pl-c"><span class="pl-c">#</span> 允许特定 IP</span>
+sudo ufw deny 23/tcp             <span class="pl-c"><span class="pl-c">#</span> 拒绝 Telnet</span>
+sudo ufw delete allow 23/tcp     <span class="pl-c"><span class="pl-c">#</span> 删除规则</span>
+sudo ufw delete 3                <span class="pl-c"><span class="pl-c">#</span> 按编号删除规则</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 默认策略</span>
+sudo ufw default deny incoming   <span class="pl-c"><span class="pl-c">#</span> 默认拒绝入站</span>
+sudo ufw default allow outgoing  <span class="pl-c"><span class="pl-c">#</span> 默认允许出站</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 应用配置</span>
+sudo ufw app list                <span class="pl-c"><span class="pl-c">#</span> 可用应用</span>
+sudo ufw allow <span class="pl-s"><span class="pl-pds">'</span>OpenSSH<span class="pl-pds">'</span></span>         <span class="pl-c"><span class="pl-c">#</span> 按应用名允许</span>
+sudo ufw allow <span class="pl-s"><span class="pl-pds">'</span>Nginx Full<span class="pl-pds">'</span></span>      <span class="pl-c"><span class="pl-c">#</span> 允许 Nginx（80+443）</span></pre></div>
+<h3>9.6 代理配置</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 环境变量</span>
+<span class="pl-k">export</span> http_proxy=http://127.0.0.1:7890
+<span class="pl-k">export</span> https_proxy=http://127.0.0.1:7890
+<span class="pl-k">export</span> no_proxy=localhost,127.0.0.1,10.0.0.0/8
+
+<span class="pl-c"><span class="pl-c">#</span> 永久配置</span>
+cat <span class="pl-k">&gt;&gt;</span> <span class="pl-k">~</span>/.bashrc <span class="pl-s"><span class="pl-k">&lt;&lt;</span> '<span class="pl-k">EOF</span>'</span>
+<span class="pl-s">export http_proxy=http://127.0.0.1:7890</span>
+<span class="pl-s">export https_proxy=http://127.0.0.1:7890</span>
+<span class="pl-s">export no_proxy=localhost,127.0.0.1</span>
+<span class="pl-s"><span class="pl-k">EOF</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> APT 代理</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">'</span>Acquire::http::Proxy "http://127.0.0.1:7890";<span class="pl-pds">'</span></span> <span class="pl-k">|</span> sudo tee /etc/apt/apt.conf.d/proxy
+
+<span class="pl-c"><span class="pl-c">#</span> Git 代理</span>
+git config --global http.proxy http://127.0.0.1:7890
+git config --global https.proxy http://127.0.0.1:7890
+
+<span class="pl-c"><span class="pl-c">#</span> pip 代理</span>
+pip install --proxy http://127.0.0.1:7890 package_name</pre></div>
+<hr>
+<h2>十、服务与进程管理</h2>
+<h3>10.1 systemd 服务管理</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 服务管理</span>
+sudo systemctl start service_name       <span class="pl-c"><span class="pl-c">#</span> 启动</span>
+sudo systemctl stop service_name        <span class="pl-c"><span class="pl-c">#</span> 停止</span>
+sudo systemctl restart service_name     <span class="pl-c"><span class="pl-c">#</span> 重启</span>
+sudo systemctl reload service_name      <span class="pl-c"><span class="pl-c">#</span> 重载配置</span>
+sudo systemctl status service_name      <span class="pl-c"><span class="pl-c">#</span> 查看状态</span>
+sudo systemctl <span class="pl-c1">enable</span> service_name      <span class="pl-c"><span class="pl-c">#</span> 开机自启</span>
+sudo systemctl disable service_name     <span class="pl-c"><span class="pl-c">#</span> 取消自启</span>
+sudo systemctl is-active service_name   <span class="pl-c"><span class="pl-c">#</span> 是否运行中</span>
+sudo systemctl is-enabled service_name  <span class="pl-c"><span class="pl-c">#</span> 是否开机自启</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 查看服务</span>
+systemctl list-units --type=service                    <span class="pl-c"><span class="pl-c">#</span> 所有服务</span>
+systemctl list-units --type=service --state=running    <span class="pl-c"><span class="pl-c">#</span> 运行中的服务</span>
+systemctl list-units --type=service --state=failed     <span class="pl-c"><span class="pl-c">#</span> 失败的服务</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 日志（journalctl）</span>
+journalctl -u service_name              <span class="pl-c"><span class="pl-c">#</span> 某服务日志</span>
+journalctl -u service_name -f           <span class="pl-c"><span class="pl-c">#</span> 实时查看</span>
+journalctl -u service_name --since <span class="pl-s"><span class="pl-pds">"</span>1 hour ago<span class="pl-pds">"</span></span>    <span class="pl-c"><span class="pl-c">#</span> 最近 1 小时</span>
+journalctl -u service_name -n 100       <span class="pl-c"><span class="pl-c">#</span> 最近 100 行</span>
+journalctl -p err                       <span class="pl-c"><span class="pl-c">#</span> 错误级别日志</span>
+journalctl --disk-usage                 <span class="pl-c"><span class="pl-c">#</span> 日志占用空间</span>
+sudo journalctl --vacuum-size=100M      <span class="pl-c"><span class="pl-c">#</span> 清理日志到 100M</span></pre></div>
+<h3>10.2 自定义 systemd 服务</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 创建服务文件</span>
+sudo nano /etc/systemd/system/myapp.service</pre></div>
+<div class="highlight highlight-source-ini"><pre class="notranslate"><span class="pl-en">[Unit]</span>
+<span class="pl-k">Description</span>=My Application
+<span class="pl-k">After</span>=network.target
+<span class="pl-k">Wants</span>=network.target
+
+<span class="pl-en">[Service]</span>
+<span class="pl-k">Type</span>=simple
+<span class="pl-k">User</span>=www-data
+<span class="pl-k">Group</span>=www-data
+<span class="pl-k">WorkingDirectory</span>=/opt/myapp
+<span class="pl-k">ExecStart</span>=/usr/bin/python3 /opt/myapp/app.py
+<span class="pl-k">ExecStop</span>=/bin/kill -s TERM $MAINPID
+<span class="pl-k">Restart</span>=always
+<span class="pl-k">RestartSec</span>=5
+<span class="pl-k">StandardOutput</span>=journal
+<span class="pl-k">StandardError</span>=journal
+<span class="pl-k">Environment</span>=<span class="pl-k">NODE_ENV</span>=production
+<span class="pl-k">Environment</span>=<span class="pl-k">PATH</span>=/usr/local/bin:/usr/bin:/bin
+
+<span class="pl-en">[Install]</span>
+<span class="pl-k">WantedBy</span>=multi-user.target</pre></div>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 重新加载 systemd</span>
+sudo systemctl daemon-reload
+
+<span class="pl-c"><span class="pl-c">#</span> 启动服务</span>
+sudo systemctl start myapp
+sudo systemctl <span class="pl-c1">enable</span> myapp
+
+<span class="pl-c"><span class="pl-c">#</span> 查看状态</span>
+sudo systemctl status myapp
+journalctl -u myapp -f</pre></div>
+<h3>10.3 进程管理</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 查看进程</span>
+ps aux                          <span class="pl-c"><span class="pl-c">#</span> 所有进程</span>
+ps -ef <span class="pl-k">|</span> grep nginx             <span class="pl-c"><span class="pl-c">#</span> 查找进程</span>
+ps aux --sort=-%mem <span class="pl-k">|</span> head      <span class="pl-c"><span class="pl-c">#</span> 按内存排序</span>
+ps aux --sort=-%cpu <span class="pl-k">|</span> head      <span class="pl-c"><span class="pl-c">#</span> 按 CPU 排序</span>
+top                             <span class="pl-c"><span class="pl-c">#</span> 实时监控</span>
+htop                            <span class="pl-c"><span class="pl-c">#</span> 更好的监控工具</span>
+pgrep -f <span class="pl-s"><span class="pl-pds">"</span>process_name<span class="pl-pds">"</span></span>         <span class="pl-c"><span class="pl-c">#</span> 按名称查找 PID</span>
+pgrep -u username               <span class="pl-c"><span class="pl-c">#</span> 按用户查找 PID</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 管理进程</span>
+<span class="pl-c1">kill</span> PID                        <span class="pl-c"><span class="pl-c">#</span> 终止进程</span>
+<span class="pl-c1">kill</span> -9 PID                     <span class="pl-c"><span class="pl-c">#</span> 强制终止</span>
+<span class="pl-c1">kill</span> -15 PID                    <span class="pl-c"><span class="pl-c">#</span> 优雅终止（默认）</span>
+killall process_name            <span class="pl-c"><span class="pl-c">#</span> 按名称终止</span>
+pkill -f <span class="pl-s"><span class="pl-pds">"</span>pattern<span class="pl-pds">"</span></span>              <span class="pl-c"><span class="pl-c">#</span> 按模式终止</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 后台运行</span>
+<span class="pl-c1">command</span> <span class="pl-k">&amp;</span>                       <span class="pl-c"><span class="pl-c">#</span> 后台运行</span>
+nohup <span class="pl-c1">command</span> <span class="pl-k">&gt;</span> output.log <span class="pl-k">2&gt;&amp;1</span> <span class="pl-k">&amp;</span>   <span class="pl-c"><span class="pl-c">#</span> 后台运行，不受终端影响</span>
+screen -S session_name          <span class="pl-c"><span class="pl-c">#</span> screen 会话</span>
+tmux new -s session_name        <span class="pl-c"><span class="pl-c">#</span> tmux 会话</span>
+
+<span class="pl-c"><span class="pl-c">#</span> tmux 常用操作</span>
+<span class="pl-c"><span class="pl-c">#</span> Ctrl+B D      分离会话</span>
+<span class="pl-c"><span class="pl-c">#</span> tmux attach -t session_name   重新连接</span>
+<span class="pl-c"><span class="pl-c">#</span> Ctrl+B C      新建窗口</span>
+<span class="pl-c"><span class="pl-c">#</span> Ctrl+B N      下一个窗口</span>
+<span class="pl-c"><span class="pl-c">#</span> Ctrl+B %      垂直分屏</span>
+<span class="pl-c"><span class="pl-c">#</span> Ctrl+B "      水平分屏</span></pre></div>
+<hr>
+<h2>十一、磁盘与存储管理</h2>
+<h3>11.1 磁盘信息查看</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 磁盘使用</span>
+df -h                           <span class="pl-c"><span class="pl-c">#</span> 文件系统使用情况</span>
+df -i                           <span class="pl-c"><span class="pl-c">#</span> inode 使用情况</span>
+du -sh /path                    <span class="pl-c"><span class="pl-c">#</span> 目录大小</span>
+du -sh <span class="pl-k">*</span> <span class="pl-k">|</span> sort -hr             <span class="pl-c"><span class="pl-c">#</span> 当前目录各文件大小排序</span>
+du -sh /var/log/<span class="pl-k">*</span>               <span class="pl-c"><span class="pl-c">#</span> 日志目录大小</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 磁盘分区</span>
+lsblk                           <span class="pl-c"><span class="pl-c">#</span> 块设备列表</span>
+sudo fdisk -l                   <span class="pl-c"><span class="pl-c">#</span> 分区详情</span>
+sudo parted -l                  <span class="pl-c"><span class="pl-c">#</span> 分区信息</span>
+blkid                           <span class="pl-c"><span class="pl-c">#</span> 分区 UUID</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 磁盘性能</span>
+sudo hdparm -Tt /dev/sda        <span class="pl-c"><span class="pl-c">#</span> 磁盘速度测试</span>
+sudo iotop                      <span class="pl-c"><span class="pl-c">#</span> IO 监控</span>
+iostat -xz 1                    <span class="pl-c"><span class="pl-c">#</span> IO 统计</span></pre></div>
+<h3>11.2 分区管理</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 使用 fdisk（MBR）</span>
+sudo fdisk /dev/sdb
+<span class="pl-c"><span class="pl-c">#</span> n 创建分区</span>
+<span class="pl-c"><span class="pl-c">#</span> d 删除分区</span>
+<span class="pl-c"><span class="pl-c">#</span> p 打印分区表</span>
+<span class="pl-c"><span class="pl-c">#</span> w 保存退出</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 使用 parted（GPT）</span>
+sudo parted /dev/sdb
+<span class="pl-c"><span class="pl-c">#</span> mklabel gpt</span>
+<span class="pl-c"><span class="pl-c">#</span> mkpart primary ext4 0% 50%</span>
+<span class="pl-c"><span class="pl-c">#</span> print</span>
+<span class="pl-c"><span class="pl-c">#</span> quit</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 使用 gparted（图形化）</span>
+sudo gparted
+
+<span class="pl-c"><span class="pl-c">#</span> 格式化分区</span>
+sudo mkfs.ext4 /dev/sdb1        <span class="pl-c"><span class="pl-c">#</span> ext4</span>
+sudo mkfs.xfs /dev/sdb1         <span class="pl-c"><span class="pl-c">#</span> XFS</span>
+sudo mkfs.vfat /dev/sdb1        <span class="pl-c"><span class="pl-c">#</span> FAT32</span>
+sudo mkfs.ntfs /dev/sdb1        <span class="pl-c"><span class="pl-c">#</span> NTFS</span>
+sudo mkswap /dev/sdb2           <span class="pl-c"><span class="pl-c">#</span> swap</span></pre></div>
+<h3>11.3 挂载管理</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 手动挂载</span>
+sudo mount /dev/sdb1 /mnt/data
+sudo mount -o ro /dev/sdb1 /mnt/data     <span class="pl-c"><span class="pl-c">#</span> 只读挂载</span>
+sudo umount /mnt/data                     <span class="pl-c"><span class="pl-c">#</span> 卸载</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 永久挂载（/etc/fstab）</span>
+sudo blkid                              <span class="pl-c"><span class="pl-c">#</span> 获取 UUID</span>
+sudo nano /etc/fstab
+<span class="pl-c"><span class="pl-c">#</span> UUID=xxxx-xxxx  /mnt/data  ext4  defaults  0  2</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 测试 fstab（不重启）</span>
+sudo mount -a
+
+<span class="pl-c"><span class="pl-c">#</span> Swap 管理</span>
+sudo swapon /dev/sdb2
+sudo swapoff /dev/sdb2
+swapon --show
+free -h</pre></div>
+<h3>11.4 LVM 逻辑卷管理</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 创建物理卷</span>
+sudo pvcreate /dev/sdb1
+sudo pvs                          <span class="pl-c"><span class="pl-c">#</span> 查看物理卷</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 创建卷组</span>
+sudo vgcreate myvg /dev/sdb1
+sudo vgs                          <span class="pl-c"><span class="pl-c">#</span> 查看卷组</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 创建逻辑卷</span>
+sudo lvcreate -L 20G -n mydata myvg
+sudo lvcreate -l 100%FREE -n myhome myvg
+sudo lvs                          <span class="pl-c"><span class="pl-c">#</span> 查看逻辑卷</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 格式化并挂载</span>
+sudo mkfs.ext4 /dev/myvg/mydata
+sudo mount /dev/myvg/mydata /mnt/data
+
+<span class="pl-c"><span class="pl-c">#</span> 扩容</span>
+sudo lvextend -L +10G /dev/myvg/mydata
+sudo resize2fs /dev/myvg/mydata     <span class="pl-c"><span class="pl-c">#</span> ext4</span>
+<span class="pl-c"><span class="pl-c">#</span> sudo xfs_growfs /mnt/data          # XFS</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 缩容（ext4）</span>
+sudo umount /mnt/data
+sudo e2fsck -f /dev/myvg/mydata
+sudo resize2fs /dev/myvg/mydata 15G
+sudo lvreduce -L 15G /dev/myvg/mydata
+sudo mount /dev/myvg/mydata /mnt/data</pre></div>
+<h3>11.5 RAID 配置</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 安装 mdadm</span>
+sudo apt install mdadm
+
+<span class="pl-c"><span class="pl-c">#</span> 创建 RAID 1（镜像）</span>
+sudo mdadm --create /dev/md0 --level=1 --raid-devices=2 /dev/sdb1 /dev/sdc1
+
+<span class="pl-c"><span class="pl-c">#</span> 查看状态</span>
+cat /proc/mdstat
+sudo mdadm --detail /dev/md0
+
+<span class="pl-c"><span class="pl-c">#</span> 保存配置</span>
+sudo mdadm --detail --scan <span class="pl-k">&gt;&gt;</span> /etc/mdadm/mdadm.conf
+
+<span class="pl-c"><span class="pl-c">#</span> 格式化并挂载</span>
+sudo mkfs.ext4 /dev/md0
+sudo mount /dev/md0 /mnt/raid
+
+<span class="pl-c"><span class="pl-c">#</span> 故障恢复</span>
+sudo mdadm /dev/md0 --fail /dev/sdb1    <span class="pl-c"><span class="pl-c">#</span> 标记故障</span>
+sudo mdadm /dev/md0 --remove /dev/sdb1  <span class="pl-c"><span class="pl-c">#</span> 移除</span>
+sudo mdadm /dev/md0 --add /dev/sdd1     <span class="pl-c"><span class="pl-c">#</span> 替换</span></pre></div>
+<hr>
+<h2>十二、Shell 脚本编程</h2>
+<h3>12.1 脚本基础</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#!</span>/bin/bash</span>
+<span class="pl-c"><span class="pl-c">#</span> 脚本开头必须指定解释器</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 变量</span>
+name=<span class="pl-s"><span class="pl-pds">"</span>Ubuntu<span class="pl-pds">"</span></span>
+version=24.04
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>Hello, <span class="pl-smi">$name</span> <span class="pl-smi">$version</span><span class="pl-pds">"</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> 只读变量</span>
+<span class="pl-k">readonly</span> PI=3.14159
+
+<span class="pl-c"><span class="pl-c">#</span> 环境变量</span>
+<span class="pl-k">export</span> MY_VAR=<span class="pl-s"><span class="pl-pds">"</span>value<span class="pl-pds">"</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> 字符串操作</span>
+str=<span class="pl-s"><span class="pl-pds">"</span>Hello, World<span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-smi">${<span class="pl-k">#</span>str}</span>                    <span class="pl-c"><span class="pl-c">#</span> 长度</span>
+<span class="pl-c1">echo</span> <span class="pl-smi">${str<span class="pl-k">:</span>0<span class="pl-k">:</span>5}</span>                 <span class="pl-c"><span class="pl-c">#</span> 截取</span>
+<span class="pl-c1">echo</span> <span class="pl-smi">${str<span class="pl-k">/</span>World<span class="pl-k">/</span>Bash}</span>          <span class="pl-c"><span class="pl-c">#</span> 替换</span>
+<span class="pl-c1">echo</span> <span class="pl-smi">${str^^}</span>                   <span class="pl-c"><span class="pl-c">#</span> 转大写</span>
+<span class="pl-c1">echo</span> <span class="pl-smi">${str,,}</span>                   <span class="pl-c"><span class="pl-c">#</span> 转小写</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 特殊变量</span>
+<span class="pl-smi">$0</span>                              <span class="pl-c"><span class="pl-c">#</span> 脚本名</span>
+<span class="pl-smi">$1</span> <span class="pl-smi">$2</span> <span class="pl-smi">$3</span>                        <span class="pl-c"><span class="pl-c">#</span> 参数</span>
+<span class="pl-smi">$#</span>                              <span class="pl-c"><span class="pl-c">#</span> 参数个数</span>
+<span class="pl-smi">$@</span>                              <span class="pl-c"><span class="pl-c">#</span> 所有参数</span>
+<span class="pl-smi">$*</span>                              <span class="pl-c"><span class="pl-c">#</span> 所有参数（字符串）</span>
+<span class="pl-smi">$?</span>                              <span class="pl-c"><span class="pl-c">#</span> 上一命令退出码</span>
+<span class="pl-smi">$$</span>                              <span class="pl-c"><span class="pl-c">#</span> 当前进程 PID</span>
+<span class="pl-smi">$!</span>                              <span class="pl-c"><span class="pl-c">#</span> 后台进程 PID</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 字符串拼接</span>
+greeting=<span class="pl-s"><span class="pl-pds">"</span>Hello<span class="pl-pds">"</span></span>
+name=<span class="pl-s"><span class="pl-pds">"</span>World<span class="pl-pds">"</span></span>
+full=<span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$greeting</span>, <span class="pl-smi">$name</span>!<span class="pl-pds">"</span></span></pre></div>
+<h3>12.2 条件判断</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> if 语句</span>
+<span class="pl-k">if</span> [ <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$x</span><span class="pl-pds">"</span></span> <span class="pl-k">-gt</span> 10 ]<span class="pl-k">;</span> <span class="pl-k">then</span>
+    <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>大于 10<span class="pl-pds">"</span></span>
+<span class="pl-k">elif</span> [ <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$x</span><span class="pl-pds">"</span></span> <span class="pl-k">-eq</span> 10 ]<span class="pl-k">;</span> <span class="pl-k">then</span>
+    <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>等于 10<span class="pl-pds">"</span></span>
+<span class="pl-k">else</span>
+    <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>小于 10<span class="pl-pds">"</span></span>
+<span class="pl-k">fi</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 常用测试条件</span>
+<span class="pl-c"><span class="pl-c">#</span> 文件测试</span>
+[ <span class="pl-k">-f</span> file ]                     <span class="pl-c"><span class="pl-c">#</span> 是否为文件</span>
+[ <span class="pl-k">-d</span> dir ]                      <span class="pl-c"><span class="pl-c">#</span> 是否为目录</span>
+[ <span class="pl-k">-e</span> path ]                     <span class="pl-c"><span class="pl-c">#</span> 是否存在</span>
+[ <span class="pl-k">-r</span> file ]                     <span class="pl-c"><span class="pl-c">#</span> 是否可读</span>
+[ <span class="pl-k">-w</span> file ]                     <span class="pl-c"><span class="pl-c">#</span> 是否可写</span>
+[ <span class="pl-k">-x</span> file ]                     <span class="pl-c"><span class="pl-c">#</span> 是否可执行</span>
+[ <span class="pl-k">-s</span> file ]                     <span class="pl-c"><span class="pl-c">#</span> 是否非空</span>
+[ <span class="pl-k">-L</span> link ]                     <span class="pl-c"><span class="pl-c">#</span> 是否为软链接</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 字符串测试</span>
+[ <span class="pl-k">-z</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$str</span><span class="pl-pds">"</span></span> ]                   <span class="pl-c"><span class="pl-c">#</span> 是否为空</span>
+[ <span class="pl-k">-n</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$str</span><span class="pl-pds">"</span></span> ]                   <span class="pl-c"><span class="pl-c">#</span> 是否非空</span>
+[ <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$a</span><span class="pl-pds">"</span></span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$b</span><span class="pl-pds">"</span></span> ]                 <span class="pl-c"><span class="pl-c">#</span> 是否相等</span>
+[ <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$a</span><span class="pl-pds">"</span></span> <span class="pl-k">!=</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$b</span><span class="pl-pds">"</span></span> ]                <span class="pl-c"><span class="pl-c">#</span> 是否不等</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 数值测试</span>
+[ <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$a</span><span class="pl-pds">"</span></span> <span class="pl-k">-eq</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$b</span><span class="pl-pds">"</span></span> ]              <span class="pl-c"><span class="pl-c">#</span> 等于</span>
+[ <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$a</span><span class="pl-pds">"</span></span> <span class="pl-k">-ne</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$b</span><span class="pl-pds">"</span></span> ]              <span class="pl-c"><span class="pl-c">#</span> 不等于</span>
+[ <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$a</span><span class="pl-pds">"</span></span> <span class="pl-k">-gt</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$b</span><span class="pl-pds">"</span></span> ]              <span class="pl-c"><span class="pl-c">#</span> 大于</span>
+[ <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$a</span><span class="pl-pds">"</span></span> <span class="pl-k">-lt</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$b</span><span class="pl-pds">"</span></span> ]              <span class="pl-c"><span class="pl-c">#</span> 小于</span>
+[ <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$a</span><span class="pl-pds">"</span></span> <span class="pl-k">-ge</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$b</span><span class="pl-pds">"</span></span> ]              <span class="pl-c"><span class="pl-c">#</span> 大于等于</span>
+[ <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$a</span><span class="pl-pds">"</span></span> <span class="pl-k">-le</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$b</span><span class="pl-pds">"</span></span> ]              <span class="pl-c"><span class="pl-c">#</span> 小于等于</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 逻辑运算</span>
+[ <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$a</span><span class="pl-pds">"</span></span> <span class="pl-k">-gt</span> 5 ] <span class="pl-k">&amp;&amp;</span> [ <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$b</span><span class="pl-pds">"</span></span> <span class="pl-k">-lt</span> 10 ]    <span class="pl-c"><span class="pl-c">#</span> 与</span>
+[ <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$a</span><span class="pl-pds">"</span></span> <span class="pl-k">-gt</span> 5 ] <span class="pl-k">||</span> [ <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$b</span><span class="pl-pds">"</span></span> <span class="pl-k">-lt</span> 10 ]    <span class="pl-c"><span class="pl-c">#</span> 或</span>
+[ <span class="pl-k">!</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$a</span><span class="pl-pds">"</span></span> <span class="pl-k">-gt</span> 5 ]                      <span class="pl-c"><span class="pl-c">#</span> 非</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 双括号（支持算术）</span>
+<span class="pl-k">if</span> <span class="pl-s"><span class="pl-pds">((</span> x <span class="pl-k">&gt;</span> <span class="pl-c1">10</span> <span class="pl-k">&amp;&amp;</span> y <span class="pl-k">&lt;</span> <span class="pl-c1">20</span> <span class="pl-pds">))</span></span><span class="pl-k">;</span> <span class="pl-k">then</span>
+    <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>条件成立<span class="pl-pds">"</span></span>
+<span class="pl-k">fi</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 双方括号（支持模式匹配）</span>
+<span class="pl-k">if</span> [[ <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$str</span><span class="pl-pds">"</span></span> <span class="pl-k">==</span> hello<span class="pl-k">*</span> ]]<span class="pl-k">;</span> <span class="pl-k">then</span>
+    <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>以 hello 开头<span class="pl-pds">"</span></span>
+<span class="pl-k">fi</span>
+
+<span class="pl-c"><span class="pl-c">#</span> case 语句</span>
+<span class="pl-k">case</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$option</span><span class="pl-pds">"</span></span> <span class="pl-k">in</span>
+    start)
+        <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>启动<span class="pl-pds">"</span></span>
+        ;;
+    stop)
+        <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>停止<span class="pl-pds">"</span></span>
+        ;;
+    restart)
+        <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>重启<span class="pl-pds">"</span></span>
+        ;;
+    <span class="pl-k">*</span>)
+        <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>用法: <span class="pl-smi">$0</span> {start|stop|restart}<span class="pl-pds">"</span></span>
+        <span class="pl-c1">exit</span> 1
+        ;;
+<span class="pl-k">esac</span></pre></div>
+<h3>12.3 循环</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> for 循环</span>
+<span class="pl-k">for</span> <span class="pl-smi">i</span> <span class="pl-k">in</span> 1 2 3 4 5<span class="pl-k">;</span> <span class="pl-k">do</span>
+    <span class="pl-c1">echo</span> <span class="pl-smi">$i</span>
+<span class="pl-k">done</span>
+
+<span class="pl-k">for</span> <span class="pl-smi">i</span> <span class="pl-k">in</span> {1..10}<span class="pl-k">;</span> <span class="pl-k">do</span>
+    <span class="pl-c1">echo</span> <span class="pl-smi">$i</span>
+<span class="pl-k">done</span>
+
+<span class="pl-k">for</span> <span class="pl-smi">i</span> <span class="pl-k">in</span> <span class="pl-s"><span class="pl-pds">$(</span>seq 1 10<span class="pl-pds">)</span></span><span class="pl-k">;</span> <span class="pl-k">do</span>
+    <span class="pl-c1">echo</span> <span class="pl-smi">$i</span>
+<span class="pl-k">done</span>
+
+<span class="pl-k">for</span> <span class="pl-smi">file</span> <span class="pl-k">in</span> <span class="pl-k">*</span>.txt<span class="pl-k">;</span> <span class="pl-k">do</span>
+    <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$file</span><span class="pl-pds">"</span></span>
+<span class="pl-k">done</span>
+
+<span class="pl-k">for</span> <span class="pl-smi">i</span> <span class="pl-k">in</span> {1..10..2}<span class="pl-k">;</span> <span class="pl-k">do</span>          <span class="pl-c"><span class="pl-c">#</span> 步长为 2</span>
+    <span class="pl-c1">echo</span> <span class="pl-smi">$i</span>
+<span class="pl-k">done</span>
+
+<span class="pl-c"><span class="pl-c">#</span> C 风格 for</span>
+<span class="pl-k">for</span> <span class="pl-s"><span class="pl-pds">((</span>i<span class="pl-k">=</span><span class="pl-c1">0</span>; i<span class="pl-k">&lt;</span><span class="pl-c1">10</span>; i<span class="pl-k">++</span><span class="pl-pds">))</span></span><span class="pl-k">;</span> <span class="pl-k">do</span>
+    <span class="pl-c1">echo</span> <span class="pl-smi">$i</span>
+<span class="pl-k">done</span>
+
+<span class="pl-c"><span class="pl-c">#</span> while 循环</span>
+<span class="pl-k">while</span> [ <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$count</span><span class="pl-pds">"</span></span> <span class="pl-k">-lt</span> 10 ]<span class="pl-k">;</span> <span class="pl-k">do</span>
+    <span class="pl-c1">echo</span> <span class="pl-smi">$count</span>
+    <span class="pl-s"><span class="pl-pds">((</span>count<span class="pl-k">++</span><span class="pl-pds">))</span></span>
+<span class="pl-k">done</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 读取文件</span>
+<span class="pl-k">while</span> IFS= <span class="pl-c1">read</span> -r line<span class="pl-k">;</span> <span class="pl-k">do</span>
+    <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$line</span><span class="pl-pds">"</span></span>
+<span class="pl-k">done</span> <span class="pl-k">&lt;</span> file.txt
+
+<span class="pl-c"><span class="pl-c">#</span> 读取命令输出</span>
+<span class="pl-k">while</span> IFS= <span class="pl-c1">read</span> -r line<span class="pl-k">;</span> <span class="pl-k">do</span>
+    <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$line</span><span class="pl-pds">"</span></span>
+<span class="pl-k">done</span> <span class="pl-k">&lt;</span> <span class="pl-s"><span class="pl-pds">&lt;(</span>command<span class="pl-pds">)</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> until 循环</span>
+<span class="pl-k">until</span> [ <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$count</span><span class="pl-pds">"</span></span> <span class="pl-k">-ge</span> 10 ]<span class="pl-k">;</span> <span class="pl-k">do</span>
+    <span class="pl-c1">echo</span> <span class="pl-smi">$count</span>
+    <span class="pl-s"><span class="pl-pds">((</span>count<span class="pl-k">++</span><span class="pl-pds">))</span></span>
+<span class="pl-k">done</span>
+
+<span class="pl-c"><span class="pl-c">#</span> break / continue</span>
+<span class="pl-k">for</span> <span class="pl-smi">i</span> <span class="pl-k">in</span> {1..10}<span class="pl-k">;</span> <span class="pl-k">do</span>
+    [ <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$i</span><span class="pl-pds">"</span></span> <span class="pl-k">-eq</span> 5 ] <span class="pl-k">&amp;&amp;</span> <span class="pl-k">continue</span>   <span class="pl-c"><span class="pl-c">#</span> 跳过 5</span>
+    [ <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$i</span><span class="pl-pds">"</span></span> <span class="pl-k">-eq</span> 8 ] <span class="pl-k">&amp;&amp;</span> <span class="pl-c1">break</span>      <span class="pl-c"><span class="pl-c">#</span> 到 8 停止</span>
+    <span class="pl-c1">echo</span> <span class="pl-smi">$i</span>
+<span class="pl-k">done</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 嵌套循环</span>
+<span class="pl-k">for</span> <span class="pl-smi">i</span> <span class="pl-k">in</span> {1..3}<span class="pl-k">;</span> <span class="pl-k">do</span>
+    <span class="pl-k">for</span> <span class="pl-smi">j</span> <span class="pl-k">in</span> {1..3}<span class="pl-k">;</span> <span class="pl-k">do</span>
+        <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$i</span>,<span class="pl-smi">$j</span><span class="pl-pds">"</span></span>
+    <span class="pl-k">done</span>
+<span class="pl-k">done</span></pre></div>
+<h3>12.4 函数</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 定义函数</span>
+<span class="pl-en">greet</span>() {
+    <span class="pl-k">local</span> name=<span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$1</span><span class="pl-pds">"</span></span>              <span class="pl-c"><span class="pl-c">#</span> local 限定局部变量</span>
+    <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>Hello, <span class="pl-smi">$name</span>!<span class="pl-pds">"</span></span>
+}
+
+<span class="pl-c"><span class="pl-c">#</span> 调用函数</span>
+greet <span class="pl-s"><span class="pl-pds">"</span>Alice<span class="pl-pds">"</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> 带返回值的函数</span>
+<span class="pl-en">add</span>() {
+    <span class="pl-k">local</span> result=<span class="pl-s"><span class="pl-pds">$((</span> <span class="pl-smi">$1</span> <span class="pl-k">+</span> <span class="pl-smi">$2</span> <span class="pl-pds">))</span></span>
+    <span class="pl-c1">echo</span> <span class="pl-smi">$result</span>
+}
+sum=<span class="pl-s"><span class="pl-pds">$(</span>add 3 4<span class="pl-pds">)</span></span>                   <span class="pl-c"><span class="pl-c">#</span> 通过命令捕获返回值</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>Sum: <span class="pl-smi">$sum</span><span class="pl-pds">"</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> 退出码</span>
+<span class="pl-en">check_file</span>() {
+    <span class="pl-k">if</span> [ <span class="pl-k">-f</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$1</span><span class="pl-pds">"</span></span> ]<span class="pl-k">;</span> <span class="pl-k">then</span>
+        <span class="pl-k">return</span> 0                 <span class="pl-c"><span class="pl-c">#</span> 成功</span>
+    <span class="pl-k">else</span>
+        <span class="pl-k">return</span> 1                 <span class="pl-c"><span class="pl-c">#</span> 失败</span>
+    <span class="pl-k">fi</span>
+}
+
+<span class="pl-k">if</span> check_file <span class="pl-s"><span class="pl-pds">"</span>/etc/hosts<span class="pl-pds">"</span></span><span class="pl-k">;</span> <span class="pl-k">then</span>
+    <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>文件存在<span class="pl-pds">"</span></span>
+<span class="pl-k">fi</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 递归函数</span>
+<span class="pl-en">factorial</span>() {
+    <span class="pl-k">if</span> [ <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$1</span><span class="pl-pds">"</span></span> <span class="pl-k">-le</span> 1 ]<span class="pl-k">;</span> <span class="pl-k">then</span>
+        <span class="pl-c1">echo</span> 1
+    <span class="pl-k">else</span>
+        <span class="pl-k">local</span> prev=<span class="pl-s"><span class="pl-pds">$(</span>factorial <span class="pl-s"><span class="pl-pds">$((</span> <span class="pl-smi">$1</span> <span class="pl-k">-</span> <span class="pl-c1">1</span> <span class="pl-pds">))</span></span><span class="pl-pds">)</span></span>
+        <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">$((</span> <span class="pl-smi">$1</span> <span class="pl-k">*</span> prev <span class="pl-pds">))</span></span>
+    <span class="pl-k">fi</span>
+}
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">$(</span>factorial 5<span class="pl-pds">)</span></span>              <span class="pl-c"><span class="pl-c">#</span> 120</span></pre></div>
+<h3>12.5 数组</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 一维数组</span>
+arr=(apple banana cherry)
+
+<span class="pl-c"><span class="pl-c">#</span> 访问</span>
+<span class="pl-c1">echo</span> <span class="pl-smi">${arr[0]}</span>                   <span class="pl-c"><span class="pl-c">#</span> apple</span>
+<span class="pl-c1">echo</span> <span class="pl-smi">${arr[@]}</span>                   <span class="pl-c"><span class="pl-c">#</span> 所有元素</span>
+<span class="pl-c1">echo</span> <span class="pl-smi">${<span class="pl-k">#</span>arr[@]}</span>                  <span class="pl-c"><span class="pl-c">#</span> 长度</span>
+<span class="pl-c1">echo</span> <span class="pl-smi">${<span class="pl-k">#</span>arr[0]}</span>                  <span class="pl-c"><span class="pl-c">#</span> 第一个元素长度</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 添加元素</span>
+arr[3]=<span class="pl-s"><span class="pl-pds">"</span>date<span class="pl-pds">"</span></span>
+arr+=(<span class="pl-s"><span class="pl-pds">"</span>elderberry<span class="pl-pds">"</span></span>)
+
+<span class="pl-c"><span class="pl-c">#</span> 遍历</span>
+<span class="pl-k">for</span> <span class="pl-smi">item</span> <span class="pl-k">in</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">${arr[@]}</span><span class="pl-pds">"</span></span><span class="pl-k">;</span> <span class="pl-k">do</span>
+    <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$item</span><span class="pl-pds">"</span></span>
+<span class="pl-k">done</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 删除元素</span>
+<span class="pl-c1">unset</span> arr[1]
+
+<span class="pl-c"><span class="pl-c">#</span> 切片</span>
+<span class="pl-c1">echo</span> <span class="pl-smi">${arr[@]<span class="pl-k">:</span>1<span class="pl-k">:</span>2}</span>               <span class="pl-c"><span class="pl-c">#</span> 从索引 1 开始取 2 个</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 关联数组（字典）</span>
+<span class="pl-k">declare</span> -A map
+map[name]=<span class="pl-s"><span class="pl-pds">"</span>Alice<span class="pl-pds">"</span></span>
+map[age]=25
+<span class="pl-c1">echo</span> <span class="pl-smi">${map[name]}</span>
+<span class="pl-c1">echo</span> <span class="pl-smi">${<span class="pl-k">!</span>map[@]}</span>                  <span class="pl-c"><span class="pl-c">#</span> 所有键</span>
+<span class="pl-c1">echo</span> <span class="pl-smi">${map[@]}</span>                   <span class="pl-c"><span class="pl-c">#</span> 所有值</span></pre></div>
+<h3>12.6 实用脚本示例</h3>
+<p><strong>批量重命名：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#!</span>/bin/bash</span>
+<span class="pl-c"><span class="pl-c">#</span> 将当前目录所有 .txt 文件改为 .md</span>
+<span class="pl-k">for</span> <span class="pl-smi">file</span> <span class="pl-k">in</span> <span class="pl-k">*</span>.txt<span class="pl-k">;</span> <span class="pl-k">do</span>
+    [ <span class="pl-k">-f</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$file</span><span class="pl-pds">"</span></span> ] <span class="pl-k">||</span> <span class="pl-k">continue</span>
+    newname=<span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">${file<span class="pl-k">%</span>.txt}</span>.md<span class="pl-pds">"</span></span>
+    mv <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$file</span><span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$newname</span><span class="pl-pds">"</span></span>
+    <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>Renamed: <span class="pl-smi">$file</span> → <span class="pl-smi">$newname</span><span class="pl-pds">"</span></span>
+<span class="pl-k">done</span></pre></div>
+<p><strong>日志分析：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#!</span>/bin/bash</span>
+<span class="pl-c"><span class="pl-c">#</span> 分析 Nginx 访问日志</span>
+LOG_FILE=<span class="pl-s"><span class="pl-pds">"</span>/var/log/nginx/access.log<span class="pl-pds">"</span></span>
+
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>=== 日志分析报告 ===<span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>总请求数: <span class="pl-s"><span class="pl-pds">$(</span>wc -l <span class="pl-k">&lt;</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$LOG_FILE</span><span class="pl-pds">"</span></span><span class="pl-pds">)</span></span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>Top 10 IP:<span class="pl-pds">"</span></span>
+awk <span class="pl-s"><span class="pl-pds">'</span>{print $1}<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$LOG_FILE</span><span class="pl-pds">"</span></span> <span class="pl-k">|</span> sort <span class="pl-k">|</span> uniq -c <span class="pl-k">|</span> sort -rn <span class="pl-k">|</span> head -10
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>状态码分布:<span class="pl-pds">"</span></span>
+awk <span class="pl-s"><span class="pl-pds">'</span>{print $9}<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$LOG_FILE</span><span class="pl-pds">"</span></span> <span class="pl-k">|</span> sort <span class="pl-k">|</span> uniq -c <span class="pl-k">|</span> sort -rn
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>Top 10 URL:<span class="pl-pds">"</span></span>
+awk <span class="pl-s"><span class="pl-pds">'</span>{print $7}<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$LOG_FILE</span><span class="pl-pds">"</span></span> <span class="pl-k">|</span> sort <span class="pl-k">|</span> uniq -c <span class="pl-k">|</span> sort -rn <span class="pl-k">|</span> head -10</pre></div>
+<p><strong>系统健康检查：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#!</span>/bin/bash</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>=== 系统健康检查 ===<span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>时间: <span class="pl-s"><span class="pl-pds">$(</span>date<span class="pl-pds">)</span></span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>主机名: <span class="pl-s"><span class="pl-pds">$(</span>hostname<span class="pl-pds">)</span></span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>系统: <span class="pl-s"><span class="pl-pds">$(</span>lsb_release -ds<span class="pl-pds">)</span></span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>内核: <span class="pl-s"><span class="pl-pds">$(</span>uname -r<span class="pl-pds">)</span></span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>=== CPU 负载 ===<span class="pl-pds">"</span></span>
+uptime
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>=== 内存使用 ===<span class="pl-pds">"</span></span>
+free -h
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>=== 磁盘使用 ===<span class="pl-pds">"</span></span>
+df -h <span class="pl-k">|</span> grep -E <span class="pl-s"><span class="pl-pds">"</span>^/dev<span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>=== 网络连接 ===<span class="pl-pds">"</span></span>
+ss -tlnp <span class="pl-k">|</span> head -10
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>=== 最近登录 ===<span class="pl-pds">"</span></span>
+last -5
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>=== 失败服务 ===<span class="pl-pds">"</span></span>
+systemctl list-units --state=failed</pre></div>
+<p><strong>自动备份脚本：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#!</span>/bin/bash</span>
+<span class="pl-c"><span class="pl-c">#</span> 每日备份脚本</span>
+BACKUP_DIR=<span class="pl-s"><span class="pl-pds">"</span>/backup<span class="pl-pds">"</span></span>
+DATE=<span class="pl-s"><span class="pl-pds">$(</span>date +%Y%m%d_%H%M%S<span class="pl-pds">)</span></span>
+SOURCE=<span class="pl-s"><span class="pl-pds">"</span>/var/www/html<span class="pl-pds">"</span></span>
+DB_NAME=<span class="pl-s"><span class="pl-pds">"</span>mydb<span class="pl-pds">"</span></span>
+
+mkdir -p <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$BACKUP_DIR</span><span class="pl-pds">"</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> 备份文件</span>
+tar -czf <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$BACKUP_DIR</span>/web_<span class="pl-smi">${DATE}</span>.tar.gz<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$SOURCE</span><span class="pl-pds">"</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> 备份数据库</span>
+mysqldump -u root -p<span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$MYSQL_PASS</span><span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$DB_NAME</span><span class="pl-pds">"</span></span> <span class="pl-k">|</span> gzip <span class="pl-k">&gt;</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$BACKUP_DIR</span>/db_<span class="pl-smi">${DATE}</span>.sql.gz<span class="pl-pds">"</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> 清理 30 天前的备份</span>
+find <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$BACKUP_DIR</span><span class="pl-pds">"</span></span> -name <span class="pl-s"><span class="pl-pds">"</span>*.tar.gz<span class="pl-pds">"</span></span> -mtime +30 -delete
+find <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$BACKUP_DIR</span><span class="pl-pds">"</span></span> -name <span class="pl-s"><span class="pl-pds">"</span>*.sql.gz<span class="pl-pds">"</span></span> -mtime +30 -delete
+
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>备份完成: <span class="pl-smi">$DATE</span><span class="pl-pds">"</span></span></pre></div>
+<hr>
+<h2>十三、开发环境搭建</h2>
+<h3>13.1 Git 版本控制</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 安装</span>
+sudo apt install -y git
+
+<span class="pl-c"><span class="pl-c">#</span> 基本配置</span>
+git config --global user.name <span class="pl-s"><span class="pl-pds">"</span>Your Name<span class="pl-pds">"</span></span>
+git config --global user.email <span class="pl-s"><span class="pl-pds">"</span>your@email.com<span class="pl-pds">"</span></span>
+git config --global init.defaultBranch main
+git config --global core.editor vim
+
+<span class="pl-c"><span class="pl-c">#</span> 基本操作</span>
+git init                          <span class="pl-c"><span class="pl-c">#</span> 初始化仓库</span>
+git clone https://github.com/user/repo.git  <span class="pl-c"><span class="pl-c">#</span> 克隆</span>
+git add <span class="pl-c1">.</span>                         <span class="pl-c"><span class="pl-c">#</span> 添加到暂存区</span>
+git commit -m <span class="pl-s"><span class="pl-pds">"</span>message<span class="pl-pds">"</span></span>           <span class="pl-c"><span class="pl-c">#</span> 提交</span>
+git push origin main              <span class="pl-c"><span class="pl-c">#</span> 推送</span>
+git pull origin main              <span class="pl-c"><span class="pl-c">#</span> 拉取</span>
+git fetch                         <span class="pl-c"><span class="pl-c">#</span> 获取更新</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 分支管理</span>
+git branch                        <span class="pl-c"><span class="pl-c">#</span> 查看分支</span>
+git branch feature                <span class="pl-c"><span class="pl-c">#</span> 创建分支</span>
+git checkout feature              <span class="pl-c"><span class="pl-c">#</span> 切换分支</span>
+git checkout -b feature           <span class="pl-c"><span class="pl-c">#</span> 创建并切换</span>
+git merge feature                 <span class="pl-c"><span class="pl-c">#</span> 合并分支</span>
+git branch -d feature             <span class="pl-c"><span class="pl-c">#</span> 删除分支</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 查看</span>
+git status                        <span class="pl-c"><span class="pl-c">#</span> 状态</span>
+git log --oneline --graph         <span class="pl-c"><span class="pl-c">#</span> 日志</span>
+git diff                          <span class="pl-c"><span class="pl-c">#</span> 差异</span>
+git show HEAD                     <span class="pl-c"><span class="pl-c">#</span> 最近提交</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 撤销</span>
+git checkout -- file              <span class="pl-c"><span class="pl-c">#</span> 撤销修改</span>
+git reset HEAD file               <span class="pl-c"><span class="pl-c">#</span> 取消暂存</span>
+git reset --hard HEAD~1           <span class="pl-c"><span class="pl-c">#</span> 回退一个提交</span>
+git revert commit_id              <span class="pl-c"><span class="pl-c">#</span> 撤销某次提交</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 标签</span>
+git tag v1.0.0
+git push origin v1.0.0</pre></div>
+<h3>13.2 Python 开发环境</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 安装 Python</span>
+sudo apt install -y python3 python3-pip python3-venv python3-dev
+
+<span class="pl-c"><span class="pl-c">#</span> 创建虚拟环境</span>
+python3 -m venv venv
+<span class="pl-c1">source</span> venv/bin/activate
+deactivate                        <span class="pl-c"><span class="pl-c">#</span> 退出虚拟环境</span>
+
+<span class="pl-c"><span class="pl-c">#</span> pip 常用</span>
+pip install package_name
+pip install -r requirements.txt
+pip freeze <span class="pl-k">&gt;</span> requirements.txt
+pip list
+pip install --upgrade pip
+
+<span class="pl-c"><span class="pl-c">#</span> 安装 pyenv（管理多版本）</span>
+curl https://pyenv.run <span class="pl-k">|</span> bash
+<span class="pl-c"><span class="pl-c">#</span> 添加到 ~/.bashrc</span>
+<span class="pl-k">export</span> PYENV_ROOT=<span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$HOME</span>/.pyenv<span class="pl-pds">"</span></span>
+<span class="pl-k">export</span> PATH=<span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$PYENV_ROOT</span>/bin:<span class="pl-smi">$PATH</span><span class="pl-pds">"</span></span>
+<span class="pl-c1">eval</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-s"><span class="pl-pds">$(</span>pyenv init -<span class="pl-pds">)</span></span><span class="pl-pds">"</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> 安装 conda（Anaconda/Miniconda）</span>
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh
+
+<span class="pl-c"><span class="pl-c">#</span> 代码质量工具</span>
+pip install black flake8 mypy pytest</pre></div>
+<h3>13.3 Node.js 开发环境</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 方式一：使用 nvm（推荐）</span>
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh <span class="pl-k">|</span> bash
+<span class="pl-c1">source</span> <span class="pl-k">~</span>/.bashrc
+nvm install --lts                 <span class="pl-c"><span class="pl-c">#</span> 安装 LTS 版本</span>
+nvm install 20                    <span class="pl-c"><span class="pl-c">#</span> 安装指定版本</span>
+nvm use 20                        <span class="pl-c"><span class="pl-c">#</span> 切换版本</span>
+nvm ls                            <span class="pl-c"><span class="pl-c">#</span> 查看版本列表</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 方式二：使用 NodeSource</span>
+curl -fsSL https://deb.nodesource.com/setup_20.x <span class="pl-k">|</span> sudo -E bash -
+sudo apt install -y nodejs
+
+<span class="pl-c"><span class="pl-c">#</span> npm 常用</span>
+npm install package_name          <span class="pl-c"><span class="pl-c">#</span> 安装</span>
+npm install -g package_name       <span class="pl-c"><span class="pl-c">#</span> 全局安装</span>
+npm init -y                       <span class="pl-c"><span class="pl-c">#</span> 初始化项目</span>
+npm run dev                       <span class="pl-c"><span class="pl-c">#</span> 运行脚本</span>
+npm list                          <span class="pl-c"><span class="pl-c">#</span> 查看依赖</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 使用 pnpm（更快的包管理器）</span>
+npm install -g pnpm
+pnpm install</pre></div>
+<h3>13.4 Java 开发环境</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 安装 JDK</span>
+sudo apt install -y openjdk-17-jdk openjdk-17-jre
+
+<span class="pl-c"><span class="pl-c">#</span> 查看版本</span>
+java -version
+javac -version
+
+<span class="pl-c"><span class="pl-c">#</span> 设置 JAVA_HOME</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">'</span>export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64<span class="pl-pds">'</span></span> <span class="pl-k">&gt;&gt;</span> <span class="pl-k">~</span>/.bashrc
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">'</span>export PATH=$JAVA_HOME/bin:$PATH<span class="pl-pds">'</span></span> <span class="pl-k">&gt;&gt;</span> <span class="pl-k">~</span>/.bashrc
+<span class="pl-c1">source</span> <span class="pl-k">~</span>/.bashrc
+
+<span class="pl-c"><span class="pl-c">#</span> 安装 Maven</span>
+sudo apt install -y maven
+
+<span class="pl-c"><span class="pl-c">#</span> 安装 Gradle</span>
+sudo apt install -y gradle
+<span class="pl-c"><span class="pl-c">#</span> 或使用 SDKMAN</span>
+curl -s <span class="pl-s"><span class="pl-pds">"</span>https://get.sdkman.io<span class="pl-pds">"</span></span> <span class="pl-k">|</span> bash
+sdk install gradle
+
+<span class="pl-c"><span class="pl-c">#</span> 多版本管理</span>
+sudo update-alternatives --config java</pre></div>
+<h3>13.5 Docker 安装</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 安装 Docker</span>
+<span class="pl-c"><span class="pl-c">#</span> 方式一：官方脚本（推荐）</span>
+curl -fsSL https://get.docker.com <span class="pl-k">|</span> sudo sh
+
+<span class="pl-c"><span class="pl-c">#</span> 方式二：手动安装</span>
+sudo apt install -y ca-certificates curl gnupg
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg <span class="pl-k">|</span> sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>deb [arch=<span class="pl-s"><span class="pl-pds">$(</span>dpkg --print-architecture<span class="pl-pds">)</span></span> signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu <span class="pl-s"><span class="pl-pds">$(</span>lsb_release -cs<span class="pl-pds">)</span></span> stable<span class="pl-pds">"</span></span> <span class="pl-k">|</span> sudo tee /etc/apt/sources.list.d/docker.list
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+<span class="pl-c"><span class="pl-c">#</span> 允许普通用户使用 Docker</span>
+sudo usermod -aG docker <span class="pl-smi">$USER</span>
+newgrp docker
+
+<span class="pl-c"><span class="pl-c">#</span> 验证</span>
+docker --version
+docker run hello-world
+
+<span class="pl-c"><span class="pl-c">#</span> Docker Compose</span>
+docker compose version
+
+<span class="pl-c"><span class="pl-c">#</span> 配置镜像加速（/etc/docker/daemon.json）</span>
+sudo nano /etc/docker/daemon.json
+{
+  <span class="pl-s"><span class="pl-pds">"</span>registry-mirrors<span class="pl-pds">"</span></span>: [
+    <span class="pl-s"><span class="pl-pds">"</span>https://mirror.ccs.tencentyun.com<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>https://docker.mirrors.ustc.edu.cn<span class="pl-pds">"</span></span>
+  ]
+}
+sudo systemctl restart docker
+
+<span class="pl-c"><span class="pl-c">#</span> 常用 Docker 命令</span>
+docker ps                        <span class="pl-c"><span class="pl-c">#</span> 运行中的容器</span>
+docker ps -a                     <span class="pl-c"><span class="pl-c">#</span> 所有容器</span>
+docker images                    <span class="pl-c"><span class="pl-c">#</span> 镜像列表</span>
+docker pull nginx                <span class="pl-c"><span class="pl-c">#</span> 拉取镜像</span>
+docker run -d -p 8080:80 nginx   <span class="pl-c"><span class="pl-c">#</span> 运行容器</span>
+docker <span class="pl-c1">exec</span> -it container_id bash  <span class="pl-c"><span class="pl-c">#</span> 进入容器</span>
+docker logs container_id         <span class="pl-c"><span class="pl-c">#</span> 查看日志</span>
+docker stop container_id         <span class="pl-c"><span class="pl-c">#</span> 停止</span>
+docker rm container_id           <span class="pl-c"><span class="pl-c">#</span> 删除容器</span>
+docker system prune -a           <span class="pl-c"><span class="pl-c">#</span> 清理</span></pre></div>
+<h3>13.6 数据库</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> MySQL</span>
+sudo apt install -y mysql-server
+sudo mysql_secure_installation
+sudo systemctl status mysql
+
+<span class="pl-c"><span class="pl-c">#</span> PostgreSQL</span>
+sudo apt install -y postgresql postgresql-contrib
+sudo -u postgres psql
+<span class="pl-c"><span class="pl-c">#</span> CREATE USER myuser WITH PASSWORD 'mypass';</span>
+<span class="pl-c"><span class="pl-c">#</span> CREATE DATABASE mydb OWNER myuser;</span>
+
+<span class="pl-c"><span class="pl-c">#</span> Redis</span>
+sudo apt install -y redis-server
+sudo systemctl <span class="pl-c1">enable</span> redis-server
+redis-cli
+
+<span class="pl-c"><span class="pl-c">#</span> MongoDB</span>
+wget -qO - https://www.mongodb.org/static/pgp/server-7.0.asc <span class="pl-k">|</span> sudo gpg --dearmor -o /usr/share/keyrings/mongodb.gpg
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>deb [ signed-by=/usr/share/keyrings/mongodb.gpg ] https://repo.mongodb.org/apt/ubuntu <span class="pl-s"><span class="pl-pds">$(</span>lsb_release -cs<span class="pl-pds">)</span></span>/mongodb-org/7.0 multiverse<span class="pl-pds">"</span></span> <span class="pl-k">|</span> sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+sudo apt update <span class="pl-k">&amp;&amp;</span> sudo apt install -y mongodb-org
+
+<span class="pl-c"><span class="pl-c">#</span> SQLite</span>
+sudo apt install -y sqlite3</pre></div>
+<h3>13.7 VS Code 配置</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 安装 VS Code（前面已述）</span>
+<span class="pl-c"><span class="pl-c">#</span> 或使用 snap</span>
+sudo snap install code --classic
+
+<span class="pl-c"><span class="pl-c">#</span> 常用扩展</span>
+<span class="pl-c"><span class="pl-c">#</span> Python、Pylance、Docker、GitLens、Remote-SSH</span>
+<span class="pl-c"><span class="pl-c">#</span> C/C++、Java Extension Pack、ESLint、Prettier</span>
+
+<span class="pl-c"><span class="pl-c">#</span> Settings Sync（设置同步）</span>
+<span class="pl-c"><span class="pl-c">#</span> 登录 GitHub 同步设置</span></pre></div>
+<hr>
+<h2>十四、服务器运维</h2>
+<h3>14.1 Web 服务器</h3>
+<p><strong>Nginx：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt install -y nginx
+sudo systemctl <span class="pl-c1">enable</span> nginx
+sudo systemctl start nginx
+
+<span class="pl-c"><span class="pl-c">#</span> 配置文件</span>
+/etc/nginx/nginx.conf
+/etc/nginx/sites-available/
+/etc/nginx/sites-enabled/
+
+<span class="pl-c"><span class="pl-c">#</span> 站点配置</span>
+sudo nano /etc/nginx/sites-available/mysite
+<span class="pl-c"><span class="pl-c">#</span> server {</span>
+<span class="pl-c"><span class="pl-c">#</span>     listen 80;</span>
+<span class="pl-c"><span class="pl-c">#</span>     server_name example.com;</span>
+<span class="pl-c"><span class="pl-c">#</span>     root /var/www/example;</span>
+<span class="pl-c"><span class="pl-c">#</span>     index index.html;</span>
+<span class="pl-c"><span class="pl-c">#</span> }</span>
+
+sudo ln -s /etc/nginx/sites-available/mysite /etc/nginx/sites-enabled/
+sudo nginx -t                    <span class="pl-c"><span class="pl-c">#</span> 检查配置</span>
+sudo systemctl reload nginx</pre></div>
+<p><strong>Apache：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt install -y apache2
+sudo systemctl <span class="pl-c1">enable</span> apache2
+
+<span class="pl-c"><span class="pl-c">#</span> 配置文件</span>
+/etc/apache2/apache2.conf
+/etc/apache2/sites-available/
+/etc/apache2/sites-enabled/
+
+<span class="pl-c"><span class="pl-c">#</span> 站点配置</span>
+sudo nano /etc/apache2/sites-available/mysite.conf
+sudo a2ensite mysite.conf
+sudo a2enmod rewrite
+sudo systemctl reload apache2</pre></div>
+<h3>14.2 SSL 证书（Let's Encrypt）</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> Certbot（自动获取和续期证书）</span>
+sudo apt install -y certbot python3-certbot-nginx
+
+<span class="pl-c"><span class="pl-c">#</span> Nginx 自动配置</span>
+sudo certbot --nginx -d example.com -d www.example.com
+
+<span class="pl-c"><span class="pl-c">#</span> Apache 自动配置</span>
+sudo apt install -y python3-certbot-apache
+sudo certbot --apache -d example.com
+
+<span class="pl-c"><span class="pl-c">#</span> 仅获取证书</span>
+sudo certbot certonly --standalone -d example.com
+
+<span class="pl-c"><span class="pl-c">#</span> 自动续期测试</span>
+sudo certbot renew --dry-run
+
+<span class="pl-c"><span class="pl-c">#</span> 查看证书</span>
+sudo certbot certificates</pre></div>
+<h3>14.3 反向代理配置</h3>
+<div class="highlight highlight-source-nginx"><pre class="notranslate"><span class="pl-c"># Nginx 反向代理示例</span>
+<span class="pl-c1">server</span> <span class="pl-c1">{</span>
+    <span class="pl-c1">listen</span> <span class="pl-c1">80</span><span class="pl-c1">;</span>
+    <span class="pl-c1">server_name</span> api.example.com<span class="pl-c1">;</span>
+
+    <span class="pl-c1">location</span> / <span class="pl-c1">{</span>
+        <span class="pl-c1">proxy_pass</span> <span class="pl-c1">http</span>://<span class="pl-c1">127.0.0.1:8080</span><span class="pl-c1">;</span>
+        <span class="pl-c1">proxy_set_header</span> Host <span class="pl-v">$host</span><span class="pl-c1">;</span>
+        <span class="pl-c1">proxy_set_header</span> X-Real-IP <span class="pl-v">$remote_addr</span><span class="pl-c1">;</span>
+        <span class="pl-c1">proxy_set_header</span> X-Forwarded-For <span class="pl-v">$proxy_add_x_forwarded_for</span><span class="pl-c1">;</span>
+        <span class="pl-c1">proxy_set_header</span> X-Forwarded-Proto <span class="pl-v">$scheme</span><span class="pl-c1">;</span>
+    <span class="pl-c1">}</span>
+<span class="pl-c1">}</span></pre></div>
+<h3>14.4 定时任务（Cron）</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 编辑定时任务</span>
+crontab -e
+
+<span class="pl-c"><span class="pl-c">#</span> 查看定时任务</span>
+crontab -l
+
+<span class="pl-c"><span class="pl-c">#</span> cron 格式</span>
+<span class="pl-c"><span class="pl-c">#</span> ┌──────────── 分钟 (0-59)</span>
+<span class="pl-c"><span class="pl-c">#</span> │ ┌────────── 小时 (0-23)</span>
+<span class="pl-c"><span class="pl-c">#</span> │ │ ┌──────── 日 (1-31)</span>
+<span class="pl-c"><span class="pl-c">#</span> │ │ │ ┌────── 月 (1-12)</span>
+<span class="pl-c"><span class="pl-c">#</span> │ │ │ │ ┌──── 星期 (0-7, 0和7=周日)</span>
+<span class="pl-c"><span class="pl-c">#</span> * * * * * command</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 常用示例</span>
+0 2 <span class="pl-k">*</span> <span class="pl-k">*</span> <span class="pl-k">*</span> /root/backup.sh              <span class="pl-c"><span class="pl-c">#</span> 每天凌晨 2 点</span>
+<span class="pl-k">*</span>/5 <span class="pl-k">*</span> <span class="pl-k">*</span> <span class="pl-k">*</span> <span class="pl-k">*</span> /root/check.sh             <span class="pl-c"><span class="pl-c">#</span> 每 5 分钟</span>
+0 0 <span class="pl-k">*</span> <span class="pl-k">*</span> 0 /root/weekly.sh              <span class="pl-c"><span class="pl-c">#</span> 每周日</span>
+0 0 1 <span class="pl-k">*</span> <span class="pl-k">*</span> /root/monthly.sh             <span class="pl-c"><span class="pl-c">#</span> 每月 1 号</span>
+30 22 <span class="pl-k">*</span> <span class="pl-k">*</span> 1-5 /root/workday.sh         <span class="pl-c"><span class="pl-c">#</span> 工作日 22:30</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 系统级定时任务</span>
+sudo nano /etc/crontab
+sudo systemctl status cron
+
+<span class="pl-c"><span class="pl-c">#</span> anacron（适合不常开机的机器）</span>
+sudo apt install anacron</pre></div>
+<h3>14.5 日志管理</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 系统日志</span>
+/var/log/syslog                   <span class="pl-c"><span class="pl-c">#</span> 系统日志</span>
+/var/log/auth.log                 <span class="pl-c"><span class="pl-c">#</span> 认证日志</span>
+/var/log/kern.log                 <span class="pl-c"><span class="pl-c">#</span> 内核日志</span>
+/var/log/dpkg.log                 <span class="pl-c"><span class="pl-c">#</span> 软件包日志</span>
+/var/log/apt/history.log          <span class="pl-c"><span class="pl-c">#</span> APT 历史</span>
+
+<span class="pl-c"><span class="pl-c">#</span> logrotate（日志轮转）</span>
+/etc/logrotate.conf
+/etc/logrotate.d/
+
+<span class="pl-c"><span class="pl-c">#</span> 自定义日志轮转</span>
+sudo nano /etc/logrotate.d/myapp
+<span class="pl-c"><span class="pl-c">#</span> /var/log/myapp/*.log {</span>
+<span class="pl-c"><span class="pl-c">#</span>     daily</span>
+<span class="pl-c"><span class="pl-c">#</span>     missingok</span>
+<span class="pl-c"><span class="pl-c">#</span>     rotate 30</span>
+<span class="pl-c"><span class="pl-c">#</span>     compress</span>
+<span class="pl-c"><span class="pl-c">#</span>     notifempty</span>
+<span class="pl-c"><span class="pl-c">#</span>     create 0640 myapp myapp</span>
+<span class="pl-c"><span class="pl-c">#</span> }</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 查看日志</span>
+tail -f /var/log/syslog
+journalctl -f
+journalctl --since <span class="pl-s"><span class="pl-pds">"</span>2024-01-15<span class="pl-pds">"</span></span> --until <span class="pl-s"><span class="pl-pds">"</span>2024-01-16<span class="pl-pds">"</span></span></pre></div>
+<hr>
+<h2>十五、安全加固</h2>
+<h3>15.1 系统更新策略</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 启用自动安全更新</span>
+sudo apt install -y unattended-upgrades
+sudo dpkg-reconfigure unattended-upgrades
+
+<span class="pl-c"><span class="pl-c">#</span> 手动配置</span>
+sudo nano /etc/apt/apt.conf.d/50unattended-upgrades
+<span class="pl-c"><span class="pl-c">#</span> Unattended-Upgrade::Allowed-Origins {</span>
+<span class="pl-c"><span class="pl-c">#</span>     "${distro_id}:${distro_codename}-security";</span>
+<span class="pl-c"><span class="pl-c">#</span> };</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 配置自动更新计划</span>
+sudo nano /etc/apt/apt.conf.d/20auto-upgrades
+<span class="pl-c"><span class="pl-c">#</span> APT::Periodic::Update-Package-Lists "1";</span>
+<span class="pl-c"><span class="pl-c">#</span> APT::Periodic::Unattended-Upgrade "1";</span></pre></div>
+<h3>15.2 SSH 安全加固</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo nano /etc/ssh/sshd_config
+
+<span class="pl-c"><span class="pl-c">#</span> 安全配置</span>
+Port 2222                       <span class="pl-c"><span class="pl-c">#</span> 非默认端口</span>
+PermitRootLogin no              <span class="pl-c"><span class="pl-c">#</span> 禁止 root 登录</span>
+PasswordAuthentication no       <span class="pl-c"><span class="pl-c">#</span> 仅密钥登录</span>
+PubkeyAuthentication yes        <span class="pl-c"><span class="pl-c">#</span> 允许密钥</span>
+MaxAuthTries 3                  <span class="pl-c"><span class="pl-c">#</span> 最大尝试次数</span>
+LoginGraceTime 30               <span class="pl-c"><span class="pl-c">#</span> 登录超时</span>
+ClientAliveInterval 300         <span class="pl-c"><span class="pl-c">#</span> 心跳检测</span>
+ClientAliveCountMax 2           <span class="pl-c"><span class="pl-c">#</span> 超时断开</span>
+AllowUsers username             <span class="pl-c"><span class="pl-c">#</span> 白名单用户</span>
+X11Forwarding no                <span class="pl-c"><span class="pl-c">#</span> 禁用 X11</span>
+Protocol 2                      <span class="pl-c"><span class="pl-c">#</span> 仅 SSH2</span>
+
+sudo systemctl restart ssh</pre></div>
+<h3>15.3 防火墙配置</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> UFW 基础配置</span>
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow 2222/tcp         <span class="pl-c"><span class="pl-c">#</span> SSH（自定义端口）</span>
+sudo ufw allow 80/tcp           <span class="pl-c"><span class="pl-c">#</span> HTTP</span>
+sudo ufw allow 443/tcp          <span class="pl-c"><span class="pl-c">#</span> HTTPS</span>
+sudo ufw <span class="pl-c1">enable</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 限制 SSH 连接频率（防暴力破解）</span>
+sudo ufw limit 2222/tcp</pre></div>
+<h3>15.4 Fail2Ban（防暴力破解）</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt install -y fail2ban
+
+<span class="pl-c"><span class="pl-c">#</span> 配置</span>
+sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+sudo nano /etc/fail2ban/jail.local
+
+<span class="pl-c"><span class="pl-c">#</span> [DEFAULT]</span>
+<span class="pl-c"><span class="pl-c">#</span> bantime = 3600</span>
+<span class="pl-c"><span class="pl-c">#</span> findtime = 600</span>
+<span class="pl-c"><span class="pl-c">#</span> maxretry = 5</span>
+
+<span class="pl-c"><span class="pl-c">#</span> [sshd]</span>
+<span class="pl-c"><span class="pl-c">#</span> enabled = true</span>
+<span class="pl-c"><span class="pl-c">#</span> port = 2222</span>
+<span class="pl-c"><span class="pl-c">#</span> maxretry = 3</span>
+
+sudo systemctl <span class="pl-c1">enable</span> fail2ban
+sudo systemctl start fail2ban
+
+<span class="pl-c"><span class="pl-c">#</span> 管理</span>
+sudo fail2ban-client status
+sudo fail2ban-client status sshd
+sudo fail2ban-client <span class="pl-c1">set</span> sshd unbanip 192.168.1.100</pre></div>
+<h3>15.5 其他安全措施</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 1. 禁用不必要的服务</span>
+sudo systemctl disable bluetooth
+sudo systemctl disable cups
+sudo systemctl disable avahi-daemon
+
+<span class="pl-c"><span class="pl-c">#</span> 2. 文件完整性检查</span>
+sudo apt install -y aide
+sudo aideinit
+sudo cp /var/lib/aide/aide.db.new /var/lib/aide/aide.db
+sudo aide --check
+
+<span class="pl-c"><span class="pl-c">#</span> 3. 审计日志</span>
+sudo apt install -y auditd
+sudo auditctl -w /etc/passwd -p wa -k passwd_changes
+sudo ausearch -k passwd_changes
+
+<span class="pl-c"><span class="pl-c">#</span> 4. 内核安全参数</span>
+sudo nano /etc/sysctl.d/99-security.conf
+<span class="pl-c"><span class="pl-c">#</span> net.ipv4.ip_forward = 0</span>
+<span class="pl-c"><span class="pl-c">#</span> net.ipv4.conf.all.accept_redirects = 0</span>
+<span class="pl-c"><span class="pl-c">#</span> net.ipv4.conf.all.send_redirects = 0</span>
+<span class="pl-c"><span class="pl-c">#</span> net.ipv4.conf.all.accept_source_route = 0</span>
+<span class="pl-c"><span class="pl-c">#</span> net.ipv4.icmp_echo_ignore_broadcasts = 1</span>
+<span class="pl-c"><span class="pl-c">#</span> kernel.randomize_va_space = 2</span>
+<span class="pl-c"><span class="pl-c">#</span> fs.suid_dumpable = 0</span>
+sudo sysctl --system
+
+<span class="pl-c"><span class="pl-c">#</span> 5. 密码策略</span>
+sudo nano /etc/login.defs
+<span class="pl-c"><span class="pl-c">#</span> PASS_MAX_DAYS 90</span>
+<span class="pl-c"><span class="pl-c">#</span> PASS_MIN_DAYS 7</span>
+<span class="pl-c"><span class="pl-c">#</span> PASS_MIN_LEN 12</span>
+<span class="pl-c"><span class="pl-c">#</span> PASS_WARN_AGE 14</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 6. 禁用 USB 存储（可选）</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>blacklist usb-storage<span class="pl-pds">"</span></span> <span class="pl-k">|</span> sudo tee /etc/modprobe.d/blacklist-usb.conf
+
+<span class="pl-c"><span class="pl-c">#</span> 7. 文件权限审计</span>
+sudo find / -perm -4000 -type f <span class="pl-k">2&gt;</span>/dev/null    <span class="pl-c"><span class="pl-c">#</span> 查找 SUID 文件</span>
+sudo find / -perm -2000 -type f <span class="pl-k">2&gt;</span>/dev/null    <span class="pl-c"><span class="pl-c">#</span> 查找 SGID 文件</span></pre></div>
+<hr>
+<h2>十六、性能优化与监控</h2>
+<h3>16.1 系统监控工具</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> CPU 监控</span>
+top / htop                       <span class="pl-c"><span class="pl-c">#</span> 实时监控</span>
+mpstat 1                         <span class="pl-c"><span class="pl-c">#</span> CPU 统计</span>
+vmstat 1                         <span class="pl-c"><span class="pl-c">#</span> 虚拟内存统计</span>
+sar -u 1                         <span class="pl-c"><span class="pl-c">#</span> CPU 使用率</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 内存监控</span>
+free -h                          <span class="pl-c"><span class="pl-c">#</span> 内存使用</span>
+vmstat 1                         <span class="pl-c"><span class="pl-c">#</span> 内存统计</span>
+slabtop                          <span class="pl-c"><span class="pl-c">#</span> 内核 slab 缓存</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 磁盘监控</span>
+iostat -xz 1                     <span class="pl-c"><span class="pl-c">#</span> IO 统计</span>
+iotop                            <span class="pl-c"><span class="pl-c">#</span> 按进程 IO</span>
+df -h                            <span class="pl-c"><span class="pl-c">#</span> 磁盘使用</span>
+du -sh /path                     <span class="pl-c"><span class="pl-c">#</span> 目录大小</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 网络监控</span>
+iftop                            <span class="pl-c"><span class="pl-c">#</span> 连接流量</span>
+nethogs                          <span class="pl-c"><span class="pl-c">#</span> 按进程流量</span>
+nload                            <span class="pl-c"><span class="pl-c">#</span> 实时流量</span>
+ss -tunap                        <span class="pl-c"><span class="pl-c">#</span> 网络连接</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 综合监控</span>
+dstat                            <span class="pl-c"><span class="pl-c">#</span> 综合统计</span>
+glances                          <span class="pl-c"><span class="pl-c">#</span> 系统监控（需安装）</span>
+nmon                             <span class="pl-c"><span class="pl-c">#</span> 综合性能监控</span></pre></div>
+<h3>16.2 性能优化</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 1. 内核参数优化（/etc/sysctl.conf）</span>
+<span class="pl-c"><span class="pl-c">#</span> 网络优化</span>
+net.core.somaxconn = 65535
+net.ipv4.tcp_max_syn_backlog = 65535
+net.ipv4.tcp_tw_reuse = 1
+net.ipv4.ip_local_port_range = 1024 65535
+net.ipv4.tcp_fin_timeout = 15
+net.core.netdev_max_backlog = 65535
+
+<span class="pl-c"><span class="pl-c">#</span> 内存优化</span>
+vm.swappiness = 10
+vm.dirty_ratio = 15
+vm.dirty_background_ratio = 5
+
+<span class="pl-c"><span class="pl-c">#</span> 文件系统优化</span>
+fs.file-max = 2097152
+fs.inotify.max_user_watches = 524288
+
+sudo sysctl -p
+
+<span class="pl-c"><span class="pl-c">#</span> 2. 文件描述符限制</span>
+sudo nano /etc/security/limits.conf
+<span class="pl-c"><span class="pl-c">#</span> * soft nofile 65535</span>
+<span class="pl-c"><span class="pl-c">#</span> * hard nofile 65535</span>
+<span class="pl-c"><span class="pl-c">#</span> * soft nproc 65535</span>
+<span class="pl-c"><span class="pl-c">#</span> * hard nproc 65535</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 3. I/O 调度器</span>
+cat /sys/block/sda/queue/scheduler
+<span class="pl-c1">echo</span> mq-deadline <span class="pl-k">|</span> sudo tee /sys/block/sda/queue/scheduler
+
+<span class="pl-c"><span class="pl-c">#</span> 4. CPU 性能模式</span>
+sudo apt install -y cpufrequtils
+sudo cpufreq-set -g performance
+
+<span class="pl-c"><span class="pl-c">#</span> 5. 关闭不需要的服务</span>
+sudo systemctl list-unit-files --state=enabled
+sudo systemctl disable <span class="pl-k">&lt;</span>service_name<span class="pl-k">&gt;</span></pre></div>
+<h3>16.3 日志优化</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 限制 journal 大小</span>
+sudo nano /etc/systemd/journald.conf
+<span class="pl-c"><span class="pl-c">#</span> SystemMaxUse=200M</span>
+<span class="pl-c"><span class="pl-c">#</span> MaxRetentionSec=1month</span>
+
+sudo systemctl restart systemd-journald
+
+<span class="pl-c"><span class="pl-c">#</span> 清理旧日志</span>
+sudo journalctl --vacuum-size=100M
+sudo journalctl --vacuum-time=7d</pre></div>
+<h3>16.4 生成系统报告</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> sysstat 工具</span>
+sudo apt install -y sysstat
+sudo nano /etc/default/sysstat
+<span class="pl-c"><span class="pl-c">#</span> ENABLED="true"</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 查看 CPU 历史</span>
+sar -u
+sar -u -f /var/log/sysstat/sa<span class="pl-s"><span class="pl-pds">$(</span>date +%d<span class="pl-pds">)</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> 查看内存历史</span>
+sar -r
+
+<span class="pl-c"><span class="pl-c">#</span> 查看磁盘历史</span>
+sar -d
+
+<span class="pl-c"><span class="pl-c">#</span> 查看网络历史</span>
+sar -n DEV
+
+<span class="pl-c"><span class="pl-c">#</span> 安装并使用 dstat</span>
+sudo apt install -y dstat
+dstat -tcdngm 1</pre></div>
+<hr>
+<h2>十七、备份与恢复</h2>
+<h3>17.1 rsync 备份</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 基本备份</span>
+rsync -avz /source/ /backup/
+
+<span class="pl-c"><span class="pl-c">#</span> 远程备份</span>
+rsync -avz /source/ user@remote:/backup/
+
+<span class="pl-c"><span class="pl-c">#</span> 远程拉取</span>
+rsync -avz user@remote:/source/ /backup/
+
+<span class="pl-c"><span class="pl-c">#</span> 常用选项</span>
+<span class="pl-c"><span class="pl-c">#</span> -a  归档模式（保留属性）</span>
+<span class="pl-c"><span class="pl-c">#</span> -v  显示详细信息</span>
+<span class="pl-c"><span class="pl-c">#</span> -z  压缩传输</span>
+<span class="pl-c"><span class="pl-c">#</span> -r  递归</span>
+<span class="pl-c"><span class="pl-c">#</span> --delete     删除目标中多余的文件</span>
+<span class="pl-c"><span class="pl-c">#</span> --exclude    排除文件/目录</span>
+<span class="pl-c"><span class="pl-c">#</span> --progress   显示进度</span>
+<span class="pl-c"><span class="pl-c">#</span> --dry-run    演练（不实际执行）</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 示例：排除不需要的文件</span>
+rsync -avz --delete \
+    --exclude=<span class="pl-s"><span class="pl-pds">'</span>.git<span class="pl-pds">'</span></span> \
+    --exclude=<span class="pl-s"><span class="pl-pds">'</span>node_modules<span class="pl-pds">'</span></span> \
+    --exclude=<span class="pl-s"><span class="pl-pds">'</span>*.log<span class="pl-pds">'</span></span> \
+    --exclude=<span class="pl-s"><span class="pl-pds">'</span>__pycache__<span class="pl-pds">'</span></span> \
+    /source/ /backup/
+
+<span class="pl-c"><span class="pl-c">#</span> 增量备份（硬链接方式，节省空间）</span>
+rsync -avz --delete \
+    --link-dest=/backup/previous \
+    /source/ /backup/current/</pre></div>
+<h3>17.2 Timeshift 系统快照</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 安装</span>
+sudo apt install -y timeshift
+
+<span class="pl-c"><span class="pl-c">#</span> 图形界面</span>
+timeshift-gtk
+
+<span class="pl-c"><span class="pl-c">#</span> 命令行</span>
+sudo timeshift --create --comments <span class="pl-s"><span class="pl-pds">"</span>安装完成<span class="pl-pds">"</span></span>    <span class="pl-c"><span class="pl-c">#</span> 创建快照</span>
+sudo timeshift --list                             <span class="pl-c"><span class="pl-c">#</span> 列出快照</span>
+sudo timeshift --restore                          <span class="pl-c"><span class="pl-c">#</span> 恢复</span>
+sudo timeshift --delete --snapshot <span class="pl-s"><span class="pl-pds">'</span>2024-01-15<span class="pl-pds">'</span></span>  <span class="pl-c"><span class="pl-c">#</span> 删除快照</span></pre></div>
+<h3>17.3 备份策略建议</h3>
+<pre class="notranslate"><code class="notranslate">3-2-1 备份原则：
+- 3 份数据副本
+- 2 种不同存储介质
+- 1 份异地备份
+
+备份计划：
+├── 每日：增量备份（rsync / 数据库 dump）
+├── 每周：完整备份
+├── 每月：归档备份（异地）
+└── 每次变更前：系统快照（Timeshift）
+
+备份内容：
+├── 用户数据（/home）
+├── 网站数据（/var/www）
+├── 数据库（mysqldump / pg_dump）
+├── 配置文件（/etc）
+├── 邮件数据
+└── 定时任务（crontab -l）
+</code></pre>
+<h3>17.4 数据库备份</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> MySQL 备份</span>
+mysqldump -u root -p database_name <span class="pl-k">&gt;</span> backup.sql
+mysqldump -u root -p --all-databases <span class="pl-k">&gt;</span> all_backup.sql
+gzip backup.sql
+
+<span class="pl-c"><span class="pl-c">#</span> MySQL 恢复</span>
+mysql -u root -p database_name <span class="pl-k">&lt;</span> backup.sql
+
+<span class="pl-c"><span class="pl-c">#</span> PostgreSQL 备份</span>
+pg_dump -U username database_name <span class="pl-k">&gt;</span> backup.sql
+pg_dumpall -U postgres <span class="pl-k">&gt;</span> all_backup.sql
+
+<span class="pl-c"><span class="pl-c">#</span> PostgreSQL 恢复</span>
+psql -U username database_name <span class="pl-k">&lt;</span> backup.sql
+
+<span class="pl-c"><span class="pl-c">#</span> 自动备份脚本（配合 cron）</span>
+<span class="pl-c"><span class="pl-c">#!</span>/bin/bash</span>
+DATE=<span class="pl-s"><span class="pl-pds">$(</span>date +%Y%m%d_%H%M%S<span class="pl-pds">)</span></span>
+BACKUP_DIR=<span class="pl-s"><span class="pl-pds">"</span>/backup/mysql<span class="pl-pds">"</span></span>
+mkdir -p <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$BACKUP_DIR</span><span class="pl-pds">"</span></span>
+mysqldump -u root -p<span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$MYSQL_PASS</span><span class="pl-pds">"</span></span> --all-databases <span class="pl-k">|</span> gzip <span class="pl-k">&gt;</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$BACKUP_DIR</span>/all_<span class="pl-smi">${DATE}</span>.sql.gz<span class="pl-pds">"</span></span>
+find <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$BACKUP_DIR</span><span class="pl-pds">"</span></span> -name <span class="pl-s"><span class="pl-pds">"</span>*.sql.gz<span class="pl-pds">"</span></span> -mtime +30 -delete</pre></div>
+<hr>
+<h2>十八、故障排查</h2>
+<h3>18.1 启动问题</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 无法进入图形界面</span>
+<span class="pl-c"><span class="pl-c">#</span> 切换到 TTY：Ctrl + Alt + F2</span>
+<span class="pl-c"><span class="pl-c">#</span> 登录后检查</span>
+sudo systemctl status gdm3          <span class="pl-c"><span class="pl-c">#</span> 或 sddm、lightdm</span>
+sudo systemctl restart gdm3
+sudo apt install --reinstall ubuntu-desktop
+sudo dpkg --configure -a
+
+<span class="pl-c"><span class="pl-c">#</span> GRUB 引导修复</span>
+<span class="pl-c"><span class="pl-c">#</span> 用 Live USB 启动</span>
+sudo mount /dev/sdaX /mnt
+sudo mount /dev/sdaY /mnt/boot/efi  <span class="pl-c"><span class="pl-c">#</span> 如果有单独 EFI 分区</span>
+sudo grub-install --root-directory=/mnt /dev/sda
+sudo chroot /mnt update-grub
+
+<span class="pl-c"><span class="pl-c">#</span> 系统恢复模式</span>
+<span class="pl-c"><span class="pl-c">#</span> GRUB 菜单 → Advanced options → Recovery mode</span>
+<span class="pl-c"><span class="pl-c">#</span> 可以选择：clean、dpkg、fsck、grub、network、root shell</span></pre></div>
+<h3>18.2 网络问题</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 网络不通</span>
+ip addr show                        <span class="pl-c"><span class="pl-c">#</span> 检查 IP</span>
+ip route show                       <span class="pl-c"><span class="pl-c">#</span> 检查路由</span>
+ping -c 4 8.8.8.8                   <span class="pl-c"><span class="pl-c">#</span> 测试外网</span>
+ping -c 4 gateway_ip                <span class="pl-c"><span class="pl-c">#</span> 测试网关</span>
+
+<span class="pl-c"><span class="pl-c">#</span> DNS 问题</span>
+nslookup google.com                 <span class="pl-c"><span class="pl-c">#</span> 测试 DNS</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>nameserver 8.8.8.8<span class="pl-pds">"</span></span> <span class="pl-k">|</span> sudo tee /etc/resolv.conf
+
+<span class="pl-c"><span class="pl-c">#</span> 网络服务重启</span>
+sudo systemctl restart NetworkManager
+sudo netplan apply
+
+<span class="pl-c"><span class="pl-c">#</span> 网卡问题</span>
+ip link show                        <span class="pl-c"><span class="pl-c">#</span> 查看网卡状态</span>
+sudo ip link <span class="pl-c1">set</span> eth0 up            <span class="pl-c"><span class="pl-c">#</span> 启用网卡</span>
+sudo dhclient eth0                  <span class="pl-c"><span class="pl-c">#</span> 获取 IP</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 防火墙阻止</span>
+sudo ufw status                     <span class="pl-c"><span class="pl-c">#</span> 检查防火墙</span>
+sudo iptables -L -n                 <span class="pl-c"><span class="pl-c">#</span> 检查 iptables</span></pre></div>
+<h3>18.3 磁盘问题</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 磁盘空间不足</span>
+df -h                               <span class="pl-c"><span class="pl-c">#</span> 查看使用率</span>
+du -sh /var/log/<span class="pl-k">*</span>                   <span class="pl-c"><span class="pl-c">#</span> 查找大文件</span>
+sudo journalctl --vacuum-size=100M  <span class="pl-c"><span class="pl-c">#</span> 清理日志</span>
+sudo apt autoremove                 <span class="pl-c"><span class="pl-c">#</span> 清理软件包</span>
+sudo apt clean                      <span class="pl-c"><span class="pl-c">#</span> 清理缓存</span>
+docker system prune -a              <span class="pl-c"><span class="pl-c">#</span> 清理 Docker</span>
+
+<span class="pl-c"><span class="pl-c">#</span> inode 耗尽</span>
+df -i                               <span class="pl-c"><span class="pl-c">#</span> 查看 inode 使用</span>
+sudo find / -xdev -type f <span class="pl-k">|</span> wc -l  <span class="pl-c"><span class="pl-c">#</span> 统计文件数</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 文件系统检查</span>
+sudo fsck /dev/sda1                 <span class="pl-c"><span class="pl-c">#</span> 检查修复</span>
+sudo e2fsck -f /dev/sda1            <span class="pl-c"><span class="pl-c">#</span> ext4 检查</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 磁盘只读（可能磁盘故障）</span>
+dmesg <span class="pl-k">|</span> grep -i error               <span class="pl-c"><span class="pl-c">#</span> 查看内核错误</span>
+sudo mount -o remount,rw /          <span class="pl-c"><span class="pl-c">#</span> 重新挂载为读写</span></pre></div>
+<h3>18.4 软件问题</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 依赖问题</span>
+sudo apt --fix-broken install
+sudo dpkg --configure -a
+
+<span class="pl-c"><span class="pl-c">#</span> GPG 密钥错误</span>
+curl -fsSL https://archive.ubuntu.com/ubuntu/dists/<span class="pl-s"><span class="pl-pds">$(</span>lsb_release -cs<span class="pl-pds">)</span></span>/Release.gpg <span class="pl-k">|</span> sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/ubuntu.gpg
+
+<span class="pl-c"><span class="pl-c">#</span> 软件包冲突</span>
+sudo apt remove conflicting_package
+sudo apt install --reinstall package_name
+
+<span class="pl-c"><span class="pl-c">#</span> Snap 问题</span>
+sudo snap refresh
+sudo snap changes                   <span class="pl-c"><span class="pl-c">#</span> 查看变更记录</span></pre></div>
+<h3>18.5 常见错误速查</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>现象</th>
+<th>可能原因</th>
+<th>解决方案</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">Permission denied</code></td>
+<td>权限不足</td>
+<td><code class="notranslate">sudo</code> 或 <code class="notranslate">chmod</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">Command not found</code></td>
+<td>未安装 / PATH 问题</td>
+<td><code class="notranslate">apt install</code> 或检查 <code class="notranslate">PATH</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">No space left on device</code></td>
+<td>磁盘满</td>
+<td><code class="notranslate">df -h</code> 检查，清理空间</td>
+</tr>
+<tr>
+<td><code class="notranslate">Connection refused</code></td>
+<td>服务未启动</td>
+<td><code class="notranslate">systemctl start service</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">Could not resolve host</code></td>
+<td>DNS 问题</td>
+<td>修改 <code class="notranslate">/etc/resolv.conf</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">dpkg: error</code></td>
+<td>依赖损坏</td>
+<td><code class="notranslate">dpkg --configure -a</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">Unable to locate package</code></td>
+<td>源问题</td>
+<td><code class="notranslate">apt update</code>，检查 sources</td>
+</tr>
+<tr>
+<td><code class="notranslate">Failed to start service</code></td>
+<td>服务配置错误</td>
+<td><code class="notranslate">journalctl -u service</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">Boot error</code></td>
+<td>GRUB 损坏</td>
+<td>Live USB 修复引导</td>
+</tr>
+<tr>
+<td><code class="notranslate">Frozen system</code></td>
+<td>内存/IO 问题</td>
+<td><code class="notranslate">SysRq</code> 组合键强制重启</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<h2>十九、Ubuntu 版本与升级</h2>
+<h3>19.1 版本历史</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>版本</th>
+<th>代号</th>
+<th>发布时间</th>
+<th>支持截止</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>20.04 LTS</td>
+<td>Focal Fossa</td>
+<td>2020-04</td>
+<td>2025-04</td>
+<td>LTS</td>
+</tr>
+<tr>
+<td>22.04 LTS</td>
+<td>Jammy Jellyfish</td>
+<td>2022-04</td>
+<td>2027-04</td>
+<td>LTS</td>
+</tr>
+<tr>
+<td>23.04</td>
+<td>Lunar Lobster</td>
+<td>2023-04</td>
+<td>2024-01</td>
+<td>非LTS</td>
+</tr>
+<tr>
+<td>23.10</td>
+<td>Mantic Minotaur</td>
+<td>2023-10</td>
+<td>2024-07</td>
+<td>非LTS</td>
+</tr>
+<tr>
+<td>24.04 LTS</td>
+<td>Noble Numbat</td>
+<td>2024-04</td>
+<td>2029-04</td>
+<td>LTS</td>
+</tr>
+<tr>
+<td>24.10</td>
+<td>Oracular Oriole</td>
+<td>2024-10</td>
+<td>2025-07</td>
+<td>非LTS</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>19.2 查看版本</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">lsb_release -a                       <span class="pl-c"><span class="pl-c">#</span> 查看版本</span>
+cat /etc/os-release                  <span class="pl-c"><span class="pl-c">#</span> 详细信息</span>
+hostnamectl                          <span class="pl-c"><span class="pl-c">#</span> 综合信息</span>
+uname -r                             <span class="pl-c"><span class="pl-c">#</span> 内核版本</span>
+uname -a                             <span class="pl-c"><span class="pl-c">#</span> 完整内核信息</span></pre></div>
+<h3>19.3 系统升级</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 升级当前版本的所有软件包</span>
+sudo apt update <span class="pl-k">&amp;&amp;</span> sudo apt upgrade -y
+
+<span class="pl-c"><span class="pl-c">#</span> 发行版升级（如 22.04 → 24.04）</span>
+sudo apt install -y update-manager-core
+sudo nano /etc/update-manager/release-upgrades
+<span class="pl-c"><span class="pl-c">#</span> Prompt=lts                       # 只提示 LTS 升级</span>
+<span class="pl-c"><span class="pl-c">#</span> Prompt=normal                    # 提示所有版本升级</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 执行升级</span>
+sudo do-release-upgrade
+
+<span class="pl-c"><span class="pl-c">#</span> 升级前准备</span>
+<span class="pl-c"><span class="pl-c">#</span> 1. 备份重要数据</span>
+<span class="pl-c"><span class="pl-c">#</span> 2. 确保网络稳定</span>
+<span class="pl-c"><span class="pl-c">#</span> 3. 关闭第三方 PPA</span>
+<span class="pl-c"><span class="pl-c">#</span> 4. 确保磁盘空间充足</span>
+<span class="pl-c"><span class="pl-c">#</span> 5. 建议在虚拟机中先测试</span></pre></div>
+<h3>19.4 内核管理</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 查看当前内核</span>
+uname -r
+
+<span class="pl-c"><span class="pl-c">#</span> 查看已安装内核</span>
+dpkg -l <span class="pl-k">|</span> grep linux-image
+
+<span class="pl-c"><span class="pl-c">#</span> 安装新内核</span>
+sudo apt install linux-generic-hwe-24.04
+
+<span class="pl-c"><span class="pl-c">#</span> 删除旧内核</span>
+sudo apt autoremove --purge
+
+<span class="pl-c"><span class="pl-c">#</span> 查看内核启动参数</span>
+cat /proc/cmdline
+
+<span class="pl-c"><span class="pl-c">#</span> 修改启动内核</span>
+<span class="pl-c"><span class="pl-c">#</span> GRUB 菜单 → Advanced options → 选择内核</span>
+sudo nano /etc/default/grub
+<span class="pl-c"><span class="pl-c">#</span> GRUB_DEFAULT=0                    # 默认启动项</span>
+sudo update-grub</pre></div>
+<hr>
+<h2>二十、完整实战示例</h2>
+<h3>20.1 部署 Web 应用</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#!</span>/bin/bash</span>
+<span class="pl-c"><span class="pl-c">#</span> 部署 Web 应用脚本</span>
+<span class="pl-c1">set</span> -e
+
+APP_NAME=<span class="pl-s"><span class="pl-pds">"</span>myapp<span class="pl-pds">"</span></span>
+APP_DIR=<span class="pl-s"><span class="pl-pds">"</span>/opt/<span class="pl-smi">$APP_NAME</span><span class="pl-pds">"</span></span>
+NGINX_CONF=<span class="pl-s"><span class="pl-pds">"</span>/etc/nginx/sites-available/<span class="pl-smi">$APP_NAME</span><span class="pl-pds">"</span></span>
+DOMAIN=<span class="pl-s"><span class="pl-pds">"</span>example.com<span class="pl-pds">"</span></span>
+
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>=== 部署 <span class="pl-smi">$APP_NAME</span> ===<span class="pl-pds">"</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> 1. 安装依赖</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>[1/6] 安装依赖...<span class="pl-pds">"</span></span>
+sudo apt update
+sudo apt install -y nginx git python3 python3-pip python3-venv
+
+<span class="pl-c"><span class="pl-c">#</span> 2. 克隆代码</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>[2/6] 克隆代码...<span class="pl-pds">"</span></span>
+sudo mkdir -p <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$APP_DIR</span><span class="pl-pds">"</span></span>
+sudo git clone https://github.com/user/<span class="pl-smi">$APP_NAME</span>.git <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$APP_DIR</span><span class="pl-pds">"</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> 3. 创建虚拟环境</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>[3/6] 配置 Python 环境...<span class="pl-pds">"</span></span>
+<span class="pl-c1">cd</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$APP_DIR</span><span class="pl-pds">"</span></span>
+python3 -m venv venv
+<span class="pl-c1">source</span> venv/bin/activate
+pip install -r requirements.txt
+deactivate
+
+<span class="pl-c"><span class="pl-c">#</span> 4. 创建 systemd 服务</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>[4/6] 创建服务...<span class="pl-pds">"</span></span>
+sudo tee /etc/systemd/system/<span class="pl-smi">$APP_NAME</span>.service <span class="pl-k">&gt;</span> /dev/null <span class="pl-s"><span class="pl-k">&lt;&lt;</span> <span class="pl-k">EOF</span></span>
+<span class="pl-s">[Unit]</span>
+<span class="pl-s">Description=<span class="pl-smi">$APP_NAME</span></span>
+<span class="pl-s">After=network.target</span>
+<span class="pl-s"></span>
+<span class="pl-s">[Service]</span>
+<span class="pl-s">Type=simple</span>
+<span class="pl-s">User=www-data</span>
+<span class="pl-s">WorkingDirectory=<span class="pl-smi">$APP_DIR</span></span>
+<span class="pl-s">ExecStart=<span class="pl-smi">$APP_DIR</span>/venv/bin/gunicorn -w 4 -b 127.0.0.1:8000 app:app</span>
+<span class="pl-s">Restart=always</span>
+<span class="pl-s"></span>
+<span class="pl-s">[Install]</span>
+<span class="pl-s">WantedBy=multi-user.target</span>
+<span class="pl-s"><span class="pl-k">EOF</span></span>
+
+sudo systemctl daemon-reload
+sudo systemctl <span class="pl-c1">enable</span> <span class="pl-smi">$APP_NAME</span>
+sudo systemctl start <span class="pl-smi">$APP_NAME</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 5. 配置 Nginx</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>[5/6] 配置 Nginx...<span class="pl-pds">"</span></span>
+sudo tee <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$NGINX_CONF</span><span class="pl-pds">"</span></span> <span class="pl-k">&gt;</span> /dev/null <span class="pl-s"><span class="pl-k">&lt;&lt;</span> <span class="pl-k">EOF</span></span>
+<span class="pl-s">server {</span>
+<span class="pl-s">    listen 80;</span>
+<span class="pl-s">    server_name <span class="pl-smi">$DOMAIN</span>;</span>
+<span class="pl-s"></span>
+<span class="pl-s">    location / {</span>
+<span class="pl-s">        proxy_pass http://127.0.0.1:8000;</span>
+<span class="pl-s">        proxy_set_header Host <span class="pl-cce">\$</span>host;</span>
+<span class="pl-s">        proxy_set_header X-Real-IP <span class="pl-cce">\$</span>remote_addr;</span>
+<span class="pl-s">        proxy_set_header X-Forwarded-For <span class="pl-cce">\$</span>proxy_add_x_forwarded_for;</span>
+<span class="pl-s">        proxy_set_header X-Forwarded-Proto <span class="pl-cce">\$</span>scheme;</span>
+<span class="pl-s">    }</span>
+<span class="pl-s"></span>
+<span class="pl-s">    location /static/ {</span>
+<span class="pl-s">        alias <span class="pl-smi">$APP_DIR</span>/static/;</span>
+<span class="pl-s">        expires 30d;</span>
+<span class="pl-s">    }</span>
+<span class="pl-s">}</span>
+<span class="pl-s"><span class="pl-k">EOF</span></span>
+
+sudo ln -sf <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$NGINX_CONF</span><span class="pl-pds">"</span></span> /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
+
+<span class="pl-c"><span class="pl-c">#</span> 6. 配置防火墙</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>[6/6] 配置防火墙...<span class="pl-pds">"</span></span>
+sudo ufw allow <span class="pl-s"><span class="pl-pds">'</span>Nginx Full<span class="pl-pds">'</span></span>
+sudo ufw allow <span class="pl-s"><span class="pl-pds">'</span>OpenSSH<span class="pl-pds">'</span></span>
+
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>=== 部署完成 ===<span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>访问: http://<span class="pl-smi">$DOMAIN</span><span class="pl-pds">"</span></span></pre></div>
+<h3>20.2 系统初始化脚本</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#!</span>/bin/bash</span>
+<span class="pl-c"><span class="pl-c">#</span> Ubuntu 服务器初始化脚本</span>
+<span class="pl-c1">set</span> -e
+
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>=== Ubuntu 服务器初始化 ===<span class="pl-pds">"</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> 更新系统</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>[1/8] 更新系统...<span class="pl-pds">"</span></span>
+sudo apt update <span class="pl-k">&amp;&amp;</span> sudo apt full-upgrade -y
+
+<span class="pl-c"><span class="pl-c">#</span> 设置时区</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>[2/8] 设置时区...<span class="pl-pds">"</span></span>
+sudo timedatectl set-timezone Asia/Shanghai
+
+<span class="pl-c"><span class="pl-c">#</span> 安装基础软件</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>[3/8] 安装基础软件...<span class="pl-pds">"</span></span>
+sudo apt install -y \
+    curl wget git vim nano htop tree unzip zip \
+    net-tools openssh-server fail2ban ufw \
+    build-essential software-properties-common \
+    apt-transport-https ca-certificates gnupg lsb-release \
+    unattended-upgrades logrotate
+
+<span class="pl-c"><span class="pl-c">#</span> 配置防火墙</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>[4/8] 配置防火墙...<span class="pl-pds">"</span></span>
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow 22/tcp
+sudo ufw --force <span class="pl-c1">enable</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 配置 SSH 安全</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>[5/8] 加固 SSH...<span class="pl-pds">"</span></span>
+sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
+sudo sed -i <span class="pl-s"><span class="pl-pds">'</span>s/#PermitRootLogin yes/PermitRootLogin no/<span class="pl-pds">'</span></span> /etc/ssh/sshd_config
+sudo sed -i <span class="pl-s"><span class="pl-pds">'</span>s/#MaxAuthTries 6/MaxAuthTries 3/<span class="pl-pds">'</span></span> /etc/ssh/sshd_config
+sudo systemctl restart ssh
+
+<span class="pl-c"><span class="pl-c">#</span> 配置 Fail2Ban</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>[6/8] 配置 Fail2Ban...<span class="pl-pds">"</span></span>
+sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+sudo systemctl <span class="pl-c1">enable</span> fail2ban
+sudo systemctl start fail2ban
+
+<span class="pl-c"><span class="pl-c">#</span> 配置自动更新</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>[7/8] 配置自动安全更新...<span class="pl-pds">"</span></span>
+sudo dpkg-reconfigure -plow unattended-upgrades
+
+<span class="pl-c"><span class="pl-c">#</span> 配置 sysctl</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>[8/8] 优化内核参数...<span class="pl-pds">"</span></span>
+sudo tee /etc/sysctl.d/99-tuning.conf <span class="pl-k">&gt;</span> /dev/null <span class="pl-s"><span class="pl-k">&lt;&lt;</span> <span class="pl-k">EOF</span></span>
+<span class="pl-s">net.core.somaxconn = 65535</span>
+<span class="pl-s">net.ipv4.tcp_max_syn_backlog = 65535</span>
+<span class="pl-s">net.ipv4.tcp_tw_reuse = 1</span>
+<span class="pl-s">net.ipv4.ip_local_port_range = 1024 65535</span>
+<span class="pl-s">vm.swappiness = 10</span>
+<span class="pl-s">fs.file-max = 2097152</span>
+<span class="pl-s"><span class="pl-k">EOF</span></span>
+sudo sysctl --system
+
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>=== 初始化完成 ===<span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>建议：<span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>1. 重新登录以使用户组变更生效<span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>2. 配置 SSH 密钥登录<span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>3. 修改 SSH 端口（可选）<span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>4. 重启系统<span class="pl-pds">"</span></span></pre></div>
+<h3>20.3 自动化运维脚本集</h3>
+<p><strong>系统巡检脚本：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#!</span>/bin/bash</span>
+<span class="pl-c"><span class="pl-c">#</span> system_check.sh - 系统巡检</span>
+REPORT=<span class="pl-s"><span class="pl-pds">"</span>/tmp/system_check_<span class="pl-s"><span class="pl-pds">$(</span>date +%Y%m%d_%H%M%S<span class="pl-pds">)</span></span>.txt<span class="pl-pds">"</span></span>
+
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>=== 系统巡检报告 ===<span class="pl-pds">"</span></span> <span class="pl-k">|</span> tee <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT</span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>生成时间: <span class="pl-s"><span class="pl-pds">$(</span>date<span class="pl-pds">)</span></span><span class="pl-pds">"</span></span> <span class="pl-k">|</span> tee -a <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT</span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span> <span class="pl-k">|</span> tee -a <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT</span><span class="pl-pds">"</span></span>
+
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>=== 系统信息 ===<span class="pl-pds">"</span></span> <span class="pl-k">|</span> tee -a <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT</span><span class="pl-pds">"</span></span>
+hostnamectl <span class="pl-k">|</span> tee -a <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT</span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span> <span class="pl-k">|</span> tee -a <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT</span><span class="pl-pds">"</span></span>
+
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>=== CPU 负载 ===<span class="pl-pds">"</span></span> <span class="pl-k">|</span> tee -a <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT</span><span class="pl-pds">"</span></span>
+uptime <span class="pl-k">|</span> tee -a <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT</span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span> <span class="pl-k">|</span> tee -a <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT</span><span class="pl-pds">"</span></span>
+
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>=== 内存使用 ===<span class="pl-pds">"</span></span> <span class="pl-k">|</span> tee -a <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT</span><span class="pl-pds">"</span></span>
+free -h <span class="pl-k">|</span> tee -a <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT</span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span> <span class="pl-k">|</span> tee -a <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT</span><span class="pl-pds">"</span></span>
+
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>=== 磁盘使用 ===<span class="pl-pds">"</span></span> <span class="pl-k">|</span> tee -a <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT</span><span class="pl-pds">"</span></span>
+df -h <span class="pl-k">|</span> grep -E <span class="pl-s"><span class="pl-pds">"</span>^/dev<span class="pl-pds">"</span></span> <span class="pl-k">|</span> tee -a <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT</span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span> <span class="pl-k">|</span> tee -a <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT</span><span class="pl-pds">"</span></span>
+
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>=== 网络连接 ===<span class="pl-pds">"</span></span> <span class="pl-k">|</span> tee -a <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT</span><span class="pl-pds">"</span></span>
+ss -tlnp <span class="pl-k">|</span> head -15 <span class="pl-k">|</span> tee -a <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT</span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span> <span class="pl-k">|</span> tee -a <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT</span><span class="pl-pds">"</span></span>
+
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>=== 失败服务 ===<span class="pl-pds">"</span></span> <span class="pl-k">|</span> tee -a <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT</span><span class="pl-pds">"</span></span>
+systemctl list-units --state=failed --no-pager <span class="pl-k">|</span> tee -a <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT</span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span> <span class="pl-k">|</span> tee -a <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT</span><span class="pl-pds">"</span></span>
+
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>=== 最近登录 ===<span class="pl-pds">"</span></span> <span class="pl-k">|</span> tee -a <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT</span><span class="pl-pds">"</span></span>
+last -5 <span class="pl-k">|</span> tee -a <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT</span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span> <span class="pl-k">|</span> tee -a <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT</span><span class="pl-pds">"</span></span>
+
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>=== 安全检查 ===<span class="pl-pds">"</span></span> <span class="pl-k">|</span> tee -a <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT</span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>待更新软件包:<span class="pl-pds">"</span></span> <span class="pl-k">|</span> tee -a <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT</span><span class="pl-pds">"</span></span>
+apt list --upgradable <span class="pl-k">2&gt;</span>/dev/null <span class="pl-k">|</span> wc -l <span class="pl-k">|</span> tee -a <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT</span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>防火墙状态:<span class="pl-pds">"</span></span> <span class="pl-k">|</span> tee -a <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT</span><span class="pl-pds">"</span></span>
+sudo ufw status <span class="pl-k">|</span> tee -a <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT</span><span class="pl-pds">"</span></span>
+
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span> <span class="pl-k">|</span> tee -a <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT</span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>报告已保存到: <span class="pl-smi">$REPORT</span><span class="pl-pds">"</span></span></pre></div>
+<p><strong>日志分析脚本：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#!</span>/bin/bash</span>
+<span class="pl-c"><span class="pl-c">#</span> log_analysis.sh - 日志分析</span>
+LOG=<span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">${1<span class="pl-k">:-/</span>var<span class="pl-k">/</span>log<span class="pl-k">/</span>syslog}</span><span class="pl-pds">"</span></span>
+HOURS=<span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">${2<span class="pl-k">:-</span>24}</span><span class="pl-pds">"</span></span>
+
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>=== 日志分析: <span class="pl-smi">$LOG</span> (最近 <span class="pl-smi">${HOURS}</span> 小时) ===<span class="pl-pds">"</span></span>
+
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>--- 错误统计 ---<span class="pl-pds">"</span></span>
+grep -i <span class="pl-s"><span class="pl-pds">"</span>error<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$LOG</span><span class="pl-pds">"</span></span> <span class="pl-k">|</span> tail -50 <span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>{print $1,$2,$3}<span class="pl-pds">'</span></span> <span class="pl-k">|</span> sort <span class="pl-k">|</span> uniq -c <span class="pl-k">|</span> sort -rn <span class="pl-k">|</span> head -10
+
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>--- 警告统计 ---<span class="pl-pds">"</span></span>
+grep -i <span class="pl-s"><span class="pl-pds">"</span>warn<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$LOG</span><span class="pl-pds">"</span></span> <span class="pl-k">|</span> tail -50 <span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>{print $1,$2,$3}<span class="pl-pds">'</span></span> <span class="pl-k">|</span> sort <span class="pl-k">|</span> uniq -c <span class="pl-k">|</span> sort -rn <span class="pl-k">|</span> head -10
+
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>--- 登录失败 ---<span class="pl-pds">"</span></span>
+grep <span class="pl-s"><span class="pl-pds">"</span>Failed password<span class="pl-pds">"</span></span> /var/log/auth.log <span class="pl-k">2&gt;</span>/dev/null <span class="pl-k">|</span> tail -10
+
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>--- 磁盘/IO 相关 ---<span class="pl-pds">"</span></span>
+grep -iE <span class="pl-s"><span class="pl-pds">"</span>disk|io|filesystem<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$LOG</span><span class="pl-pds">"</span></span> <span class="pl-k">|</span> tail -10</pre></div>
+<hr>
+<h2>附录 A：常用快捷键速查</h2>
+<h3>终端快捷键</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>快捷键</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">Ctrl + Alt + T</code></td>
+<td>打开终端</td>
+</tr>
+<tr>
+<td><code class="notranslate">Ctrl + Shift + T</code></td>
+<td>新建终端标签</td>
+</tr>
+<tr>
+<td><code class="notranslate">Ctrl + Shift + N</code></td>
+<td>新建终端窗口</td>
+</tr>
+<tr>
+<td><code class="notranslate">Ctrl + Shift + C</code></td>
+<td>复制</td>
+</tr>
+<tr>
+<td><code class="notranslate">Ctrl + Shift + V</code></td>
+<td>粘贴</td>
+</tr>
+<tr>
+<td><code class="notranslate">Ctrl + C</code></td>
+<td>终止命令</td>
+</tr>
+<tr>
+<td><code class="notranslate">Ctrl + Z</code></td>
+<td>暂停任务</td>
+</tr>
+<tr>
+<td><code class="notranslate">Ctrl + D</code></td>
+<td>退出</td>
+</tr>
+<tr>
+<td><code class="notranslate">Ctrl + R</code></td>
+<td>搜索历史</td>
+</tr>
+<tr>
+<td><code class="notranslate">Ctrl + L</code></td>
+<td>清屏</td>
+</tr>
+<tr>
+<td><code class="notranslate">Ctrl + A / E</code></td>
+<td>行首 / 行尾</td>
+</tr>
+<tr>
+<td><code class="notranslate">Ctrl + U / K</code></td>
+<td>删除行前 / 行后</td>
+</tr>
+<tr>
+<td><code class="notranslate">Ctrl + W</code></td>
+<td>删除前一个单词</td>
+</tr>
+<tr>
+<td><code class="notranslate">Tab</code></td>
+<td>自动补全</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>桌面快捷键</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>快捷键</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">Super</code></td>
+<td>活动概览</td>
+</tr>
+<tr>
+<td><code class="notranslate">Super + A</code></td>
+<td>显示应用程序</td>
+</tr>
+<tr>
+<td><code class="notranslate">Super + D</code></td>
+<td>显示桌面</td>
+</tr>
+<tr>
+<td><code class="notranslate">Super + L</code></td>
+<td>锁屏</td>
+</tr>
+<tr>
+<td><code class="notranslate">Super + ↑/↓</code></td>
+<td>最大化 / 还原</td>
+</tr>
+<tr>
+<td><code class="notranslate">Super + ←/→</code></td>
+<td>半屏</td>
+</tr>
+<tr>
+<td><code class="notranslate">Alt + Tab</code></td>
+<td>切换窗口</td>
+</tr>
+<tr>
+<td><code class="notranslate">Alt + F4</code></td>
+<td>关闭窗口</td>
+</tr>
+<tr>
+<td><code class="notranslate">Ctrl + Alt + Del</code></td>
+<td>注销</td>
+</tr>
+<tr>
+<td><code class="notranslate">PrtSc</code></td>
+<td>截图</td>
+</tr>
+<tr>
+<td><code class="notranslate">Ctrl + Alt + F1-F6</code></td>
+<td>切换到 TTY</td>
+</tr>
+<tr>
+<td><code class="notranslate">Ctrl + Alt + F7</code></td>
+<td>返回图形界面</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<h2>附录 B：推荐学习资源</h2>
+<h3>书籍</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>书名</th>
+<th>作者</th>
+<th>方向</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>《鸟哥的 Linux 私房菜》</td>
+<td>鸟哥</td>
+<td>Linux 基础</td>
+</tr>
+<tr>
+<td>《Linux 命令行与 Shell 脚本编程大全》</td>
+<td>Richard Blum</td>
+<td>Shell 脚本</td>
+</tr>
+<tr>
+<td>《Linux 就该这么学》</td>
+<td>刘遄</td>
+<td>Linux 入门</td>
+</tr>
+<tr>
+<td>《UNIX 环境高级编程》</td>
+<td>W. Richard Stevens</td>
+<td>系统编程</td>
+</tr>
+<tr>
+<td>《Linux 性能优化实战》</td>
+<td>倪朋飞</td>
+<td>性能优化</td>
+</tr>
+<tr>
+<td>《Docker 技术入门与实战》</td>
+<td>杨保华</td>
+<td>Docker</td>
+</tr>
+<tr>
+<td>《Linux 运维之道》</td>
+<td>丁明一</td>
+<td>运维</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>在线资源</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>资源</th>
+<th>网址</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ubuntu 官方文档</td>
+<td><a href="https://help.ubuntu.com" rel="nofollow">https://help.ubuntu.com</a></td>
+<td>最权威</td>
+</tr>
+<tr>
+<td>Ubuntu 论坛</td>
+<td><a href="https://discourse.ubuntu.com" rel="nofollow">https://discourse.ubuntu.com</a></td>
+<td>社区问答</td>
+</tr>
+<tr>
+<td>Ask Ubuntu</td>
+<td><a href="https://askubuntu.com" rel="nofollow">https://askubuntu.com</a></td>
+<td>问答社区</td>
+</tr>
+<tr>
+<td>Linux Journey</td>
+<td><a href="https://linuxjourney.com" rel="nofollow">https://linuxjourney.com</a></td>
+<td>交互式学习</td>
+</tr>
+<tr>
+<td>Linux 命令大全</td>
+<td><a href="https://www.linuxcool.com" rel="nofollow">https://www.linuxcool.com</a></td>
+<td>命令速查</td>
+</tr>
+<tr>
+<td>Arch Wiki</td>
+<td><a href="https://wiki.archlinux.org" rel="nofollow">https://wiki.archlinux.org</a></td>
+<td>通用 Linux 知识</td>
+</tr>
+<tr>
+<td>DigitalOcean 教程</td>
+<td><a href="https://www.digitalocean.com/community/tutorials" rel="nofollow">https://www.digitalocean.com/community/tutorials</a></td>
+<td>实用教程</td>
+</tr>
+<tr>
+<td>Linux 基础</td>
+<td><a href="https://linuxtools-rst.readthedocs.io" rel="nofollow">https://linuxtools-rst.readthedocs.io</a></td>
+<td>工具详解</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<blockquote>
+<p><strong>总结：</strong> Ubuntu 是一个功能强大、社区活跃的 Linux 发行版，从桌面到服务器、从开发到运维都能胜任。掌握命令行是精通 Ubuntu 的关键，多动手实践、多阅读 man 手册、多参与社区讨论，你将快速成长为 Linux 高手。</p>
+</blockquote></div>
+<div style="font-size:small;margin-top:8px;float:right;">转载请注明出处</div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://helloblog.eik.cc">你好博客</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if("09/25/2026"!=""){
+    var startSite=new Date("09/25/2026");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行 "+diffDay+" 天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","techjiang/Gmeek-HelloBlog");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script><script src='https://blog.meekdai.com/Gmeek/plugins/lightbox.js'></script>
+
+</html>
