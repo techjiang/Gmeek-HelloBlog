@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>你好博客</title><link>https://helloblog.eik.cc</link><description>你好博客，你好世界！</description><copyright>你好博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://img2.tofaka.com/autoupload/f/3624q/20260926/caKC/1024X1024/Hello-Logo.png</url><title>avatar</title><link>https://helloblog.eik.cc</link></image><lastBuildDate>Mon, 28 Sep 2026 13:48:10 +0000</lastBuildDate><managingEditor>你好博客</managingEditor><ttl>60</ttl><webMaster>你好博客</webMaster><item><title>WordPress从入门到精通(第二部分)</title><link>https://helloblog.eik.cc/post/WordPress-cong-ru-men-dao-jing-tong-%28-di-er-bu-fen-%29.html</link><description>## 九、插件开发
+## 九、插件开发
 
 ### 9.1 插件文件结构
 
@@ -29,7 +28,7 @@ my-plugin/
 ### 9.2 插件主文件
 
 ```php
-&lt;?php
+<?php
 /**
  * Plugin Name:       My Custom Plugin
  * Plugin URI:        https://example.com/my-plugin
@@ -60,25 +59,25 @@ register_activation_hook(__FILE__, 'my_plugin_activate');
 function my_plugin_activate() {
     // 创建数据库表
     global $wpdb;
-    $table_name = $wpdb-&gt;prefix . 'my_plugin_data';
-    $charset_collate = $wpdb-&gt;get_charset_collate();
+    $table_name = $wpdb->prefix . 'my_plugin_data';
+    $charset_collate = $wpdb->get_charset_collate();
 
-    $sql = 'CREATE TABLE $table_name (
+    $sql = "CREATE TABLE $table_name (
         id mediumint(9) NOT NULL AUTO_INCREMENT,
         name varchar(100) NOT NULL,
         value text,
         created_at datetime DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY (id)
-    ) $charset_collate;';
+    ) $charset_collate;";
 
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     dbDelta($sql);
 
     // 设置默认选项
     add_option('my_plugin_settings', array(
-        'enabled'      =&gt; true,
-        'title'        =&gt; 'My Plugin',
-        'items_per_page' =&gt; 10,
+        'enabled'      => true,
+        'title'        => 'My Plugin',
+        'items_per_page' => 10,
     ));
 
     // 设置默认选项
@@ -107,8 +106,8 @@ function my_plugin_admin_scripts($hook) {
     wp_enqueue_script('my-plugin-admin', MY_PLUGIN_URL . 'admin/js/admin.js', array('jquery'), MY_PLUGIN_VERSION, true);
 
     wp_localize_script('my-plugin-admin', 'myPluginAdmin', array(
-        'ajaxUrl' =&gt; admin_url('admin-ajax.php'),
-        'nonce'   =&gt; wp_create_nonce('my_plugin_nonce'),
+        'ajaxUrl' => admin_url('admin-ajax.php'),
+        'nonce'   => wp_create_nonce('my_plugin_nonce'),
     ));
 }
 add_action('admin_enqueue_scripts', 'my_plugin_admin_scripts');
@@ -124,7 +123,7 @@ add_action('wp_enqueue_scripts', 'my_plugin_frontend_scripts');
 ### 9.3 添加后台菜单页面
 
 ```php
-&lt;?php
+<?php
 // 添加顶级菜单
 function my_plugin_menu() {
     add_menu_page(
@@ -164,24 +163,24 @@ add_action('admin_menu', 'my_plugin_menu');
 
 // 设置页面内容
 function my_plugin_settings_page() {
-    ?&gt;
-    &lt;div class='wrap'&gt;
-        &lt;h1&gt;My Plugin Settings&lt;/h1&gt;
-        &lt;form method='post' action='options.php'&gt;
-            &lt;?php
+    ?>
+    <div class="wrap">
+        <h1>My Plugin Settings</h1>
+        <form method="post" action="options.php">
+            <?php
             settings_fields('my_plugin_settings_group');
             do_settings_sections('my-plugin-settings');
             submit_button();
-            ?&gt;
-        &lt;/form&gt;
-    &lt;/div&gt;
-    &lt;?php
+            ?>
+        </form>
+    </div>
+    <?php
 }
 
 // 注册设置
 function my_plugin_register_settings() {
     register_setting('my_plugin_settings_group', 'my_plugin_settings', array(
-        'sanitize_callback' =&gt; 'my_plugin_sanitize_settings',
+        'sanitize_callback' => 'my_plugin_sanitize_settings',
     ));
 
     add_settings_section(
@@ -212,16 +211,16 @@ add_action('admin_init', 'my_plugin_register_settings');
 // 字段回调
 function my_plugin_enabled_callback() {
     $options = get_option('my_plugin_settings');
-    ?&gt;
-    &lt;input type='checkbox' name='my_plugin_settings[enabled]' value='1' &lt;?php checked(1, $options['enabled'] ?? 0); ?&gt;&gt;
-    &lt;?php
+    ?>
+    <input type="checkbox" name="my_plugin_settings[enabled]" value="1" <?php checked(1, $options['enabled'] ?? 0); ?>>
+    <?php
 }
 
 function my_plugin_title_callback() {
     $options = get_option('my_plugin_settings');
-    ?&gt;
-    &lt;input type='text' name='my_plugin_settings[title]' value='&lt;?php echo esc_attr($options['title'] ?? ''); ?&gt;' class='regular-text'&gt;
-    &lt;?php
+    ?>
+    <input type="text" name="my_plugin_settings[title]" value="<?php echo esc_attr($options['title'] ?? ''); ?>" class="regular-text">
+    <?php
 }
 
 // 清理回调
@@ -236,7 +235,7 @@ function my_plugin_sanitize_settings($input) {
 ### 9.4 AJAX 处理
 
 ```php
-&lt;?php
+<?php
 // AJAX 处理（登录用户）
 function my_plugin_ajax_handler() {
     // 验证 nonce
@@ -257,13 +256,13 @@ function my_plugin_ajax_handler() {
             $value = sanitize_textarea_field($_POST['value'] ?? '');
 
             global $wpdb;
-            $result = $wpdb-&gt;insert($wpdb-&gt;prefix . 'my_plugin_data', array(
-                'name'  =&gt; $name,
-                'value' =&gt; $value,
+            $result = $wpdb->insert($wpdb->prefix . 'my_plugin_data', array(
+                'name'  => $name,
+                'value' => $value,
             ));
 
             if ($result) {
-                wp_send_json_success(array('message' =&gt; 'Data saved successfully'));
+                wp_send_json_success(array('message' => 'Data saved successfully'));
             } else {
                 wp_send_json_error('Failed to save data');
             }
@@ -271,7 +270,7 @@ function my_plugin_ajax_handler() {
 
         case 'get_data':
             global $wpdb;
-            $data = $wpdb-&gt;get_results('SELECT * FROM {$wpdb-&gt;prefix}my_plugin_data ORDER BY created_at DESC LIMIT 10');
+            $data = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}my_plugin_data ORDER BY created_at DESC LIMIT 10");
             wp_send_json_success($data);
             break;
 
@@ -320,7 +319,7 @@ add_action('hook_name', 'callback_function', $priority, $accepted_args);
 
 // 示例：在页面底部添加内容
 function my_custom_footer_content() {
-    echo '&lt;p&gt;Powered by My Theme&lt;/p&gt;';
+    echo '<p>Powered by My Theme</p>';
 }
 add_action('wp_footer', 'my_custom_footer_content');
 
@@ -328,9 +327,9 @@ add_action('wp_footer', 'my_custom_footer_content');
 // init                  WordPress 初始化后（加载主题/插件后）
 // wp_loaded             所有内容加载完成后
 // template_redirect     模板加载前
-// wp_head               &lt;head&gt; 标签内
-// wp_footer             &lt;/body&gt; 标签前
-// wp_body_open          &lt;body&gt; 标签打开后
+// wp_head               <head> 标签内
+// wp_footer             </body> 标签前
+// wp_body_open          <body> 标签打开后
 // after_setup_theme     主题设置后
 // wp_enqueue_scripts    前台脚本加载
 // admin_enqueue_scripts 后台脚本加载
@@ -430,10 +429,10 @@ GET /wp-json/wp/v2/comments           # 获取评论
 GET /wp-json/wp/v2/settings           # 获取设置（需权限）
 
 # 带参数查询
-GET /wp-json/wp/v2/posts?per_page=5&amp;page=1
+GET /wp-json/wp/v2/posts?per_page=5&page=1
 GET /wp-json/wp/v2/posts?search=keyword
 GET /wp-json/wp/v2/posts?categories=1,2
-GET /wp-json/wp/v2/posts?orderby=date&amp;order=desc
+GET /wp-json/wp/v2/posts?orderby=date&order=desc
 GET /wp-json/wp/v2/posts?author=1
 
 # 使用 curl 测试
@@ -444,41 +443,41 @@ curl https://example.com/wp-json/wp/v2/posts?per_page=3
 ### 11.2 注册自定义 REST API 端点
 
 ```php
-&lt;?php
+<?php
 // 注册自定义端点
 function my_plugin_register_rest_routes() {
     register_rest_route('my-plugin/v1', '/data', array(
-        'methods'             =&gt; 'GET',
-        'callback'            =&gt; 'my_plugin_get_data',
-        'permission_callback' =&gt; 'my_plugin_check_permission',
-        'args'                =&gt; array(
-            'per_page' =&gt; array(
-                'default'           =&gt; 10,
-                'sanitize_callback' =&gt; 'absint',
+        'methods'             => 'GET',
+        'callback'            => 'my_plugin_get_data',
+        'permission_callback' => 'my_plugin_check_permission',
+        'args'                => array(
+            'per_page' => array(
+                'default'           => 10,
+                'sanitize_callback' => 'absint',
             ),
-            'page' =&gt; array(
-                'default'           =&gt; 1,
-                'sanitize_callback' =&gt; 'absint',
+            'page' => array(
+                'default'           => 1,
+                'sanitize_callback' => 'absint',
             ),
         ),
     ));
 
     register_rest_route('my-plugin/v1', '/data', array(
-        'methods'             =&gt; 'POST',
-        'callback'            =&gt; 'my_plugin_create_data',
-        'permission_callback' =&gt; 'my_plugin_check_permission',
+        'methods'             => 'POST',
+        'callback'            => 'my_plugin_create_data',
+        'permission_callback' => 'my_plugin_check_permission',
     ));
 
-    register_rest_route('my-plugin/v1', '/data/(?P&lt;id&gt;\d+)', array(
-        'methods'             =&gt; 'PUT',
-        'callback'            =&gt; 'my_plugin_update_data',
-        'permission_callback' =&gt; 'my_plugin_check_permission',
+    register_rest_route('my-plugin/v1', '/data/(?P<id>\d+)', array(
+        'methods'             => 'PUT',
+        'callback'            => 'my_plugin_update_data',
+        'permission_callback' => 'my_plugin_check_permission',
     ));
 
-    register_rest_route('my-plugin/v1', '/data/(?P&lt;id&gt;\d+)', array(
-        'methods'             =&gt; 'DELETE',
-        'callback'            =&gt; 'my_plugin_delete_data',
-        'permission_callback' =&gt; 'my_plugin_check_permission',
+    register_rest_route('my-plugin/v1', '/data/(?P<id>\d+)', array(
+        'methods'             => 'DELETE',
+        'callback'            => 'my_plugin_delete_data',
+        'permission_callback' => 'my_plugin_check_permission',
     ));
 }
 add_action('rest_api_init', 'my_plugin_register_rest_routes');
@@ -491,23 +490,23 @@ function my_plugin_check_permission($request) {
 // GET - 获取数据
 function my_plugin_get_data($request) {
     global $wpdb;
-    $per_page = $request-&gt;get_param('per_page');
-    $page = $request-&gt;get_param('page');
+    $per_page = $request->get_param('per_page');
+    $page = $request->get_param('page');
     $offset = ($page - 1) * $per_page;
 
-    $data = $wpdb-&gt;get_results($wpdb-&gt;prepare(
-        'SELECT * FROM {$wpdb-&gt;prefix}my_plugin_data LIMIT %d OFFSET %d',
+    $data = $wpdb->get_results($wpdb->prepare(
+        "SELECT * FROM {$wpdb->prefix}my_plugin_data LIMIT %d OFFSET %d",
         $per_page, $offset
     ));
 
-    $total = $wpdb-&gt;get_var('SELECT COUNT(*) FROM {$wpdb-&gt;prefix}my_plugin_data');
+    $total = $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}my_plugin_data");
 
     return new WP_REST_Response(array(
-        'data'       =&gt; $data,
-        'total'      =&gt; (int) $total,
-        'page'       =&gt; (int) $page,
-        'per_page'   =&gt; (int) $per_page,
-        'total_pages' =&gt; ceil($total / $per_page),
+        'data'       => $data,
+        'total'      => (int) $total,
+        'page'       => (int) $page,
+        'per_page'   => (int) $per_page,
+        'total_pages' => ceil($total / $per_page),
     ), 200);
 }
 
@@ -515,62 +514,62 @@ function my_plugin_get_data($request) {
 function my_plugin_create_data($request) {
     global $wpdb;
 
-    $name = sanitize_text_field($request-&gt;get_param('name'));
-    $value = sanitize_textarea_field($request-&gt;get_param('value'));
+    $name = sanitize_text_field($request->get_param('name'));
+    $value = sanitize_textarea_field($request->get_param('value'));
 
-    $result = $wpdb-&gt;insert($wpdb-&gt;prefix . 'my_plugin_data', array(
-        'name'  =&gt; $name,
-        'value' =&gt; $value,
+    $result = $wpdb->insert($wpdb->prefix . 'my_plugin_data', array(
+        'name'  => $name,
+        'value' => $value,
     ));
 
     if ($result) {
         return new WP_REST_Response(array(
-            'id'      =&gt; $wpdb-&gt;insert_id,
-            'message' =&gt; 'Created successfully',
+            'id'      => $wpdb->insert_id,
+            'message' => 'Created successfully',
         ), 201);
     }
 
-    return new WP_REST_Response(array('message' =&gt; 'Failed to create'), 500);
+    return new WP_REST_Response(array('message' => 'Failed to create'), 500);
 }
 
 // PUT - 更新数据
 function my_plugin_update_data($request) {
     global $wpdb;
-    $id = $request-&gt;get_param('id');
+    $id = $request->get_param('id');
 
-    $result = $wpdb-&gt;update(
-        $wpdb-&gt;prefix . 'my_plugin_data',
+    $result = $wpdb->update(
+        $wpdb->prefix . 'my_plugin_data',
         array(
-            'name'  =&gt; sanitize_text_field($request-&gt;get_param('name')),
-            'value' =&gt; sanitize_textarea_field($request-&gt;get_param('value')),
+            'name'  => sanitize_text_field($request->get_param('name')),
+            'value' => sanitize_textarea_field($request->get_param('value')),
         ),
-        array('id' =&gt; $id)
+        array('id' => $id)
     );
 
-    return new WP_REST_Response(array('message' =&gt; 'Updated successfully'), 200);
+    return new WP_REST_Response(array('message' => 'Updated successfully'), 200);
 }
 
 // DELETE - 删除数据
 function my_plugin_delete_data($request) {
     global $wpdb;
-    $id = $request-&gt;get_param('id');
+    $id = $request->get_param('id');
 
-    $result = $wpdb-&gt;delete($wpdb-&gt;prefix . 'my_plugin_data', array('id' =&gt; $id));
+    $result = $wpdb->delete($wpdb->prefix . 'my_plugin_data', array('id' => $id));
 
-    return new WP_REST_Response(array('message' =&gt; 'Deleted successfully'), 200);
+    return new WP_REST_Response(array('message' => 'Deleted successfully'), 200);
 }
 ```
 
 ### 11.3 修改现有 REST API
 
 ```php
-&lt;?php
+<?php
 // 修改文章 API 返回的字段
 function my_plugin_modify_post_response($response, $post) {
-    $data = $response-&gt;get_data();
-    $data['custom_field'] = get_post_meta($post-&gt;ID, 'custom_field', true);
-    $data['reading_time'] = ceil(str_word_count(strip_tags($post-&gt;post_content)) / 200) . ' min';
-    $response-&gt;set_data($data);
+    $data = $response->get_data();
+    $data['custom_field'] = get_post_meta($post->ID, 'custom_field', true);
+    $data['reading_time'] = ceil(str_word_count(strip_tags($post->post_content)) / 200) . ' min';
+    $response->set_data($data);
     return $response;
 }
 add_filter('rest_prepare_post', 'my_plugin_modify_post_response', 10, 2);
@@ -578,10 +577,10 @@ add_filter('rest_prepare_post', 'my_plugin_modify_post_response', 10, 2);
 // 注册自定义文章字段
 function my_plugin_register_post_meta() {
     register_post_meta('post', 'custom_field', array(
-        'show_in_rest'  =&gt; true,
-        'single'        =&gt; true,
-        'type'          =&gt; 'string',
-        'auth_callback' =&gt; function() {
+        'show_in_rest'  => true,
+        'single'        => true,
+        'type'          => 'string',
+        'auth_callback' => function() {
             return current_user_can('edit_posts');
         },
     ));
@@ -606,7 +605,7 @@ add_action('init', 'my_plugin_register_post_meta');
 ```nginx
 location ~* \.(jpg|jpeg|png|gif|ico|css|js|woff2|svg|webp)$ {
     expires 30d;
-    add_header Cache-Control 'public, immutable';
+    add_header Cache-Control "public, immutable";
     access_log off;
 }
 ```
@@ -646,10 +645,10 @@ DELETE FROM wp_posts WHERE post_status = 'trash';
 DELETE FROM wp_comments WHERE comment_approved = 'spam';
 
 -- 清理过期的临时数据
-DELETE FROM wp_options WHERE option_name LIKE '_transient_%' AND option_value &lt; UNIX_TIMESTAMP() - 86400;
+DELETE FROM wp_options WHERE option_name LIKE '_transient_%' AND option_value < UNIX_TIMESTAMP() - 86400;
 
 -- 清理过期的临时数据（二）
-DELETE FROM wp_options WHERE option_name LIKE '_site_transient_%' AND option_value &lt; UNIX_TIMESTAMP() - 86400;
+DELETE FROM wp_options WHERE option_name LIKE '_site_transient_%' AND option_value < UNIX_TIMESTAMP() - 86400;
 
 -- 优化表
 OPTIMIZE TABLE wp_posts;
@@ -693,7 +692,7 @@ sudo systemctl restart php8.1-fpm
 ```
 1. 上传前压缩
    - TinyPNG / Squoosh / ImageOptim
-   - 目标：每张图 &lt; 200KB
+   - 目标：每张图 < 200KB
 
 2. 使用 WebP 格式
    - 插件：ShortPixel / Imagify / Converter for Media
@@ -822,25 +821,25 @@ location ~* /license\.txt {
 **Apache（.htaccess）：**
 ```apache
 # 保护 wp-config.php
-&lt;Files wp-config.php&gt;
+<Files wp-config.php>
     Order Allow,Deny
     Deny from all
-&lt;/Files&gt;
+</Files>
 
 # 禁止目录浏览
 Options -Indexes
 
 # 保护 .htaccess
-&lt;Files .htaccess&gt;
+<Files .htaccess>
     Order Allow,Deny
     Deny from all
-&lt;/Files&gt;
+</Files>
 
 # 禁止 XML-RPC
-&lt;Files xmlrpc.php&gt;
+<Files xmlrpc.php>
     Order Allow,Deny
     Deny from all
-&lt;/Files&gt;
+</Files>
 ```
 
 ### 13.4 登录安全
@@ -857,12 +856,12 @@ Options -Indexes
 
 // 4. 添加登录验证码
 function my_login_captcha() {
-    ?&gt;
-    &lt;p&gt;
-        &lt;label for='captcha'&gt;What is 3 + 4?&lt;/label&gt;&lt;br&gt;
-        &lt;input type='text' name='captcha' id='captcha' class='input' required&gt;
-    &lt;/p&gt;
-    &lt;?php
+    ?>
+    <p>
+        <label for="captcha">What is 3 + 4?</label><br>
+        <input type="text" name="captcha" id="captcha" class="input" required>
+    </p>
+    <?php
 }
 add_action('login_form', 'my_login_captcha');
 
@@ -920,7 +919,7 @@ add_filter('authenticate', 'my_verify_login_captcha', 20, 3);
    静态页面 or 最新文章
 
 4. 搜索引擎可见性
-   开发时勾选'阻止搜索引擎'
+   开发时勾选"阻止搜索引擎"
    上线后取消勾选
 
 5. SSL 证书（HTTPS）
@@ -1028,9 +1027,9 @@ Sitemap: https://example.com/sitemap_index.xml
 # Google Mobile-Friendly Test
 
 # 7. Core Web Vitals
-# LCP（最大内容绘制）&lt; 2.5s
-# FID（首次输入延迟）&lt; 100ms
-# CLS（累积布局偏移）&lt; 0.1
+# LCP（最大内容绘制）< 2.5s
+# FID（首次输入延迟）< 100ms
+# CLS（累积布局偏移）< 0.1
 ```
 
 ---
@@ -1048,7 +1047,7 @@ define('WP_ALLOW_MULTISITE', true);
 后台 → 工具 → 网络安装：
 1. 选择子域名或子目录
 2. 填写网络标题和管理员邮箱
-3. 点击'安装'
+3. 点击"安装"
 
 然后按照提示将代码添加到 wp-config.php 和 .htaccess
 ```
@@ -1147,18 +1146,18 @@ UPDATE wp_postmeta SET meta_value = REPLACE(meta_value, 'http://old.com', 'https
 
 ```bash
 # 备份
-mysqldump -u root -p wordpress &gt; wordpress_backup.sql
-mysqldump -u root -p --all-databases &gt; all_backup.sql
+mysqldump -u root -p wordpress > wordpress_backup.sql
+mysqldump -u root -p --all-databases > all_backup.sql
 
 # 压缩备份
-mysqldump -u root -p wordpress | gzip &gt; wordpress_backup.sql.gz
+mysqldump -u root -p wordpress | gzip > wordpress_backup.sql.gz
 
 # 恢复
-mysql -u root -p wordpress &lt; wordpress_backup.sql
+mysql -u root -p wordpress < wordpress_backup.sql
 gunzip -c wordpress_backup.sql.gz | mysql -u root -p wordpress
 
 # 定时备份（crontab）
-# 0 2 * * * mysqldump -u root -p'password' wordpress | gzip &gt; /backup/wordpress_$(date +\%Y\%m\%d).sql.gz
+# 0 2 * * * mysqldump -u root -p'password' wordpress | gzip > /backup/wordpress_$(date +\%Y\%m\%d).sql.gz
 ```
 
 ---
@@ -1177,14 +1176,14 @@ services:
     container_name: wordpress
     restart: always
     ports:
-      - '8080:80'
+      - "8080:80"
     environment:
       WORDPRESS_DB_HOST: db
       WORDPRESS_DB_USER: wpuser
       WORDPRESS_DB_PASSWORD: YourStrongPassword123!
       WORDPRESS_DB_NAME: wordpress
       WORDPRESS_TABLE_PREFIX: wp_
-      WORDPRESS_DEBUG: 'false'
+      WORDPRESS_DEBUG: "false"
     volumes:
       - wordpress_data:/var/www/html
       - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
@@ -1209,7 +1208,7 @@ services:
     container_name: phpmyadmin
     restart: always
     ports:
-      - '8081:80'
+      - "8081:80"
     environment:
       PMA_HOST: db
       PMA_PORT: 3306
@@ -1305,12 +1304,12 @@ wp core update                            # 更新 WordPress
 wp core version                           # 查看版本
 
 # 安装 WordPress
-wp core install --url='https://example.com' \
-    --title='My Site' \
-    --admin_user='admin' \
-    --admin_password='StrongPass123!' \
-    --admin_email='admin@example.com' \
-    --locale='zh_CN' \
+wp core install --url="https://example.com" \
+    --title="My Site" \
+    --admin_user="admin" \
+    --admin_password="StrongPass123!" \
+    --admin_email="admin@example.com" \
+    --locale="zh_CN" \
     --skip-email
 
 # 数据库
@@ -1323,8 +1322,8 @@ wp search-replace 'old.com' 'new.com'     # 批量替换
 
 # 文章
 wp post list                              # 列出文章
-wp post create --post_title='Hello' --post_content='World' --post_status=publish
-wp post update 1 --post_title='New Title'
+wp post create --post_title="Hello" --post_content="World" --post_status=publish
+wp post update 1 --post_title="New Title"
 wp post delete 1 --force
 wp post generate --count=10               # 生成测试文章
 
@@ -1333,8 +1332,8 @@ wp post list --post_type=page
 
 # 用户
 wp user list                              # 列出用户
-wp user create username email@example.com --role=author --user_pass='password'
-wp user update 1 --user_pass='newpassword'
+wp user create username email@example.com --role=author --user_pass="password"
+wp user update 1 --user_pass="newpassword"
 wp user delete 2 --reassign=1
 wp user generate --count=5                # 生成测试用户
 
@@ -1355,12 +1354,12 @@ wp plugin update --all                    # 更新所有插件
 
 # 选项（设置）
 wp option get siteurl                     # 获取站点 URL
-wp option update blogname 'New Title'     # 修改站点标题
+wp option update blogname "New Title"     # 修改站点标题
 wp option list                            # 列出所有选项
 
 # 分类/标签
 wp term list category                     # 列出分类
-wp term create category 'News'            # 创建分类
+wp term create category "News"            # 创建分类
 
 # 媒体
 wp media import image.jpg                 # 导入图片
@@ -1370,7 +1369,7 @@ wp cache flush                            # 清除缓存
 wp rewrite flush                          # 刷新固定链接
 
 # 评估
-wp eval 'echo get_bloginfo('name');'      # 执行 PHP 代码
+wp eval 'echo get_bloginfo("name");'      # 执行 PHP 代码
 wp shell                                  # 交互式 PHP Shell
 
 # 检查
@@ -1395,11 +1394,11 @@ define('WP_DEBUG_DISPLAY', false);
 tail -f /var/www/wordpress/wp-content/debug.log
 
 // 2. 禁用所有插件（通过数据库）
-mysql -u root -p wordpress -e 'UPDATE wp_options SET option_value='a:0:{}' WHERE option_name='active_plugins';'
+mysql -u root -p wordpress -e "UPDATE wp_options SET option_value='a:0:{}' WHERE option_name='active_plugins';"
 
 // 3. 切换默认主题（通过数据库）
-mysql -u root -p wordpress -e 'UPDATE wp_options SET option_value='twentytwentyfour' WHERE option_name='template';'
-mysql -u root -p wordpress -e 'UPDATE wp_options SET option_value='twentytwentyfour' WHERE option_name='stylesheet';'
+mysql -u root -p wordpress -e "UPDATE wp_options SET option_value='twentytwentyfour' WHERE option_name='template';"
+mysql -u root -p wordpress -e "UPDATE wp_options SET option_value='twentytwentyfour' WHERE option_name='stylesheet';"
 
 // 4. 检查 PHP 内存限制
 // php.ini 或 wp-config.php
@@ -1436,7 +1435,7 @@ find /var/www/wordpress -type f -exec chmod 644 {} \;
 ### 19.3 数据库连接错误
 
 ```php
-// '建立数据库连接时出错'
+// "建立数据库连接时出错"
 
 // 1. 检查 wp-config.php 中的数据库信息
 define('DB_NAME', 'wordpress');
@@ -1449,10 +1448,10 @@ sudo systemctl status mysql
 sudo systemctl restart mysql
 
 // 3. 检查数据库用户权限
-mysql -u root -p -e 'SHOW GRANTS FOR 'wpuser'@'localhost';'
+mysql -u root -p -e "SHOW GRANTS FOR 'wpuser'@'localhost';"
 
 // 4. 测试数据库连接
-mysql -u wpuser -p'password' wordpress -e 'SELECT 1;'
+mysql -u wpuser -p'password' wordpress -e "SELECT 1;"
 ```
 
 ### 19.4 固定链接不工作（404 错误）
@@ -1464,9 +1463,9 @@ sudo a2enmod rewrite
 sudo systemctl restart apache2
 
 # 确保 AllowOverride All
-# &lt;Directory /var/www/wordpress&gt;
+# <Directory /var/www/wordpress>
 #     AllowOverride All
-# &lt;/Directory&gt;
+# </Directory>
 
 # Nginx
 # 确保配置中有：
@@ -1475,7 +1474,7 @@ sudo systemctl restart apache2
 # }
 
 # 重新保存固定链接
-# 后台 → 设置 → 固定链接 → 直接点击'保存更改'
+# 后台 → 设置 → 固定链接 → 直接点击"保存更改"
 
 # WP-CLI
 wp rewrite flush
@@ -1541,47 +1540,47 @@ sudo chcon -R -t httpd_sys_rw_content_t /var/www/wordpress/wp-content/uploads/
 # deploy_wordpress.sh
 set -e
 
-DOMAIN='example.com'
-DB_NAME='wordpress'
-DB_USER='wpuser'
+DOMAIN="example.com"
+DB_NAME="wordpress"
+DB_USER="wpuser"
 DB_PASS=$(openssl rand -base64 24)
-WP_DIR='/var/www/wordpress'
-ADMIN_USER='admin'
+WP_DIR="/var/www/wordpress"
+ADMIN_USER="admin"
 ADMIN_PASS=$(openssl rand -base64 16)
-ADMIN_EMAIL='admin@example.com'
+ADMIN_EMAIL="admin@example.com"
 
-echo '=== WordPress 一键部署 ==='
+echo "=== WordPress 一键部署 ==="
 
 # 1. 安装 LAMP/LNMP
-echo '[1/7] 安装环境...'
-apt update &amp;&amp; apt install -y nginx php-fpm php-mysql php-curl php-gd php-mbstring php-xml php-zip php-intl mysql-server certbot python3-certbot-nginx
+echo "[1/7] 安装环境..."
+apt update && apt install -y nginx php-fpm php-mysql php-curl php-gd php-mbstring php-xml php-zip php-intl mysql-server certbot python3-certbot-nginx
 
 # 2. 创建数据库
-echo '[2/7] 创建数据库...'
-mysql -u root -p -e '
+echo "[2/7] 创建数据库..."
+mysql -u root -p -e "
 CREATE DATABASE IF NOT EXISTS $DB_NAME DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE USER IF NOT EXISTS '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';
 GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost';
 FLUSH PRIVILEGES;
-'
+"
 
 # 3. 下载 WordPress
-echo '[3/7] 下载 WordPress...'
+echo "[3/7] 下载 WordPress..."
 cd /var/www
 wget -q https://wordpress.org/latest.tar.gz
 tar -xzf latest.tar.gz
 chown -R www-data:www-data $WP_DIR
 
 # 4. 配置 wp-config.php
-echo '[4/7] 配置 WordPress...'
+echo "[4/7] 配置 WordPress..."
 cd $WP_DIR
 cp wp-config-sample.php wp-config.php
 
 # 生成密钥
 SALTS=$(curl -s https://api.wordpress.org/secret-key/1.1/salt/)
 
-cat &gt; wp-config.php &lt;&lt; EOF
-&lt;?php
+cat > wp-config.php << EOF
+<?php
 define('DB_NAME', '$DB_NAME');
 define('DB_USER', '$DB_USER');
 define('DB_PASSWORD', '$DB_PASS');
@@ -1605,8 +1604,8 @@ require_once ABSPATH . 'wp-settings.php';
 EOF
 
 # 5. 配置 Nginx
-echo '[5/7] 配置 Nginx...'
-cat &gt; /etc/nginx/sites-available/wordpress &lt;&lt; EOF
+echo "[5/7] 配置 Nginx..."
+cat > /etc/nginx/sites-available/wordpress << EOF
 server {
     listen 80;
     server_name $DOMAIN www.$DOMAIN;
@@ -1638,47 +1637,47 @@ server {
 EOF
 
 ln -sf /etc/nginx/sites-available/wordpress /etc/nginx/sites-enabled/
-nginx -t &amp;&amp; systemctl reload nginx
+nginx -t && systemctl reload nginx
 
 # 6. 安装 WordPress
-echo '[6/7] 安装 WordPress...'
+echo "[6/7] 安装 WordPress..."
 cd $WP_DIR
 wp core install \
-    --url='http://$DOMAIN' \
-    --title='$DOMAIN' \
-    --admin_user='$ADMIN_USER' \
-    --admin_password='$ADMIN_PASS' \
-    --admin_email='$ADMIN_EMAIL' \
-    --locale='zh_CN' \
+    --url="http://$DOMAIN" \
+    --title="$DOMAIN" \
+    --admin_user="$ADMIN_USER" \
+    --admin_password="$ADMIN_PASS" \
+    --admin_email="$ADMIN_EMAIL" \
+    --locale="zh_CN" \
     --skip-email \
     --allow-root
 
 # 7. 基本配置
-echo '[7/7] 基本配置...'
+echo "[7/7] 基本配置..."
 wp option update permalink_structure '/%postname%/' --allow-root
 wp rewrite flush --allow-root
 wp plugin install akismet --activate --allow-root
 wp plugin install wordpress-seo --activate --allow-root
 wp theme install generatepress --activate --allow-root
 
-echo ''
-echo '=== 部署完成 ==='
-echo '站点地址: http://$DOMAIN'
-echo '后台地址: http://$DOMAIN/wp-admin'
-echo '管理员:   $ADMIN_USER'
-echo '密码:     $ADMIN_PASS'
-echo '数据库:   $DB_NAME'
-echo 'DB 用户:  $DB_USER'
-echo 'DB 密码:  $DB_PASS'
-echo ''
-echo '请立即登录后台并修改密码！'
-echo '下一步：配置 SSL（sudo certbot --nginx -d $DOMAIN）'
+echo ""
+echo "=== 部署完成 ==="
+echo "站点地址: http://$DOMAIN"
+echo "后台地址: http://$DOMAIN/wp-admin"
+echo "管理员:   $ADMIN_USER"
+echo "密码:     $ADMIN_PASS"
+echo "数据库:   $DB_NAME"
+echo "DB 用户:  $DB_USER"
+echo "DB 密码:  $DB_PASS"
+echo ""
+echo "请立即登录后台并修改密码！"
+echo "下一步：配置 SSL（sudo certbot --nginx -d $DOMAIN）"
 ```
 
 ### 20.2 自定义短代码插件
 
 ```php
-&lt;?php
+<?php
 /**
  * Plugin Name: My Shortcodes
  * Description: 自定义短代码集合
@@ -1689,18 +1688,18 @@ echo '下一步：配置 SSL（sudo certbot --nginx -d $DOMAIN）'
 
 if (!defined('ABSPATH')) exit;
 
-// 按钮短代码 [my_button url='#' text='点击这里' color='blue' size='large']
+// 按钮短代码 [my_button url="#" text="点击这里" color="blue" size="large"]
 function my_button_shortcode($atts) {
     $atts = shortcode_atts(array(
-        'url'   =&gt; '#',
-        'text'  =&gt; 'Click Here',
-        'color' =&gt; 'blue',
-        'size'  =&gt; 'medium',
-        'target' =&gt; '_self',
+        'url'   => '#',
+        'text'  => 'Click Here',
+        'color' => 'blue',
+        'size'  => 'medium',
+        'target' => '_self',
     ), $atts, 'my_button');
 
     return sprintf(
-        '&lt;a href='%s' class='my-btn my-btn-%s my-btn-%s' target='%s'&gt;%s&lt;/a&gt;',
+        '<a href="%s" class="my-btn my-btn-%s my-btn-%s" target="%s">%s</a>',
         esc_url($atts['url']),
         esc_attr($atts['color']),
         esc_attr($atts['size']),
@@ -1710,40 +1709,40 @@ function my_button_shortcode($atts) {
 }
 add_shortcode('my_button', 'my_button_shortcode');
 
-// 信息框短代码 [my_alert type='info' title='提示']内容[/my_alert]
+// 信息框短代码 [my_alert type="info" title="提示"]内容[/my_alert]
 function my_alert_shortcode($atts, $content = null) {
     $atts = shortcode_atts(array(
-        'type'  =&gt; 'info',
-        'title' =&gt; '',
+        'type'  => 'info',
+        'title' => '',
     ), $atts, 'my_alert');
 
     $types = array('info', 'success', 'warning', 'error');
     $type = in_array($atts['type'], $types) ? $atts['type'] : 'info';
 
-    $html = '&lt;div class='my-alert my-alert-' . esc_attr($type) . ''&gt;';
+    $html = '<div class="my-alert my-alert-' . esc_attr($type) . '">';
     if (!empty($atts['title'])) {
-        $html .= '&lt;strong&gt;' . esc_html($atts['title']) . '&lt;/strong&gt;';
+        $html .= '<strong>' . esc_html($atts['title']) . '</strong>';
     }
-    $html .= '&lt;p&gt;' . wp_kses_post(do_shortcode($content)) . '&lt;/p&gt;';
-    $html .= '&lt;/div&gt;';
+    $html .= '<p>' . wp_kses_post(do_shortcode($content)) . '</p>';
+    $html .= '</div>';
 
     return $html;
 }
 add_shortcode('my_alert', 'my_alert_shortcode');
 
-// 文章列表短代码 [my_posts category='news' count='5' layout='grid']
+// 文章列表短代码 [my_posts category="news" count="5" layout="grid"]
 function my_posts_shortcode($atts) {
     $atts = shortcode_atts(array(
-        'category' =&gt; '',
-        'count'    =&gt; 5,
-        'layout'   =&gt; 'list',
+        'category' => '',
+        'count'    => 5,
+        'layout'   => 'list',
     ), $atts, 'my_posts');
 
     $args = array(
-        'post_type'      =&gt; 'post',
-        'posts_per_page' =&gt; intval($atts['count']),
-        'orderby'        =&gt; 'date',
-        'order'          =&gt; 'DESC',
+        'post_type'      => 'post',
+        'posts_per_page' => intval($atts['count']),
+        'orderby'        => 'date',
+        'order'          => 'DESC',
     );
 
     if (!empty($atts['category'])) {
@@ -1751,22 +1750,22 @@ function my_posts_shortcode($atts) {
     }
 
     $query = new WP_Query($args);
-    $html = '&lt;div class='my-posts my-posts-' . esc_attr($atts['layout']) . ''&gt;';
+    $html = '<div class="my-posts my-posts-' . esc_attr($atts['layout']) . '">';
 
-    if ($query-&gt;have_posts()) {
-        while ($query-&gt;have_posts()) {
-            $query-&gt;the_post();
-            $html .= '&lt;div class='my-post-item'&gt;';
-            $html .= '&lt;h3&gt;&lt;a href='' . get_permalink() . ''&gt;' . get_the_title() . '&lt;/a&gt;&lt;/h3&gt;';
-            $html .= '&lt;p&gt;' . get_the_excerpt() . '&lt;/p&gt;';
-            $html .= '&lt;span class='date'&gt;' . get_the_date() . '&lt;/span&gt;';
-            $html .= '&lt;/div&gt;';
+    if ($query->have_posts()) {
+        while ($query->have_posts()) {
+            $query->the_post();
+            $html .= '<div class="my-post-item">';
+            $html .= '<h3><a href="' . get_permalink() . '">' . get_the_title() . '</a></h3>';
+            $html .= '<p>' . get_the_excerpt() . '</p>';
+            $html .= '<span class="date">' . get_the_date() . '</span>';
+            $html .= '</div>';
         }
     } else {
-        $html .= '&lt;p&gt;暂无文章&lt;/p&gt;';
+        $html .= '<p>暂无文章</p>';
     }
 
-    $html .= '&lt;/div&gt;';
+    $html .= '</div>';
     wp_reset_postdata();
 
     return $html;
@@ -1783,7 +1782,7 @@ add_action('wp_enqueue_scripts', 'my_shortcodes_styles');
 ### 20.3 自定义文章类型插件
 
 ```php
-&lt;?php
+<?php
 /**
  * Plugin Name: My Custom Post Types
  * Description: 注册自定义文章类型和分类法
@@ -1797,41 +1796,41 @@ function my_register_post_types() {
 
     // 作品集（Portfolio）
     register_post_type('portfolio', array(
-        'labels' =&gt; array(
-            'name'               =&gt; '作品集',
-            'singular_name'      =&gt; '作品',
-            'add_new'            =&gt; '添加作品',
-            'add_new_item'       =&gt; '添加新作品',
-            'edit_item'          =&gt; '编辑作品',
-            'new_item'           =&gt; '新作品',
-            'view_item'          =&gt; '查看作品',
-            'search_items'       =&gt; '搜索作品',
-            'not_found'          =&gt; '未找到作品',
-            'not_found_in_trash' =&gt; '回收站中无作品',
+        'labels' => array(
+            'name'               => '作品集',
+            'singular_name'      => '作品',
+            'add_new'            => '添加作品',
+            'add_new_item'       => '添加新作品',
+            'edit_item'          => '编辑作品',
+            'new_item'           => '新作品',
+            'view_item'          => '查看作品',
+            'search_items'       => '搜索作品',
+            'not_found'          => '未找到作品',
+            'not_found_in_trash' => '回收站中无作品',
         ),
-        'public'          =&gt; true,
-        'has_archive'     =&gt; true,
-        'rewrite'         =&gt; array('slug' =&gt; 'portfolio'),
-        'menu_icon'       =&gt; 'dashicons-portfolio',
-        'supports'        =&gt; array('title', 'editor', 'thumbnail', 'excerpt', 'custom-fields', 'comments'),
-        'show_in_rest'    =&gt; true,
-        'capability_type' =&gt; 'post',
+        'public'          => true,
+        'has_archive'     => true,
+        'rewrite'         => array('slug' => 'portfolio'),
+        'menu_icon'       => 'dashicons-portfolio',
+        'supports'        => array('title', 'editor', 'thumbnail', 'excerpt', 'custom-fields', 'comments'),
+        'show_in_rest'    => true,
+        'capability_type' => 'post',
     ));
 
     // 产品（Product）
     register_post_type('product', array(
-        'labels' =&gt; array(
-            'name'          =&gt; '产品',
-            'singular_name' =&gt; '产品',
-            'add_new'       =&gt; '添加产品',
-            'edit_item'     =&gt; '编辑产品',
+        'labels' => array(
+            'name'          => '产品',
+            'singular_name' => '产品',
+            'add_new'       => '添加产品',
+            'edit_item'     => '编辑产品',
         ),
-        'public'       =&gt; true,
-        'has_archive'  =&gt; true,
-        'rewrite'      =&gt; array('slug' =&gt; 'product'),
-        'menu_icon'    =&gt; 'dashicons-cart',
-        'supports'     =&gt; array('title', 'editor', 'thumbnail', 'excerpt', 'custom-fields'),
-        'show_in_rest' =&gt; true,
+        'public'       => true,
+        'has_archive'  => true,
+        'rewrite'      => array('slug' => 'product'),
+        'menu_icon'    => 'dashicons-cart',
+        'supports'     => array('title', 'editor', 'thumbnail', 'excerpt', 'custom-fields'),
+        'show_in_rest' => true,
     ));
 }
 add_action('init', 'my_register_post_types');
@@ -1841,27 +1840,27 @@ function my_register_taxonomies() {
 
     // 作品分类
     register_taxonomy('portfolio_category', 'portfolio', array(
-        'labels' =&gt; array(
-            'name'          =&gt; '作品分类',
-            'singular_name' =&gt; '作品分类',
-            'add_new_item'  =&gt; '添加作品分类',
+        'labels' => array(
+            'name'          => '作品分类',
+            'singular_name' => '作品分类',
+            'add_new_item'  => '添加作品分类',
         ),
-        'hierarchical'      =&gt; true,
-        'rewrite'           =&gt; array('slug' =&gt; 'portfolio-category'),
-        'show_admin_column' =&gt; true,
-        'show_in_rest'      =&gt; true,
+        'hierarchical'      => true,
+        'rewrite'           => array('slug' => 'portfolio-category'),
+        'show_admin_column' => true,
+        'show_in_rest'      => true,
     ));
 
     // 产品标签
     register_taxonomy('product_tag', 'product', array(
-        'labels' =&gt; array(
-            'name'          =&gt; '产品标签',
-            'singular_name' =&gt; '产品标签',
+        'labels' => array(
+            'name'          => '产品标签',
+            'singular_name' => '产品标签',
         ),
-        'hierarchical'      =&gt; false,
-        'rewrite'           =&gt; array('slug' =&gt; 'product-tag'),
-        'show_admin_column' =&gt; true,
-        'show_in_rest'      =&gt; true,
+        'hierarchical'      => false,
+        'rewrite'           => array('slug' => 'product-tag'),
+        'show_admin_column' => true,
+        'show_in_rest'      => true,
     ));
 }
 add_action('init', 'my_register_taxonomies');
@@ -1869,31 +1868,31 @@ add_action('init', 'my_register_taxonomies');
 // 注册自定义元数据
 function my_register_meta() {
     register_post_meta('portfolio', 'project_url', array(
-        'show_in_rest'  =&gt; true,
-        'single'        =&gt; true,
-        'type'          =&gt; 'string',
-        'auth_callback' =&gt; function() { return current_user_can('edit_posts'); },
+        'show_in_rest'  => true,
+        'single'        => true,
+        'type'          => 'string',
+        'auth_callback' => function() { return current_user_can('edit_posts'); },
     ));
 
     register_post_meta('portfolio', 'client_name', array(
-        'show_in_rest'  =&gt; true,
-        'single'        =&gt; true,
-        'type'          =&gt; 'string',
-        'auth_callback' =&gt; function() { return current_user_can('edit_posts'); },
+        'show_in_rest'  => true,
+        'single'        => true,
+        'type'          => 'string',
+        'auth_callback' => function() { return current_user_can('edit_posts'); },
     ));
 
     register_post_meta('product', 'price', array(
-        'show_in_rest'  =&gt; true,
-        'single'        =&gt; true,
-        'type'          =&gt; 'string',
-        'auth_callback' =&gt; function() { return current_user_can('edit_posts'); },
+        'show_in_rest'  => true,
+        'single'        => true,
+        'type'          => 'string',
+        'auth_callback' => function() { return current_user_can('edit_posts'); },
     ));
 
     register_post_meta('product', 'sku', array(
-        'show_in_rest'  =&gt; true,
-        'single'        =&gt; true,
-        'type'          =&gt; 'string',
-        'auth_callback' =&gt; function() { return current_user_can('edit_posts'); },
+        'show_in_rest'  => true,
+        'single'        => true,
+        'type'          => 'string',
+        'auth_callback' => function() { return current_user_can('edit_posts'); },
     ));
 }
 add_action('init', 'my_register_meta');
@@ -1909,8 +1908,8 @@ add_action('init', 'my_register_meta');
 | `get_footer()` | 加载 footer.php |
 | `get_sidebar()` | 加载 sidebar.php |
 | `get_template_part('content')` | 加载 template-parts/content.php |
-| `wp_head()` | 在 &lt;head&gt; 中输出 |
-| `wp_footer()` | 在 &lt;/body&gt; 前输出 |
+| `wp_head()` | 在 <head> 中输出 |
+| `wp_footer()` | 在 </body> 前输出 |
 | `wp_enqueue_style()` | 加载 CSS |
 | `wp_enqueue_script()` | 加载 JS |
 | `wp_nav_menu()` | 输出导航菜单 |
@@ -1967,217 +1966,4 @@ add_action('init', 'my_register_meta');
 
 ---
 
-&gt; **总结：** WordPress 从入门到精通的核心路径是：先掌握后台管理 → 学会使用主题和插件 → 深入主题开发 → 学习插件开发 → 理解钩子系统 → 掌握 REST API → 优化性能和安全。</description><guid isPermaLink="true">https://helloblog.eik.cc/post/WordPress-cong-ru-men-dao-jing-tong-%28-di-er-bu-fen-%29.html</guid><pubDate>Mon, 28 Sep 2026 13:47:42 +0000</pubDate></item><item><title>WordPress从入门到精通</title><link>https://helloblog.eik.cc/post/WordPress-cong-ru-men-dao-jing-tong.html</link><description>&gt; 全面涵盖安装部署、后台管理、主题开发、插件开发、性能优化、安全加固、SEO 优化、多站点管理、API 二次开发及故障排查。</description><guid isPermaLink="true">https://helloblog.eik.cc/post/WordPress-cong-ru-men-dao-jing-tong.html</guid><pubDate>Mon, 28 Sep 2026 13:46:31 +0000</pubDate></item><item><title>CentOS从入门到精通</title><link>https://helloblog.eik.cc/post/CentOS-cong-ru-men-dao-jing-tong.html</link><description>&gt; 全面涵盖安装、系统配置、命令行、YUM/DNF 包管理、网络配置、服务管理、存储管理、Shell 脚本、开发环境搭建、服务器运维、安全加固（SELinux）、性能优化、备份恢复及故障排查。</description><guid isPermaLink="true">https://helloblog.eik.cc/post/CentOS-cong-ru-men-dao-jing-tong.html</guid><pubDate>Mon, 28 Sep 2026 05:17:58 +0000</pubDate></item><item><title>Debian从入门到精通</title><link>https://helloblog.eik.cc/post/Debian-cong-ru-men-dao-jing-tong.html</link><description>&gt; 全面涵盖安装、系统配置、命令行、软件包管理、网络配置、服务管理、存储管理、Shell 脚本、开发环境搭建、服务器运维、安全加固、性能优化、备份恢复及故障排查。</description><guid isPermaLink="true">https://helloblog.eik.cc/post/Debian-cong-ru-men-dao-jing-tong.html</guid><pubDate>Mon, 28 Sep 2026 05:10:13 +0000</pubDate></item><item><title>Ubuntu从入门到精通</title><link>https://helloblog.eik.cc/post/Ubuntu-cong-ru-men-dao-jing-tong.html</link><description>&gt; 全面涵盖安装、桌面使用、命令行、系统管理、网络配置、服务管理、开发环境搭建、Shell 脚本、安全加固、性能优化及故障排查。</description><guid isPermaLink="true">https://helloblog.eik.cc/post/Ubuntu-cong-ru-men-dao-jing-tong.html</guid><pubDate>Mon, 28 Sep 2026 05:04:04 +0000</pubDate></item><item><title>Kali Linux从入门到精通</title><link>https://helloblog.eik.cc/post/Kali%20Linux-cong-ru-men-dao-jing-tong.html</link><description>&gt; **重要声明：** Kali Linux 是专业的网络安全测试与渗透测试操作系统，仅限在**获得明确授权**的环境中使用。</description><guid isPermaLink="true">https://helloblog.eik.cc/post/Kali%20Linux-cong-ru-men-dao-jing-tong.html</guid><pubDate>Mon, 28 Sep 2026 04:53:57 +0000</pubDate></item><item><title>Java常用代码大全</title><link>https://helloblog.eik.cc/post/Java-chang-yong-dai-ma-da-quan.html</link><description>涵盖基础语法、数据类型、流程控制、数组与字符串、面向对象、集合框架、泛型、Lambda 与 Stream、异常处理、IO 流、多线程、JDBC、常用工具类及实战示例。</description><guid isPermaLink="true">https://helloblog.eik.cc/post/Java-chang-yong-dai-ma-da-quan.html</guid><pubDate>Mon, 28 Sep 2026 04:44:51 +0000</pubDate></item><item><title>C++常用代码大全</title><link>https://helloblog.eik.cc/post/C%2B%2B-chang-yong-dai-ma-da-quan.html</link><description>涵盖基础语法、数据类型、流程控制、函数、数组与字符串、指针与引用、面向对象、STL、文件操作、异常处理、多线程及实用技巧。</description><guid isPermaLink="true">https://helloblog.eik.cc/post/C%2B%2B-chang-yong-dai-ma-da-quan.html</guid><pubDate>Mon, 28 Sep 2026 04:37:56 +0000</pubDate></item><item><title>Python常用代码大全</title><link>https://helloblog.eik.cc/post/Python-chang-yong-dai-ma-da-quan.html</link><description>涵盖基础语法、数据类型、函数、面向对象、文件操作、异常处理、常用标准库及实用技巧。</description><guid isPermaLink="true">https://helloblog.eik.cc/post/Python-chang-yong-dai-ma-da-quan.html</guid><pubDate>Mon, 28 Sep 2026 04:33:57 +0000</pubDate></item><item><title>Apache(httpd)常用命令与配置大全</title><link>https://helloblog.eik.cc/post/Apache%28httpd%29-chang-yong-ming-ling-yu-pei-zhi-da-quan.html</link><description>涵盖安装、服务管理、核心配置、虚拟主机、反向代理、HTTPS、性能优化及故障排查。</description><guid isPermaLink="true">https://helloblog.eik.cc/post/Apache%28httpd%29-chang-yong-ming-ling-yu-pei-zhi-da-quan.html</guid><pubDate>Mon, 28 Sep 2026 04:29:43 +0000</pubDate></item><item><title>Nginx 常用命令与配置大全</title><link>https://helloblog.eik.cc/post/Nginx%20-chang-yong-ming-ling-yu-pei-zhi-da-quan.html</link><description>涵盖安装、服务管理、核心配置、反向代理、负载均衡、HTTPS、性能优化及故障排查。</description><guid isPermaLink="true">https://helloblog.eik.cc/post/Nginx%20-chang-yong-ming-ling-yu-pei-zhi-da-quan.html</guid><pubDate>Sun, 27 Sep 2026 14:27:28 +0000</pubDate></item><item><title>Docker 常用命令大全</title><link>https://helloblog.eik.cc/post/Docker%20-chang-yong-ming-ling-da-quan.html</link><description>按功能分类整理，覆盖从镜像管理到容器编排的日常操作。</description><guid isPermaLink="true">https://helloblog.eik.cc/post/Docker%20-chang-yong-ming-ling-da-quan.html</guid><pubDate>Sun, 27 Sep 2026 14:24:27 +0000</pubDate></item><item><title>Linux 常用命令大全</title><link>https://helloblog.eik.cc/post/Linux%20-chang-yong-ming-ling-da-quan.html</link><description>下面按功能分类整理，适用于大多数主流发行版（CentOS/Ubuntu/Debian 等）。</description><guid isPermaLink="true">https://helloblog.eik.cc/post/Linux%20-chang-yong-ming-ling-da-quan.html</guid><pubDate>Sun, 27 Sep 2026 14:21:27 +0000</pubDate></item><item><title>少年壮志不言愁，只是人间留不住：别了，刘欢</title><link>https://helloblog.eik.cc/post/shao-nian-zhuang-zhi-bu-yan-chou-%EF%BC%8C-zhi-shi-ren-jian-liu-bu-zhu-%EF%BC%9A-bie-le-%EF%BC%8C-liu-huan.html</link><description>昨天（9月25日）上午9时52分，刘欢在上海走了。</description><guid isPermaLink="true">https://helloblog.eik.cc/post/shao-nian-zhuang-zhi-bu-yan-chou-%EF%BC%8C-zhi-shi-ren-jian-liu-bu-zhu-%EF%BC%9A-bie-le-%EF%BC%8C-liu-huan.html</guid><pubDate>Sat, 26 Sep 2026 14:32:58 +0000</pubDate></item><item><title>别把 AI Agent 当许愿池：我是怎么逼着 AI 写出“生产级”代码的</title><link>https://helloblog.eik.cc/post/bie-ba-%20AI%20Agent%20-dang-xu-yuan-chi-%EF%BC%9A-wo-shi-zen-me-bi-zhao-%20AI%20-xie-chu-%E2%80%9C-sheng-chan-ji-%E2%80%9D-dai-ma-de.html</link><description>最近这一年，我面了不少候选人，也跟圈里很多技术总监喝过茶。</description><guid isPermaLink="true">https://helloblog.eik.cc/post/bie-ba-%20AI%20Agent%20-dang-xu-yuan-chi-%EF%BC%9A-wo-shi-zen-me-bi-zhao-%20AI%20-xie-chu-%E2%80%9C-sheng-chan-ji-%E2%80%9D-dai-ma-de.html</guid><pubDate>Sat, 26 Sep 2026 09:22:37 +0000</pubDate></item><item><title>Git 安装：千万别“一路 Next”</title><link>https://helloblog.eik.cc/post/Git%20-an-zhuang-%EF%BC%9A-qian-wan-bie-%E2%80%9C-yi-lu-%20Next%E2%80%9D.html</link><description>说实话，每次带新人或者自己换电脑，最折磨人的绝对不是写代码，而是配环境。</description><guid isPermaLink="true">https://helloblog.eik.cc/post/Git%20-an-zhuang-%EF%BC%9A-qian-wan-bie-%E2%80%9C-yi-lu-%20Next%E2%80%9D.html</guid><pubDate>Sat, 26 Sep 2026 09:10:47 +0000</pubDate></item><item><title>🎮 Steam 官方正版安装教程（2026最新版）</title><link>https://helloblog.eik.cc/post/%F0%9F%8E%AE%20Steam%20-guan-fang-zheng-ban-an-zhuang-jiao-cheng-%EF%BC%882026-zui-xin-ban-%EF%BC%89.html</link><description>## 1.首先需要安装Watt Toolkit瓦特工具箱(原来的Steam++)
-
-点击[**这里**](https://steampp.net/)前往下载安装
-
-![](https://steampp.net/images/home/js.webp)
-
-然后在加速页选择“Steam 服务”点击“一键加速”
-
-## 2.安装Steam
-
-&gt; ⚠️ **重要警示**：请务必从 Valve 官方网站下载 Steam，切勿使用任何第三方下载站、破解版或“Steam管家/助手”等山寨软件，以免账号被盗或电脑中毒。</description><guid isPermaLink="true">https://helloblog.eik.cc/post/%F0%9F%8E%AE%20Steam%20-guan-fang-zheng-ban-an-zhuang-jiao-cheng-%EF%BC%882026-zui-xin-ban-%EF%BC%89.html</guid><pubDate>Sat, 26 Sep 2026 07:57:47 +0000</pubDate></item><item><title>Kali Linux 完美中文输入法 | Fcitx5 一键配置教程（2026最新）</title><link>https://helloblog.eik.cc/post/Kali%20Linux%20-wan-mei-zhong-wen-shu-ru-fa-%20-%20Fcitx5%20-yi-jian-pei-zhi-jiao-cheng-%EF%BC%882026-zui-xin-%EF%BC%89.html</link><description>![](https://pic1.imgdb.cn/i/0343whmqwS7Ftylim6SWkJ.webp)
-
-开始之前我推荐飞鸟云VPN机场
-
-200GB流量，不限时，不限速，用完为止，不限设备数量，支持ChatGPT/Claude/Gemini等大模型，支持最新Hysteria2协议，重复购买流量可叠加/10元人民币
-
-还有多种套餐任你选择，点击下方链接获取👇
-
-获取链接：[点击获取👆](https://feiniaoyun.xyz/#/register?code=pl4OIsZ9)
-
-* * *
-
-好的，我们回归正题
-
-在 Kali Linux 上安装中文输入法（通常推荐使用 **Fcitx5** 框架搭配 **Rime** 或 **Pinyin** 引擎，或者 **IBus** 框架），步骤相对标准化。</description><guid isPermaLink="true">https://helloblog.eik.cc/post/Kali%20Linux%20-wan-mei-zhong-wen-shu-ru-fa-%20-%20Fcitx5%20-yi-jian-pei-zhi-jiao-cheng-%EF%BC%882026-zui-xin-%EF%BC%89.html</guid><pubDate>Sat, 26 Sep 2026 07:45:56 +0000</pubDate></item><item><title>装机必备软件(2026.7.25)</title><link>https://helloblog.eik.cc/post/zhuang-ji-bi-bei-ruan-jian-%282026.7.25%29.html</link><description>## 📦 压缩与解压（3款）
-**1. 7-Zip** — 完全免费开源，无广告无捆绑，压缩率极高  
-🔗 官网下载：[点击前往👆](https://www.7-zip.org/)
-
-**2. Bandizip** — 界面清爽，支持30+种压缩格式，自带图片预览  
-🔗 官网下载：[点击前往👆](https://www.bandisoft.com/bandizip/)
-
-**3. NanaZip** — 7-Zip现代UI版，完美适配Win11右键菜单  
-🔗 GitHub：[点击前往👆](https://github.com/M2Team/NanaZip)
-
----
-
-## 🔍 搜索与效率（5款）
-**4. Everything** — 本地文件秒搜神器，仅3MB  
-🔗 官网下载：[点击前往👆](https://www.voidtools.com/zh-cn/)
-
-**5. Microsoft PowerToys** — 微软官方开源工具箱，20+实用功能  
-🔗 GitHub：[点击前往👆](https://github.com/microsoft/PowerToys)
-
-**6. Listary** — 文件快速定位与启动增强工具  
-🔗 官网下载：[点击前往👆](https://www.listary.com/download)
-
-**7. uTools** — 国产效率神器，集成数百个插件  
-🔗 官网下载：[点击前往👆](https://www.u.tools/)
-
-**8. QuickLook** — Mac式空格键快速预览  
-🔗 GitHub：[点击前往👆](https://github.com/QL-Win/QuickLook)
-
----
-
-## 🌐 浏览器（3款）
-**9. Microsoft Edge** — Win11自带，内置Copilot AI  
-🔗 官网下载：[点击前往👆](https://www.microsoft.com/edge)
-
-**10. Google Chrome** — 全球最流行，扩展生态最丰富  
-🔗 官网下载：[点击前往👆](https://www.google.com/chrome/)
-
-**11. Firefox** — 注重隐私保护的开源浏览器  
-🔗 官网下载：[点击前往👆](https://www.mozilla.org/firefox/)
-
----
-
-## 💬 通讯与社交（3款）
-**12. 微信** — 国民级即时通讯  
-🔗 官网下载：[点击前往👆](https://pc.weixin.qq.com/)
-
-**13. QQ** — 大文件传输快，群功能强大  
-🔗 官网下载：[点击前往👆](https://im.qq.com/)
-
-**14. Telegram** — 国际化即时通讯，端到端加密  
-🔗 官网下载：[点击前往👆](https://desktop.telegram.org/)
-
----
-
-## 📝 办公与笔记（5款）
-**15. WPS Office** — 国产免费办公套件  
-🔗 官网下载：[点击前往👆](https://www.wps.cn/)
-
-**16. Microsoft 365** — 微软官方办公套件  
-🔗 官网下载：[点击前往👆](https://www.microsoft.com/microsoft-365)
-
-**17. Obsidian** — 本地化知识管理笔记  
-🔗 官网下载：[点击前往👆](https://obsidian.md/)
-
-**18. Notion** — 全能型协作笔记工具  
-🔗 官网下载：[点击前往👆](https://www.notion.so/)
-
-**19. SumatraPDF** — 极轻量PDF阅读器  
-🔗 官网下载：[点击前往👆](https://www.sumatrapdfreader.org/)
-
----
-
-## 🎬 影音播放（4款）
-**20. PotPlayer** — 韩国万能播放器  
-🔗 官网下载：[点击前往👆](https://potplayer.daum.net/)
-
-**21. VLC Media Player** — 开源免费万能播放器  
-🔗 官网下载：[点击前往👆](https://www.videolan.org/vlc/)
-
-**22. 网易云音乐** — 歌单推荐精准  
-🔗 官网下载：[点击前往👆](https://music.163.com/#/download)
-
-**23. foobar2000** — 极客级音频播放器  
-🔗 官网下载：[点击前往👆](https://www.foobar2000.org/)
-
----
-
-## 🎨 图像与设计（4款）
-**24. Snipaste** — 截图贴图神器  
-🔗 官网下载：[点击前往👆](https://www.snipaste.com/)
-
-**25. ScreenToGif** — 开源免费屏幕录制GIF工具  
-🔗 官网下载：[点击前往👆](https://www.screentogif.com/)
-
-**26. Paint.NET** — 轻量级图片编辑器  
-🔗 官网下载：[点击前往👆](https://www.getpaint.net/)
-
-**27. ShareX** — 开源全能截图工具  
-🔗 官网下载：[点击前往👆](https://getsharex.com/)
-
----
-
-## 🛡️ 安全与清理（5款）
-**28. Windows Defender** — 系统自带，无需额外下载  
-🔗 系统内置，无需安装
-
-**29. 微软电脑管家** — 微软官方出品，轻量无广告  
-🔗 官网下载：[点击前往👆](https://pcmanager.microsoft.com/)
-
-**30. Dism++** — 国产开源系统优化工具  
-🔗 GitHub：[点击前往👆](https://github.com/Chuyu-Team/Dism-Multi-language)
-
-**31. Geek Uninstaller** — 仅6MB的卸载神器  
-🔗 官网下载：[点击前往👆](https://geekuninstaller.com/)
-
-**32. CCleaner** — 老牌系统清理工具  
-🔗 官网下载：[点击前往👆](https://www.ccleaner.com/)
-
----
-
-## 🔧 系统与工具（5款）
-**33. 图吧工具箱** — 硬件检测工具合集  
-🔗 官网下载：[点击前往👆](https://www.tbtool.cn/)
-
-**34. SpaceSniffer** — 磁盘空间可视化工具  
-🔗 官网下载：[点击前往👆](http://www.uderzo.it/main_products/space_sniffer/)
-
-**35. TrafficMonitor** — 开源轻量网速监控悬浮窗  
-🔗 GitHub：[点击前往👆](https://github.com/zhongyang219/TrafficMonitor)
-
-**36. LocalSend** — 开源免费局域网文件传输  
-🔗 官网下载：[点击前往👆](https://localsend.org/)
-
-**37. UniGetUI** — 开源Windows包管理器图形界面  
-🔗 GitHub：[点击前往👆](https://github.com/marticliment/UniGetUI)
-
----
-
-## ⌨️ 输入法与运行库（3款）
-**38. 微信输入法** — 腾讯出品，无广告无弹窗  
-🔗 官网下载：[点击前往👆](https://z.weixin.qq.com/)
-
-**39. 微软常用运行库合集** — 整合VC++、.NET、DirectX等  
-🔗 GitHub：[点击前往👆](https://github.com/abbodi1406/vcredist)
-
-**40. Motrix** — 开源全能下载工具（替代IDM）  
-🔗 官网下载：[点击前往👆](https://motrix.app/)
-
----
-
-&gt; 💡 **温馨提示：** 
-&gt;
-&gt; + 以上链接均为官方或GitHub地址，安全可靠
-&gt; + 建议收藏此列表，装机时直接点击下载
-&gt; + 开源软件优先从GitHub下载，商业软件从官网下载
-&gt; + 避免使用第三方下载站，防止捆绑流氓软件
-&gt;
-
-。</description><guid isPermaLink="true">https://helloblog.eik.cc/post/zhuang-ji-bi-bei-ruan-jian-%282026.7.25%29.html</guid><pubDate>Sat, 26 Sep 2026 07:39:54 +0000</pubDate></item><item><title>你好</title><link>https://helloblog.eik.cc/post/ni-hao.html</link><description>这是一篇你好内容！。</description><guid isPermaLink="true">https://helloblog.eik.cc/post/ni-hao.html</guid><pubDate>Sat, 26 Sep 2026 03:51:59 +0000</pubDate></item><item><title>关于</title><link>https://helloblog.eik.cc/about.html</link><description>欢迎来到我的博客。</description><guid isPermaLink="true">https://helloblog.eik.cc/about.html</guid><pubDate>Sat, 26 Sep 2026 06:14:56 +0000</pubDate></item><item><title>友情链接</title><link>https://helloblog.eik.cc/link.html</link><description>&lt;h3&gt;海内存知己，天涯若比邻！&lt;/h3&gt;
-
-**超级友链**
-
-- [科技酱](https://docs.asoe.cn) 同一个世界，同一个互联网！
-
-**朋友们**
-
-**博客组织**
-
-**我的项目**
-
-**友链申请要求：**
-✅ 网站能够正常访问
-✅ 网站类型为个人博客
-✅ 网站需要包含本站友链
-✅ 网站需要开通一年以上，且原创文章不少于 30 篇
-❌ 不接受商业性或包含侵入性广告的站点
-❌ 不接受违反中华人民共和国法律法规的站点
-
-如果符合如上条件，可在本页面评论区留言您的友链信息
-
-```
-- Name: 你好博客
-- URL: https://helloblog.eik.cc
-- RSS: https://helloblog.eik.cc/rss.xml
-- Avatar: https://img2.tofaka.com/autoupload/f/3624q/20260926/caKC/1024X1024/Hello-Logo.png
-- Desc: 你好博客，你好世界！
-```
-申请前记得先添加本站哦~
-
-。</description><guid isPermaLink="true">https://helloblog.eik.cc/link.html</guid><pubDate>Sat, 26 Sep 2026 06:15:27 +0000</pubDate></item></channel></rss>
+> **总结：** WordPress 从入门到精通的核心路径是：先掌握后台管理 → 学会使用主题和插件 → 深入主题开发 → 学习插件开发 → 理解钩子系统 → 掌握 REST API → 优化性能和安全。WordPress 的生态系统极其丰富，无论是零代码建站还是深度开发，都能满足需求。持续学习官方文档、关注社区动态、多做项目实践，你将快速成为 WordPress 高手。
