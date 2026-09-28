@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <meta name='description' content='你好博客是一个专注于技术分享、编程笔记与生活感悟的个人博客，提供高质量原创内容。'><meta name='keywords' content='你好博客,技术博客,编程笔记,Gmeek,前端开发,个人网站'><meta name='author' content='你好博客'><meta name='robots' content='index,follow'><link rel='canonical' href='https://helloblog.eik.cc/'><script type='application/ld+json'>{"@context":"https://schema.org","@type":"WebSite","name":"你好博客","url":"https://helloblog.eik.cc/","description":"专注于技术分享、编程笔记与生活感悟的个人博客","author":{"@type":"Person","name":"你好博客","email":"official@tech.asoe.cn"},"potentialAction":{"@type":"SearchAction","target":"https://helloblog.eik.cc/?q={search_term_string}","query-input":"required name=search_term_string"}}</script><script src='https://blog.meekdai.com/Gmeek/plugins/GmeekBSZ.js'></script><script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script>
+    <link rel="icon" href="https://img2.tofaka.com/autoupload/f/3624q/20260926/caKC/1024X1024/Hello-Logo.png"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="涵盖安装、服务管理、核心配置、虚拟主机、反向代理、HTTPS、性能优化及故障排查。">
+<meta property="og:title" content="Apache(httpd)常用命令与配置大全">
+<meta property="og:description" content="涵盖安装、服务管理、核心配置、虚拟主机、反向代理、HTTPS、性能优化及故障排查。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://helloblog.eik.cc/post/Apache%28httpd%29-chang-yong-ming-ling-yu-pei-zhi-da-quan.html">
+<meta property="og:image" content="https://img2.tofaka.com/autoupload/f/3624q/20260926/caKC/1024X1024/Hello-Logo.png">
+<title>Apache(httpd)常用命令与配置大全</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">Apache(httpd)常用命令与配置大全</h1>
+<div class="title-right">
+    <a href="https://helloblog.eik.cc" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/techjiang/Gmeek-HelloBlog/issues/13" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><p>涵盖安装、服务管理、核心配置、虚拟主机、反向代理、HTTPS、性能优化及故障排查。</p>
+<hr>
+<h2>一、安装 Apache</h2>
+<p><strong>Debian / Ubuntu（Apache 服务名为 <code class="notranslate">apache2</code>）：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">apt update
+apt install apache2</pre></div>
+<p><strong>CentOS / RHEL（Apache 服务名为 <code class="notranslate">httpd</code>）：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">yum install httpd</pre></div>
+<p><strong>验证安装：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">apache2 -v          <span class="pl-c"><span class="pl-c">#</span> Debian/Ubuntu 查看版本</span>
+httpd -v            <span class="pl-c"><span class="pl-c">#</span> CentOS/RHEL 查看版本</span>
+apachectl -v        <span class="pl-c"><span class="pl-c">#</span> 通用（若已安装）</span></pre></div>
+<blockquote>
+<p><g-emoji class="g-emoji" alias="warning">⚠️</g-emoji> 后文命令中，Debian/Ubuntu 用 <code class="notranslate">apache2</code>，CentOS/RHEL 用 <code class="notranslate">httpd</code>，请按发行版替换。</p>
+</blockquote>
+<hr>
+<h2>二、服务管理</h2>
+<p><strong>systemd 管理：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> Debian/Ubuntu</span>
+systemctl start apache2
+systemctl stop apache2
+systemctl restart apache2
+systemctl reload apache2
+systemctl status apache2
+systemctl <span class="pl-c1">enable</span> apache2          <span class="pl-c"><span class="pl-c">#</span> 开机自启</span>
+systemctl disable apache2
+
+<span class="pl-c"><span class="pl-c">#</span> CentOS/RHEL</span>
+systemctl start httpd
+systemctl stop httpd
+systemctl restart httpd
+systemctl reload httpd
+systemctl status httpd
+systemctl <span class="pl-c1">enable</span> httpd
+systemctl disable httpd</pre></div>
+<p><strong>apachectl 控制命令：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">apachectl start            <span class="pl-c"><span class="pl-c">#</span> 启动</span>
+apachectl stop             <span class="pl-c"><span class="pl-c">#</span> 停止</span>
+apachectl restart          <span class="pl-c"><span class="pl-c">#</span> 重启</span>
+apachectl graceful         <span class="pl-c"><span class="pl-c">#</span> 优雅重启（不断开连接）</span>
+apachectl configtest       <span class="pl-c"><span class="pl-c">#</span> 检测配置语法（重要！）</span>
+apachectl -t               <span class="pl-c"><span class="pl-c">#</span> 同上（简写）</span>
+apachectl -M               <span class="pl-c"><span class="pl-c">#</span> 列出已加载模块</span>
+apachectl -S               <span class="pl-c"><span class="pl-c">#</span> 显示虚拟主机配置摘要</span>
+apachectl -V               <span class="pl-c"><span class="pl-c">#</span> 查看编译参数</span>
+apachectl -l               <span class="pl-c"><span class="pl-c">#</span> 列出静态编译模块</span></pre></div>
+<p><strong>日志位置：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> Debian/Ubuntu</span>
+/var/log/apache2/access.log
+/var/log/apache2/error.log
+
+<span class="pl-c"><span class="pl-c">#</span> CentOS/RHEL</span>
+/var/log/httpd/access_log
+/var/log/httpd/error_log
+
+tail -f /var/log/apache2/access.log   <span class="pl-c"><span class="pl-c">#</span> 实时查看访问日志</span></pre></div>
+<hr>
+<h2>三、配置文件结构</h2>
+<p><strong>主配置文件：</strong></p>
+<pre class="notranslate"><code class="notranslate"># Debian/Ubuntu
+/etc/apache2/apache2.conf
+/etc/apache2/ports.conf
+/etc/apache2/sites-available/       # 站点配置（可用）
+/etc/apache2/sites-enabled/         # 站点配置（已启用，软链接）
+/etc/apache2/mods-available/        # 模块配置（可用）
+/etc/apache2/mods-enabled/          # 模块配置（已启用）
+/etc/apache2/conf-available/        # 全局配置（可用）
+/etc/apache2/conf-enabled/          # 全局配置（已启用）
+
+# CentOS/RHEL
+/etc/httpd/conf/httpd.conf          # 主配置
+/etc/httpd/conf.d/                  # 附加配置目录
+/etc/httpd/conf.modules.d/          # 模块配置
+</code></pre>
+<p><strong>apache2.conf 核心结构：</strong></p>
+<div class="highlight highlight-source-apacheconf"><pre class="notranslate"><span class="pl-c"># 全局配置</span>
+<span class="pl-k">ServerRoot</span> "/etc/apache2"
+<span class="pl-k">PidFile</span> ${APACHE_PID_FILE}
+<span class="pl-k">Timeout</span> <span class="pl-c1">300</span>
+<span class="pl-k">KeepAlive</span> <span class="pl-e">On</span>
+<span class="pl-k">MaxKeepAliveRequests</span> <span class="pl-c1">100</span>
+<span class="pl-k">KeepAliveTimeout</span> <span class="pl-c1">5</span>
+
+<span class="pl-c"># 运行用户</span>
+<span class="pl-k">User</span> www-data
+<span class="pl-k">Group</span> www-data
+
+<span class="pl-c"># 加载模块</span>
+<span class="pl-k">Include</span> mods-enabled/*.load
+<span class="pl-k">Include</span> mods-enabled/*.conf
+
+<span class="pl-c"># 加载站点</span>
+<span class="pl-k">Include</span> sites-enabled/*.conf</pre></div>
+<hr>
+<h2>四、核心配置指令</h2>
+<div class="highlight highlight-source-apacheconf"><pre class="notranslate"><span class="pl-c"># 基本全局参数</span>
+<span class="pl-k">ServerRoot</span> "/etc/apache2"        # 配置根目录
+<span class="pl-k">ServerName</span> www.example.com:<span class="pl-c1">80</span>    # 服务器域名
+<span class="pl-k">ServerAdmin</span> admin@example.com    # 管理员邮箱
+<span class="pl-k">Timeout</span> <span class="pl-c1">300</span>                      # 超时时间（秒）
+<span class="pl-k">Listen</span> <span class="pl-c1">80</span>                        # 监听端口
+<span class="pl-k">Listen</span> <span class="pl-c1">443</span> https                 # 监听 HTTPS
+
+<span class="pl-c"># 连接管理</span>
+<span class="pl-k">KeepAlive</span> <span class="pl-e">On</span>                     # 开启长连接
+<span class="pl-k">MaxKeepAliveRequests</span> <span class="pl-c1">100</span>         # 单连接最大请求数
+<span class="pl-k">KeepAliveTimeout</span> <span class="pl-c1">5</span>               # 长连接超时
+
+<span class="pl-c"># 配置目录权限</span>
+&lt;<span class="pl-e">Directory</span> <span class="pl-s">"/var/www/html"</span>&gt;
+    <span class="pl-k">Options</span> Indexes FollowSymLinks
+    <span class="pl-k">AllowOverride</span> All
+    <span class="pl-k">Require</span> all granted
+&lt;/<span class="pl-e">Directory</span>&gt;
+
+<span class="pl-c"># 拒绝访问隐藏文件</span>
+&lt;<span class="pl-e">FilesMatch</span> <span class="pl-s">"^\.ht"</span>&gt;
+    <span class="pl-k">Require</span> all denied
+&lt;/<span class="pl-e">FilesMatch</span>&gt;</pre></div>
+<hr>
+<h2>五、虚拟主机（VirtualHost）</h2>
+<p><strong>基于域名：</strong></p>
+<div class="highlight highlight-source-apacheconf"><pre class="notranslate">&lt;<span class="pl-e">VirtualHost</span> <span class="pl-s">*:80</span>&gt;
+    <span class="pl-k">ServerName</span> www.example.com
+    <span class="pl-k">ServerAlias</span> <span class="pl-s">example.com</span>
+    <span class="pl-k">DocumentRoot</span> /var/www/example
+
+    &lt;<span class="pl-e">Directory</span> <span class="pl-s">"/var/www/example"</span>&gt;
+        <span class="pl-k">Options</span> Indexes FollowSymLinks
+        <span class="pl-k">AllowOverride</span> All
+        <span class="pl-k">Require</span> all granted
+    &lt;/<span class="pl-e">Directory</span>&gt;
+
+    <span class="pl-k">ErrorLog</span>  ${APACHE_LOG_DIR}/example_error.log
+    <span class="pl-k">CustomLog</span> ${APACHE_LOG_DIR}/example_access.log combined
+&lt;/<span class="pl-e">VirtualHost</span>&gt;</pre></div>
+<p><strong>基于端口：</strong></p>
+<div class="highlight highlight-source-apacheconf"><pre class="notranslate"><span class="pl-k">Listen</span> <span class="pl-c1">8080</span>
+
+&lt;<span class="pl-e">VirtualHost</span> <span class="pl-s">*:8080</span>&gt;
+    <span class="pl-k">ServerName</span> app.example.com
+    <span class="pl-k">DocumentRoot</span> /var/www/app
+&lt;/<span class="pl-e">VirtualHost</span>&gt;</pre></div>
+<p><strong>默认虚拟主机（兜底）：</strong></p>
+<div class="highlight highlight-source-apacheconf"><pre class="notranslate">&lt;<span class="pl-e">VirtualHost</span> <span class="pl-s">*:80</span>&gt;
+    <span class="pl-k">ServerName</span> _default_
+    <span class="pl-k">DocumentRoot</span> /var/www/default
+&lt;/<span class="pl-e">VirtualHost</span>&gt;</pre></div>
+<p><strong>Debian/Ubuntu 启用站点：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">a2ensite example.com.conf       <span class="pl-c"><span class="pl-c">#</span> 启用站点</span>
+a2dissite example.com.conf      <span class="pl-c"><span class="pl-c">#</span> 禁用站点</span>
+a2enmod rewrite                 <span class="pl-c"><span class="pl-c">#</span> 启用模块</span>
+a2dismod rewrite                <span class="pl-c"><span class="pl-c">#</span> 禁用模块</span>
+a2enconf security               <span class="pl-c"><span class="pl-c">#</span> 启用配置</span>
+systemctl reload apache2</pre></div>
+<hr>
+<h2>六、URL 重写（mod_rewrite）</h2>
+<div class="highlight highlight-source-apacheconf"><pre class="notranslate"><span class="pl-c"># 启用模块（Debian/Ubuntu）</span>
+a2enmod rewrite
+
+&lt;<span class="pl-e">VirtualHost</span> <span class="pl-s">*:80</span>&gt;
+    <span class="pl-k">ServerName</span> www.example.com
+    <span class="pl-k">DocumentRoot</span> /var/www/example
+
+    &lt;<span class="pl-e">Directory</span> <span class="pl-s">"/var/www/example"</span>&gt;
+        <span class="pl-k">AllowOverride</span> All          # 允许 .htaccess 生效
+        <span class="pl-k">Options</span> FollowSymLinks
+    &lt;/<span class="pl-e">Directory</span>&gt;
+
+<span class="pl-c">   <span class="pl-c"> </span># 开启重写</span>
+    <span class="pl-k">RewriteEngine</span> <span class="pl-e">On</span>
+
+<span class="pl-c">   <span class="pl-c"> </span># 强制 HTTPS</span>
+    <span class="pl-k">RewriteCond</span> <span class="pl-sr">%{HTTPS}</span> <span class="pl-s">!=on</span>
+    <span class="pl-k">RewriteRule</span> <span class="pl-sr">^(.*)$</span> <span class="pl-s">https://%{HTTP_HOST}%{REQUEST_URI}</span> [L,R=<span class="pl-c1">301</span>]
+
+<span class="pl-c">   <span class="pl-c"> </span># 去掉 www</span>
+    <span class="pl-k">RewriteCond</span> <span class="pl-sr">%{HTTP_HOST}</span> <span class="pl-s">^www\.(.+)$</span> [NC]
+    <span class="pl-k">RewriteRule</span> <span class="pl-sr">^(.*)$</span> <span class="pl-s">https://%1/$1</span> [R=<span class="pl-c1">301</span>,L]
+
+<span class="pl-c">   <span class="pl-c"> </span># 前端路由（SPA 项目）</span>
+    <span class="pl-k">RewriteCond</span> <span class="pl-sr">%{REQUEST_FILENAME}</span> <span class="pl-s">!-f</span>
+    <span class="pl-k">RewriteCond</span> <span class="pl-sr">%{REQUEST_FILENAME}</span> <span class="pl-s">!-d</span>
+    <span class="pl-k">RewriteRule</span> <span class="pl-sr">^(.*)$</span> <span class="pl-s">/index.html</span> [L]
+
+<span class="pl-c">   <span class="pl-c"> </span># URL 重写</span>
+    <span class="pl-k">RewriteRule</span> <span class="pl-sr">^blog/(.*)$</span> <span class="pl-s">/articles/$1</span> [L]
+&lt;/<span class="pl-e">VirtualHost</span>&gt;</pre></div>
+<hr>
+<h2>七、反向代理（mod_proxy）</h2>
+<p><strong>启用模块：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">a2enmod proxy proxy_http proxy_balancer proxy_hcheck lbmethod_byrequests
+<span class="pl-c"><span class="pl-c">#</span> Debian/Ubuntu</span>
+systemctl reload apache2</pre></div>
+<p><strong>基本反向代理：</strong></p>
+<div class="highlight highlight-source-apacheconf"><pre class="notranslate">&lt;<span class="pl-e">VirtualHost</span> <span class="pl-s">*:80</span>&gt;
+    <span class="pl-k">ServerName</span> api.example.com
+
+    <span class="pl-k">ProxyPreserveHost</span> <span class="pl-e">On</span>
+    <span class="pl-k">ProxyPass</span>        / http://<span class="pl-c1">127</span>.<span class="pl-c1">0</span>.<span class="pl-c1">0</span>.<span class="pl-c1">1</span>:<span class="pl-c1">8080</span>/
+    <span class="pl-k">ProxyPassReverse</span> / http://<span class="pl-c1">127</span>.<span class="pl-c1">0</span>.<span class="pl-c1">0</span>.<span class="pl-c1">1</span>:<span class="pl-c1">8080</span>/
+
+<span class="pl-c">   <span class="pl-c"> </span># 传递真实 IP</span>
+    <span class="pl-k">ProxyPassReverse</span> / http://<span class="pl-c1">127</span>.<span class="pl-c1">0</span>.<span class="pl-c1">0</span>.<span class="pl-c1">1</span>:<span class="pl-c1">8080</span>/
+    <span class="pl-k">RequestHeader</span> <span class="pl-e">set</span> X-Real-IP "%{<span class="pl-v">REMOTE_ADDR</span>}s"
+    <span class="pl-k">RequestHeader</span> <span class="pl-e">set</span> X-Forwarded-For "%{<span class="pl-v">REMOTE_ADDR</span>}s"
+&lt;/<span class="pl-e">VirtualHost</span>&gt;</pre></div>
+<p><strong>多路径代理：</strong></p>
+<div class="highlight highlight-source-apacheconf"><pre class="notranslate"><span class="pl-k">ProxyPass</span>        /api/ http://<span class="pl-c1">127</span>.<span class="pl-c1">0</span>.<span class="pl-c1">0</span>.<span class="pl-c1">1</span>:<span class="pl-c1">8080</span>/
+<span class="pl-k">ProxyPassReverse</span> /api/ http://<span class="pl-c1">127</span>.<span class="pl-c1">0</span>.<span class="pl-c1">0</span>.<span class="pl-c1">1</span>:<span class="pl-c1">8080</span>/
+
+<span class="pl-k">ProxyPass</span>        /web/ http://<span class="pl-c1">127</span>.<span class="pl-c1">0</span>.<span class="pl-c1">0</span>.<span class="pl-c1">1</span>:<span class="pl-c1">3000</span>/
+<span class="pl-k">ProxyPassReverse</span> /web/ http://<span class="pl-c1">127</span>.<span class="pl-c1">0</span>.<span class="pl-c1">0</span>.<span class="pl-c1">1</span>:<span class="pl-c1">3000</span>/</pre></div>
+<p><strong>排除某些路径（不代理）：</strong></p>
+<div class="highlight highlight-source-apacheconf"><pre class="notranslate"><span class="pl-k">ProxyPass</span> /static/ !
+<span class="pl-k">ProxyPass</span> / http://<span class="pl-c1">127</span>.<span class="pl-c1">0</span>.<span class="pl-c1">0</span>.<span class="pl-c1">1</span>:<span class="pl-c1">8080</span>/</pre></div>
+<p><strong>WebSocket 代理：</strong></p>
+<div class="highlight highlight-source-apacheconf"><pre class="notranslate"><span class="pl-k">RewriteEngine</span> <span class="pl-e">On</span>
+<span class="pl-k">RewriteCond</span> <span class="pl-sr">%{HTTP:Upgrade}</span> <span class="pl-s">websocket</span> [NC]
+<span class="pl-k">RewriteCond</span> <span class="pl-sr">%{HTTP:Connection}</span> <span class="pl-s">upgrade</span> [NC]
+<span class="pl-k">RewriteRule</span> <span class="pl-sr">/(.*)</span> <span class="pl-s">ws://127.0.0.1:8080/$1</span> [P,L]
+
+<span class="pl-k">ProxyPass</span>        /ws/ ws://<span class="pl-c1">127</span>.<span class="pl-c1">0</span>.<span class="pl-c1">0</span>.<span class="pl-c1">1</span>:<span class="pl-c1">8080</span>/
+<span class="pl-k">ProxyPassReverse</span> /ws/ ws://<span class="pl-c1">127</span>.<span class="pl-c1">0</span>.<span class="pl-c1">0</span>.<span class="pl-c1">1</span>:<span class="pl-c1">8080</span>/</pre></div>
+<hr>
+<h2>八、负载均衡（mod_proxy_balancer）</h2>
+<div class="highlight highlight-source-apacheconf"><pre class="notranslate">&lt;<span class="pl-e">Proxy</span> <span class="pl-s">"balancer://mycluster"</span>&gt;
+    <span class="pl-k">BalancerMember</span> http://<span class="pl-c1">192</span>.<span class="pl-c1">168</span>.<span class="pl-c1">1</span>.<span class="pl-c1">10</span>:<span class="pl-c1">8080</span> loadfactor=<span class="pl-c1">5</span>
+    <span class="pl-k">BalancerMember</span> http://<span class="pl-c1">192</span>.<span class="pl-c1">168</span>.<span class="pl-c1">1</span>.<span class="pl-c1">11</span>:<span class="pl-c1">8080</span> loadfactor=<span class="pl-c1">3</span>
+    <span class="pl-k">BalancerMember</span> http://<span class="pl-c1">192</span>.<span class="pl-c1">168</span>.<span class="pl-c1">1</span>.<span class="pl-c1">12</span>:<span class="pl-c1">8080</span> status=+H     # 备用
+    ProxySet lbmethod=byrequests
+<span class="pl-c">   <span class="pl-c"> </span># 策略：byrequests（轮询）、bytraffic（流量）、bybusyness（忙碌）</span>
+&lt;/<span class="pl-e">Proxy</span>&gt;
+
+&lt;<span class="pl-e">VirtualHost</span> <span class="pl-s">*:80</span>&gt;
+    <span class="pl-k">ServerName</span> www.example.com
+
+    <span class="pl-k">ProxyPreserveHost</span> <span class="pl-e">On</span>
+    <span class="pl-k">ProxyPass</span>        / balancer://mycluster/
+    <span class="pl-k">ProxyPassReverse</span> / balancer://mycluster/
+
+<span class="pl-c">   <span class="pl-c"> </span># 管理页面（监控节点状态）</span>
+    &lt;<span class="pl-e">Location</span> <span class="pl-s">/balancer-manager</span>&gt;
+        <span class="pl-k">SetHandler</span> balancer-manager
+        <span class="pl-k">Require</span> local
+    &lt;/<span class="pl-e">Location</span>&gt;
+&lt;/<span class="pl-e">VirtualHost</span>&gt;</pre></div>
+<p><strong>会话保持（粘性会话）：</strong></p>
+<div class="highlight highlight-source-apacheconf"><pre class="notranslate"><span class="pl-k">Header</span> add <span class="pl-e">Set</span>-Cookie "ROUTEID=.%{<span class="pl-v">BALANCER_WORKER_ROUTE</span>}e; path=/" env=BALANCER_ROUTE_CHANGED
+
+&lt;<span class="pl-e">Proxy</span> <span class="pl-s">"balancer://mycluster"</span>&gt;
+    <span class="pl-k">BalancerMember</span> http://<span class="pl-c1">192</span>.<span class="pl-c1">168</span>.<span class="pl-c1">1</span>.<span class="pl-c1">10</span>:<span class="pl-c1">8080</span> route=<span class="pl-c1">1</span>
+    <span class="pl-k">BalancerMember</span> http://<span class="pl-c1">192</span>.<span class="pl-c1">168</span>.<span class="pl-c1">1</span>.<span class="pl-c1">11</span>:<span class="pl-c1">8080</span> route=<span class="pl-c1">2</span>
+    ProxySet stickysession=ROUTEID
+&lt;/<span class="pl-e">Proxy</span>&gt;</pre></div>
+<hr>
+<h2>九、HTTPS / SSL 配置</h2>
+<p><strong>启用模块：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">a2enmod ssl          <span class="pl-c"><span class="pl-c">#</span> Debian/Ubuntu</span>
+a2ensite default-ssl.conf
+systemctl reload apache2</pre></div>
+<p><strong>虚拟主机配置：</strong></p>
+<div class="highlight highlight-source-apacheconf"><pre class="notranslate">&lt;<span class="pl-e">VirtualHost</span> <span class="pl-s">*:443</span>&gt;
+    <span class="pl-k">ServerName</span> www.example.com
+    <span class="pl-k">DocumentRoot</span> /var/www/example
+
+    <span class="pl-k">SSLEngine</span> <span class="pl-e">on</span>
+    <span class="pl-k">SSLCertificateFile</span>    /etc/ssl/certs/example.com.pem
+    <span class="pl-k">SSLCertificateKeyFile</span> /etc/ssl/private/example.com.key
+    <span class="pl-k">SSLCertificateChainFile</span> /etc/ssl/certs/chain.pem
+
+<span class="pl-c">   <span class="pl-c"> </span># SSL 优化</span>
+    <span class="pl-k">SSLProtocol</span>             all -SSLv3 -TLSv1 -TLSv1.<span class="pl-c1">1</span>
+    <span class="pl-k">SSLCipherSuite</span>          HIGH:!aNULL:!MD5
+    <span class="pl-k">SSLHonorCipherOrder</span>     <span class="pl-e">on</span>
+    <span class="pl-k">SSLSessionCache</span>         shmcb:/var/run/ssl_scache(<span class="pl-c1">512000</span>)
+    <span class="pl-k">SSLSessionCacheTimeout</span>  <span class="pl-c1">300</span>
+
+<span class="pl-c">   <span class="pl-c"> </span># HSTS（强制 HTTPS）</span>
+    <span class="pl-k">Header</span> always <span class="pl-e">set</span> Strict-Transport-Security "max-age=<span class="pl-c1">31536000</span>; includeSubDomains"
+&lt;/<span class="pl-e">VirtualHost</span>&gt;
+
+<span class="pl-c"># HTTP 跳转 HTTPS</span>
+&lt;<span class="pl-e">VirtualHost</span> <span class="pl-s">*:80</span>&gt;
+    <span class="pl-k">ServerName</span> www.example.com
+    <span class="pl-k">Redirect</span> <span class="pl-e">permanent</span> <span class="pl-s">/</span> <span class="pl-s">https://www.example.com/</span>
+&lt;/<span class="pl-e">VirtualHost</span>&gt;</pre></div>
+<p><strong>生成自签名证书（测试用）：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout /etc/ssl/private/self.key \
+  -out /etc/ssl/certs/self.crt</pre></div>
+<p><strong>免费证书（Let's Encrypt / certbot）：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">apt install certbot python3-certbot-apache
+certbot --apache -d example.com -d www.example.com</pre></div>
+<hr>
+<h2>十、.htaccess 常用配置</h2>
+<blockquote>
+<p><code class="notranslate">.htaccess</code> 放在站点根目录，需 <code class="notranslate">AllowOverride All</code> 才生效。</p>
+</blockquote>
+<div class="highlight highlight-source-apacheconf"><pre class="notranslate"><span class="pl-c"># 开启重写</span>
+<span class="pl-k">RewriteEngine</span> <span class="pl-e">On</span>
+
+<span class="pl-c"># 强制 HTTPS</span>
+<span class="pl-k">RewriteCond</span> <span class="pl-sr">%{HTTPS}</span> <span class="pl-s">!=on</span>
+<span class="pl-k">RewriteRule</span> <span class="pl-sr">^(.*)$</span> <span class="pl-s">https://%{HTTP_HOST}%{REQUEST_URI}</span> [L,R=<span class="pl-c1">301</span>]
+
+<span class="pl-c"># 禁止访问 .ht 文件</span>
+&lt;<span class="pl-e">FilesMatch</span> <span class="pl-s">"^\.ht"</span>&gt;
+    <span class="pl-k">Order</span> allow,deny
+    <span class="pl-k">Deny</span> <span class="pl-e">from</span> all
+&lt;/<span class="pl-e">FilesMatch</span>&gt;
+
+<span class="pl-c"># 目录密码保护</span>
+<span class="pl-k">AuthType</span> Basic
+<span class="pl-k">AuthName</span> "Restricted Area"
+<span class="pl-k">AuthUserFile</span> /var/www/example/.htpasswd
+<span class="pl-k">Require</span> valid-user
+<span class="pl-c"># 生成密码：</span>
+<span class="pl-c"># htpasswd -c /var/www/example/.htpasswd username</span>
+
+<span class="pl-c"># 禁止 IP 访问</span>
+<span class="pl-k">Order</span> deny,allow
+<span class="pl-k">Deny</span> <span class="pl-e">from</span> <span class="pl-c1">192</span>.<span class="pl-c1">168</span>.<span class="pl-c1">1</span>.<span class="pl-c1">100</span>
+<span class="pl-k">Allow</span> <span class="pl-e">from</span> all
+
+<span class="pl-c"># 自定义错误页</span>
+<span class="pl-k">ErrorDocument</span> <span class="pl-c1">404</span> /<span class="pl-c1">404</span>.html
+<span class="pl-k">ErrorDocument</span> <span class="pl-c1">500</span> /50x.html
+
+<span class="pl-c"># 禁止目录列表</span>
+<span class="pl-k">Options</span> -Indexes
+
+<span class="pl-c"># 设置默认首页</span>
+<span class="pl-k">DirectoryIndex</span> index.html index.php
+
+<span class="pl-c"># URL 重写（去 .html 后缀）</span>
+<span class="pl-k">RewriteCond</span> <span class="pl-sr">%{REQUEST_FILENAME}</span> <span class="pl-s">!-d</span>
+<span class="pl-k">RewriteCond</span> <span class="pl-sr">%{REQUEST_FILENAME}\.html</span> <span class="pl-s">-f</span>
+<span class="pl-k">RewriteRule</span> <span class="pl-sr">^(.*)$</span> <span class="pl-s">$1.html</span> [L]</pre></div>
+<hr>
+<h2>十一、访问控制与认证</h2>
+<p><strong>IP 黑白名单：</strong></p>
+<div class="highlight highlight-source-apacheconf"><pre class="notranslate">&lt;<span class="pl-e">Directory</span> <span class="pl-s">"/var/www/admin"</span>&gt;
+    <span class="pl-k">Require</span> ip <span class="pl-c1">192</span>.<span class="pl-c1">168</span>.<span class="pl-c1">1</span>.<span class="pl-c1">0</span>/<span class="pl-c1">24</span>
+    <span class="pl-k">Require</span> ip <span class="pl-c1">127</span>.<span class="pl-c1">0</span>.<span class="pl-c1">0</span>.<span class="pl-c1">1</span>
+<span class="pl-c">   <span class="pl-c"> </span># Require all denied</span>
+&lt;/<span class="pl-e">Directory</span>&gt;</pre></div>
+<p><strong>HTTP Basic 认证：</strong></p>
+<div class="highlight highlight-source-apacheconf"><pre class="notranslate">&lt;<span class="pl-e">Directory</span> <span class="pl-s">"/var/www/secure"</span>&gt;
+    <span class="pl-k">AuthType</span> Basic
+    <span class="pl-k">AuthName</span> "Restricted Area"
+    <span class="pl-k">AuthUserFile</span> /etc/apache2/.htpasswd
+    <span class="pl-k">Require</span> valid-user
+&lt;/<span class="pl-e">Directory</span>&gt;</pre></div>
+<p><strong>生成密码文件：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> Debian/Ubuntu</span>
+htpasswd -c /etc/apache2/.htpasswd username
+
+<span class="pl-c"><span class="pl-c">#</span> CentOS/RHEL</span>
+htpasswd -c /etc/httpd/.htpasswd username</pre></div>
+<p><strong>限制请求速率（mod_ratelimit）：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">a2enmod ratelimit</pre></div>
+<div class="highlight highlight-source-apacheconf"><pre class="notranslate">&lt;<span class="pl-e">Directory</span> <span class="pl-s">"/var/www/download"</span>&gt;
+    <span class="pl-k">SetOutputFilter</span> RATE_LIMIT
+    <span class="pl-k">SetEnv</span> rate-limit <span class="pl-c1">512</span>       # KB/s
+&lt;/<span class="pl-e">Directory</span>&gt;</pre></div>
+<hr>
+<h2>十二、日志配置</h2>
+<div class="highlight highlight-source-apacheconf"><pre class="notranslate"><span class="pl-c"># 自定义日志格式</span>
+<span class="pl-k">LogFormat</span> "%h %l %u %t \"%r\" %&gt;s %b \"%{<span class="pl-v">Referer</span>}i\" \"%{<span class="pl-v">User-Agent</span>}i\" %D" detailed
+
+&lt;<span class="pl-e">VirtualHost</span> <span class="pl-s">*:80</span>&gt;
+    <span class="pl-k">ServerName</span> www.example.com
+
+    <span class="pl-k">ErrorLog</span>  ${APACHE_LOG_DIR}/example_error.log
+    <span class="pl-k">CustomLog</span> ${APACHE_LOG_DIR}/example_access.log detailed
+
+<span class="pl-c">   <span class="pl-c"> </span># 不记录静态资源日志</span>
+    <span class="pl-k">SetEnvIf</span> Request_URI "\.(jpg|png|css|js)$" dontlog
+    <span class="pl-k">CustomLog</span> ${APACHE_LOG_DIR}/example_access.log detailed env=!dontlog
+&lt;/<span class="pl-e">VirtualHost</span>&gt;</pre></div>
+<p><strong>常见日志变量：</strong></p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>变量</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">%h</code></td>
+<td>客户端 IP</td>
+</tr>
+<tr>
+<td><code class="notranslate">%t</code></td>
+<td>时间</td>
+</tr>
+<tr>
+<td><code class="notranslate">%r</code></td>
+<td>请求行</td>
+</tr>
+<tr>
+<td><code class="notranslate">%&gt;s</code></td>
+<td>响应状态码</td>
+</tr>
+<tr>
+<td><code class="notranslate">%b</code></td>
+<td>发送字节数</td>
+</tr>
+<tr>
+<td><code class="notranslate">%D</code></td>
+<td>处理时间（微秒）</td>
+</tr>
+<tr>
+<td><code class="notranslate">%{Referer}i</code></td>
+<td>来源页面</td>
+</tr>
+<tr>
+<td><code class="notranslate">%{User-Agent}i</code></td>
+<td>浏览器标识</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><strong>日志切割（logrotate）：</strong></p>
+<pre class="notranslate"><code class="notranslate"># /etc/logrotate.d/apache2
+/var/log/apache2/*.log {
+    daily
+    missingok
+    rotate 30
+    compress
+    notifempty
+    create 0640 www-data adm
+    sharedscripts
+    postrotate
+        systemctl reload apache2 &gt; /dev/null 2&gt;&amp;1 || true
+    endscript
+}
+</code></pre>
+<hr>
+<h2>十三、性能优化</h2>
+<div class="highlight highlight-source-apacheconf"><pre class="notranslate"><span class="pl-c"># 进程管理（prefork / event / worker）</span>
+<span class="pl-c"># 推荐 event（Apache 2.4 默认）</span>
+&lt;<span class="pl-e">IfModule</span> <span class="pl-s">mpm_event_module</span>&gt;
+    <span class="pl-k">StartServers</span>             <span class="pl-c1">3</span>
+    <span class="pl-k">MinSpareThreads</span>          <span class="pl-c1">75</span>
+    <span class="pl-k">MaxSpareThreads</span>          <span class="pl-c1">250</span>
+    <span class="pl-k">ThreadLimit</span>              <span class="pl-c1">64</span>
+    <span class="pl-k">ThreadsPerChild</span>          <span class="pl-c1">25</span>
+    <span class="pl-k">MaxRequestWorkers</span>        <span class="pl-c1">400</span>
+    <span class="pl-k">MaxConnectionsPerChild</span>   <span class="pl-c1">0</span>
+&lt;/<span class="pl-e">IfModule</span>&gt;
+
+<span class="pl-c"># 老版本 prefork（PHP 场景）</span>
+&lt;<span class="pl-e">IfModule</span> <span class="pl-s">mpm_prefork_module</span>&gt;
+    <span class="pl-k">StartServers</span>          <span class="pl-c1">5</span>
+    <span class="pl-k">MinSpareServers</span>       <span class="pl-c1">5</span>
+    <span class="pl-k">MaxSpareServers</span>       <span class="pl-c1">10</span>
+    <span class="pl-k">MaxRequestWorkers</span>     <span class="pl-c1">150</span>
+    <span class="pl-k">MaxConnectionsPerChild</span> <span class="pl-c1">1000</span>
+&lt;/<span class="pl-e">IfModule</span>&gt;
+
+<span class="pl-c"># 连接优化</span>
+<span class="pl-k">KeepAlive</span> <span class="pl-e">On</span>
+<span class="pl-k">MaxKeepAliveRequests</span> <span class="pl-c1">100</span>
+<span class="pl-k">KeepAliveTimeout</span> <span class="pl-c1">5</span>
+<span class="pl-k">Timeout</span> <span class="pl-c1">60</span>
+
+<span class="pl-c"># 开启压缩（mod_deflate）</span>
+&lt;<span class="pl-e">IfModule</span> <span class="pl-s">mod_deflate.c</span>&gt;
+    <span class="pl-k">AddOutputFilterByType</span> DEFLATE <span class="pl-e">text/html</span> <span class="pl-e">text/plain</span> <span class="pl-e">text/css</span>
+    <span class="pl-k">AddOutputFilterByType</span> DEFLATE <span class="pl-e">application/json</span> <span class="pl-e">application/javascript</span>
+    <span class="pl-k">AddOutputFilterByType</span> DEFLATE <span class="pl-e">image/svg+xml</span>
+&lt;/<span class="pl-e">IfModule</span>&gt;
+
+<span class="pl-c"># 浏览器缓存（mod_expires）</span>
+&lt;<span class="pl-e">IfModule</span> <span class="pl-s">mod_expires.c</span>&gt;
+    <span class="pl-k">ExpiresActive</span> <span class="pl-e">On</span>
+    <span class="pl-k">ExpiresByType</span> <span class="pl-e">image/jpeg</span> "access plus <span class="pl-c1">30</span> days"
+    <span class="pl-k">ExpiresByType</span> <span class="pl-e">image/png</span>  "access plus <span class="pl-c1">30</span> days"
+    <span class="pl-k">ExpiresByType</span> <span class="pl-e">text/css</span>   "access plus <span class="pl-c1">7</span> days"
+    <span class="pl-k">ExpiresByType</span> <span class="pl-e">application/javascript</span> "access plus <span class="pl-c1">7</span> days"
+&lt;/<span class="pl-e">IfModule</span>&gt;
+
+<span class="pl-c"># 开启 sendfile</span>
+<span class="pl-k">EnableSendfile</span> <span class="pl-e">On</span>
+<span class="pl-k">EnableMMAP</span> <span class="pl-e">On</span></pre></div>
+<p><strong>常用优化模块启用：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">a2enmod deflate expires headers rewrite ssl proxy proxy_http
+systemctl reload apache2</pre></div>
+<hr>
+<h2>十四、常用模块速查</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>模块</th>
+<th>说明</th>
+<th>启用命令</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">mod_rewrite</code></td>
+<td>URL 重写</td>
+<td><code class="notranslate">a2enmod rewrite</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">mod_proxy</code></td>
+<td>反向代理</td>
+<td><code class="notranslate">a2enmod proxy</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">mod_proxy_http</code></td>
+<td>HTTP 代理</td>
+<td><code class="notranslate">a2enmod proxy_http</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">mod_proxy_balancer</code></td>
+<td>负载均衡</td>
+<td><code class="notranslate">a2enmod proxy_balancer</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">mod_ssl</code></td>
+<td>HTTPS 支持</td>
+<td><code class="notranslate">a2enmod ssl</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">mod_deflate</code></td>
+<td>Gzip 压缩</td>
+<td><code class="notranslate">a2enmod deflate</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">mod_expires</code></td>
+<td>浏览器缓存</td>
+<td><code class="notranslate">a2enmod expires</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">mod_headers</code></td>
+<td>HTTP 头操作</td>
+<td><code class="notranslate">a2enmod headers</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">mod_alias</code></td>
+<td>URL 别名/重定向</td>
+<td><code class="notranslate">a2enmod alias</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">mod_mime</code></td>
+<td>MIME 类型</td>
+<td>默认启用</td>
+</tr>
+<tr>
+<td><code class="notranslate">mod_status</code></td>
+<td>状态监控</td>
+<td><code class="notranslate">a2enmod status</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">mod_info</code></td>
+<td>服务器信息</td>
+<td><code class="notranslate">a2enmod info</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">mod_ratelimit</code></td>
+<td>限速</td>
+<td><code class="notranslate">a2enmod ratelimit</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">mod_cache</code></td>
+<td>缓存</td>
+<td><code class="notranslate">a2enmod cache cache_disk</code></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<h2>十五、状态监控</h2>
+<div class="highlight highlight-source-apacheconf"><pre class="notranslate"><span class="pl-c"># 服务器状态页</span>
+&lt;<span class="pl-e">Location</span> <span class="pl-s">/server-status</span>&gt;
+    <span class="pl-k">SetHandler</span> server-status
+    <span class="pl-k">Require</span> local
+<span class="pl-c">   <span class="pl-c"> </span># Require ip 192.168.1.0/24</span>
+&lt;/<span class="pl-e">Location</span>&gt;
+
+<span class="pl-c"># 服务器信息页</span>
+&lt;<span class="pl-e">Location</span> <span class="pl-s">/server-info</span>&gt;
+    <span class="pl-k">SetHandler</span> server-info
+    <span class="pl-k">Require</span> local
+&lt;/<span class="pl-e">Location</span>&gt;
+
+<span class="pl-c"># Balancer 管理页（负载均衡监控）</span>
+&lt;<span class="pl-e">Location</span> <span class="pl-s">/balancer-manager</span>&gt;
+    <span class="pl-k">SetHandler</span> balancer-manager
+    <span class="pl-k">Require</span> local
+&lt;/<span class="pl-e">Location</span>&gt;</pre></div>
+<p>访问：<code class="notranslate">http://localhost/server-status</code>、<code class="notranslate">http://localhost/server-info</code></p>
+<hr>
+<h2>十六、故障排查常用命令</h2>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 配置检查</span>
+apachectl configtest            <span class="pl-c"><span class="pl-c">#</span> 检查语法（强烈推荐每次改配置后执行）</span>
+apachectl -t                    <span class="pl-c"><span class="pl-c">#</span> 同上</span>
+apachectl -S                    <span class="pl-c"><span class="pl-c">#</span> 查看虚拟主机配置摘要</span>
+apachectl -M                    <span class="pl-c"><span class="pl-c">#</span> 查看已加载模块</span>
+apachectl -V                    <span class="pl-c"><span class="pl-c">#</span> 查看编译参数</span>
+apachectl -l                    <span class="pl-c"><span class="pl-c">#</span> 静态编译模块</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 日志查看</span>
+tail -f /var/log/apache2/error.log
+tail -f /var/log/apache2/access.log
+tail -100 /var/log/apache2/error.log
+
+<span class="pl-c"><span class="pl-c">#</span> 进程与端口</span>
+ps -ef <span class="pl-k">|</span> grep apache
+ps -ef <span class="pl-k">|</span> grep httpd
+ss -tunlp <span class="pl-k">|</span> grep :80
+netstat -tunlp <span class="pl-k">|</span> grep :80
+lsof -i:80
+
+<span class="pl-c"><span class="pl-c">#</span> 访问测试</span>
+curl -I http://localhost
+curl -H <span class="pl-s"><span class="pl-pds">"</span>Host: example.com<span class="pl-pds">"</span></span> http://127.0.0.1
+curl -k https://localhost        <span class="pl-c"><span class="pl-c">#</span> 忽略证书测试</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 权限排查</span>
+ls -la /var/www/                 <span class="pl-c"><span class="pl-c">#</span> 查看目录权限</span>
+ps aux <span class="pl-k">|</span> grep apache             <span class="pl-c"><span class="pl-c">#</span> 确认运行用户</span>
+chown -R www-data:www-data /var/www/    <span class="pl-c"><span class="pl-c">#</span> Debian/Ubuntu</span>
+chown -R apache:apache /var/www/        <span class="pl-c"><span class="pl-c">#</span> CentOS/RHEL</span>
+chmod -R 755 /var/www/
+
+<span class="pl-c"><span class="pl-c">#</span> SELinux（CentOS 常见问题）</span>
+getsebool -a <span class="pl-k">|</span> grep httpd
+setsebool -P httpd_can_network_connect 1
+setsebool -P httpd_enable_homedirs 1
+chcon -R -t httpd_sys_content_t /var/www/
+
+<span class="pl-c"><span class="pl-c">#</span> 常见错误</span>
+<span class="pl-c"><span class="pl-c">#</span> 1. 403 Forbidden   → 目录权限 / SELinux / Options 缺少 Indexes</span>
+<span class="pl-c"><span class="pl-c">#</span> 2. 404 Not Found   → DocumentRoot 路径错误</span>
+<span class="pl-c"><span class="pl-c">#</span> 3. 500 Internal    → 查看 error.log，多为 .htaccess 语法错误</span>
+<span class="pl-c"><span class="pl-c">#</span> 4. 502 Bad Gateway → 后端服务未启动</span>
+<span class="pl-c"><span class="pl-c">#</span> 5. AH00558         → 未设置 ServerName（加上即可）</span>
+<span class="pl-c"><span class="pl-c">#</span> 6. Address already in use → 端口被占用</span></pre></div>
+<hr>
+<h2>十七、完整站点配置示例</h2>
+<div class="highlight highlight-source-apacheconf"><pre class="notranslate"><span class="pl-c"># /etc/apache2/sites-available/example.com.conf</span>
+
+<span class="pl-c"># 负载均衡后端</span>
+&lt;<span class="pl-e">Proxy</span> <span class="pl-s">"balancer://app_cluster"</span>&gt;
+    <span class="pl-k">BalancerMember</span> http://<span class="pl-c1">127</span>.<span class="pl-c1">0</span>.<span class="pl-c1">0</span>.<span class="pl-c1">1</span>:<span class="pl-c1">8080</span> loadfactor=<span class="pl-c1">5</span>
+    <span class="pl-k">BalancerMember</span> http://<span class="pl-c1">127</span>.<span class="pl-c1">0</span>.<span class="pl-c1">0</span>.<span class="pl-c1">1</span>:<span class="pl-c1">8081</span> loadfactor=<span class="pl-c1">3</span>
+    ProxySet lbmethod=byrequests
+&lt;/<span class="pl-e">Proxy</span>&gt;
+
+<span class="pl-c"># HTTP → HTTPS 跳转</span>
+&lt;<span class="pl-e">VirtualHost</span> <span class="pl-s">*:80</span>&gt;
+    <span class="pl-k">ServerName</span> www.example.com
+    <span class="pl-k">ServerAlias</span> <span class="pl-s">example.com</span>
+    <span class="pl-k">Redirect</span> <span class="pl-e">permanent</span> <span class="pl-s">/</span> <span class="pl-s">https://www.example.com/</span>
+&lt;/<span class="pl-e">VirtualHost</span>&gt;
+
+<span class="pl-c"># HTTPS 主站</span>
+&lt;<span class="pl-e">VirtualHost</span> <span class="pl-s">*:443</span>&gt;
+    <span class="pl-k">ServerName</span> www.example.com
+    <span class="pl-k">ServerAlias</span> <span class="pl-s">example.com</span>
+    <span class="pl-k">DocumentRoot</span> /var/www/example
+
+    <span class="pl-k">SSLEngine</span> <span class="pl-e">on</span>
+    <span class="pl-k">SSLCertificateFile</span>    /etc/ssl/certs/example.com.pem
+    <span class="pl-k">SSLCertificateKeyFile</span> /etc/ssl/private/example.com.key
+    <span class="pl-k">SSLProtocol</span>           all -SSLv3 -TLSv1 -TLSv1.<span class="pl-c1">1</span>
+
+    <span class="pl-k">Header</span> always <span class="pl-e">set</span> Strict-Transport-Security "max-age=<span class="pl-c1">31536000</span>; includeSubDomains"
+    <span class="pl-k">Header</span> always <span class="pl-e">set</span> X-Content-Type-<span class="pl-k">Options</span> "nosniff"
+    <span class="pl-k">Header</span> always <span class="pl-e">set</span> X-Frame-<span class="pl-k">Options</span> "SAMEORIGIN"
+
+    &lt;<span class="pl-e">Directory</span> <span class="pl-s">"/var/www/example"</span>&gt;
+        <span class="pl-k">Options</span> FollowSymLinks
+        <span class="pl-k">AllowOverride</span> All
+        <span class="pl-k">Require</span> all granted
+    &lt;/<span class="pl-e">Directory</span>&gt;
+
+<span class="pl-c">   <span class="pl-c"> </span># 静态资源缓存</span>
+    &lt;<span class="pl-e">FilesMatch</span> <span class="pl-s">"\.(jpg|jpeg|png|gif|ico|css|js|woff2)$"</span>&gt;
+        <span class="pl-k">ExpiresActive</span> <span class="pl-e">On</span>
+        <span class="pl-k">ExpiresByType</span> <span class="pl-e">image/jpeg</span> "access plus <span class="pl-c1">30</span> days"
+        <span class="pl-k">ExpiresByType</span> <span class="pl-e">text/css</span>   "access plus <span class="pl-c1">7</span> days"
+    &lt;/<span class="pl-e">FilesMatch</span>&gt;
+
+<span class="pl-c">   <span class="pl-c"> </span># API 反向代理</span>
+    <span class="pl-k">ProxyPreserveHost</span> <span class="pl-e">On</span>
+    <span class="pl-k">ProxyPass</span>        /api/ balancer://app_cluster/
+    <span class="pl-k">ProxyPassReverse</span> /api/ balancer://app_cluster/
+
+<span class="pl-c">   <span class="pl-c"> </span># 前端路由（SPA）</span>
+    <span class="pl-k">RewriteEngine</span> <span class="pl-e">On</span>
+    <span class="pl-k">RewriteCond</span> <span class="pl-sr">%{REQUEST_FILENAME}</span> <span class="pl-s">!-f</span>
+    <span class="pl-k">RewriteCond</span> <span class="pl-sr">%{REQUEST_FILENAME}</span> <span class="pl-s">!-d</span>
+    <span class="pl-k">RewriteRule</span> <span class="pl-sr">^(.*)$</span> <span class="pl-s">/index.html</span> [L]
+
+<span class="pl-c">   <span class="pl-c"> </span># 日志</span>
+    <span class="pl-k">ErrorLog</span>  ${APACHE_LOG_DIR}/example_error.log
+    <span class="pl-k">CustomLog</span> ${APACHE_LOG_DIR}/example_access.log combined
+&lt;/<span class="pl-e">VirtualHost</span>&gt;</pre></div>
+<p><strong>启用站点：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">a2ensite example.com.conf
+a2enmod rewrite ssl proxy proxy_http proxy_balancer headers expires
+apachectl configtest
+systemctl reload apache2</pre></div></div>
+<div style="font-size:small;margin-top:8px;float:right;">转载请注明出处</div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://helloblog.eik.cc">你好博客</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if("09/25/2026"!=""){
+    var startSite=new Date("09/25/2026");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行 "+diffDay+" 天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","techjiang/Gmeek-HelloBlog");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script><script src='https://blog.meekdai.com/Gmeek/plugins/lightbox.js'></script>
+
+</html>
