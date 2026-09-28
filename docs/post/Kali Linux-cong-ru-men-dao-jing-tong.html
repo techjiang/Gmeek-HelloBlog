@@ -1,0 +1,2397 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <meta name='description' content='你好博客是一个专注于技术分享、编程笔记与生活感悟的个人博客，提供高质量原创内容。'><meta name='keywords' content='你好博客,技术博客,编程笔记,Gmeek,前端开发,个人网站'><meta name='author' content='你好博客'><meta name='robots' content='index,follow'><link rel='canonical' href='https://helloblog.eik.cc/'><script type='application/ld+json'>{"@context":"https://schema.org","@type":"WebSite","name":"你好博客","url":"https://helloblog.eik.cc/","description":"专注于技术分享、编程笔记与生活感悟的个人博客","author":{"@type":"Person","name":"你好博客","email":"official@tech.asoe.cn"},"potentialAction":{"@type":"SearchAction","target":"https://helloblog.eik.cc/?q={search_term_string}","query-input":"required name=search_term_string"}}</script><script src='https://blog.meekdai.com/Gmeek/plugins/GmeekBSZ.js'></script><script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script>
+    <link rel="icon" href="https://img2.tofaka.com/autoupload/f/3624q/20260926/caKC/1024X1024/Hello-Logo.png"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="> **重要声明：** Kali Linux 是专业的网络安全测试与渗透测试操作系统，仅限在**获得明确授权**的环境中使用。">
+<meta property="og:title" content="Kali Linux从入门到精通">
+<meta property="og:description" content="> **重要声明：** Kali Linux 是专业的网络安全测试与渗透测试操作系统，仅限在**获得明确授权**的环境中使用。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://helloblog.eik.cc/post/Kali%20Linux-cong-ru-men-dao-jing-tong.html">
+<meta property="og:image" content="https://img2.tofaka.com/autoupload/f/3624q/20260926/caKC/1024X1024/Hello-Logo.png">
+<title>Kali Linux从入门到精通</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">Kali Linux从入门到精通</h1>
+<div class="title-right">
+    <a href="https://helloblog.eik.cc" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/techjiang/Gmeek-HelloBlog/issues/17" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><blockquote>
+<p><strong>重要声明：</strong> Kali Linux 是专业的网络安全测试与渗透测试操作系统，仅限在<strong>获得明确授权</strong>的环境中使用。未经授权对任何系统进行安全测试属于违法行为。本文档旨在帮助安全从业者、学生和研究人员正确学习和使用 Kali Linux。</p>
+</blockquote>
+<hr>
+<h2>目录</h2>
+<ul>
+<li><a href="#%E4%B8%80kali-linux-%E7%AE%80%E4%BB%8B">一、Kali Linux 简介</a></li>
+<li><a href="#%E4%BA%8C%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85">二、系统安装</a></li>
+<li><a href="#%E4%B8%89%E5%88%9D%E5%A7%8B%E9%85%8D%E7%BD%AE">三、初始配置</a></li>
+<li><a href="#%E5%9B%9B%E5%9F%BA%E7%A1%80%E6%93%8D%E4%BD%9C">四、基础操作</a></li>
+<li><a href="#%E4%BA%94%E8%BD%AF%E4%BB%B6%E5%8C%85%E7%AE%A1%E7%90%86">五、软件包管理</a></li>
+<li><a href="#%E5%85%AD%E5%B7%A5%E5%85%B7%E4%BD%93%E7%B3%BB%E6%A6%82%E8%A7%88">六、工具体系概览</a></li>
+<li><a href="#%E4%B8%83%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E4%B8%8E%E9%85%8D%E7%BD%AE">七、网络基础与配置</a></li>
+<li><a href="#%E5%85%ABweb-%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95%E5%9F%BA%E7%A1%80">八、Web 应用安全测试基础</a></li>
+<li><a href="#%E4%B9%9D%E6%97%A0%E7%BA%BF%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95%E5%9F%BA%E7%A1%80">九、无线安全测试基础</a></li>
+<li><a href="#%E5%8D%81%E6%95%B0%E5%AD%97%E5%8F%96%E8%AF%81%E4%B8%8E%E9%80%86%E5%90%91%E5%9F%BA%E7%A1%80">十、数字取证与逆向基础</a></li>
+<li><a href="#%E5%8D%81%E4%B8%80%E8%84%9A%E6%9C%AC%E4%B8%8E%E8%87%AA%E5%8A%A8%E5%8C%96">十一、脚本与自动化</a></li>
+<li><a href="#%E5%8D%81%E4%BA%8C%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%8E%E5%AE%9E%E9%AA%8C%E5%AE%A4%E6%90%AD%E5%BB%BA">十二、虚拟化与实验室搭建</a></li>
+<li><a href="#%E5%8D%81%E4%B8%89%E5%AD%A6%E4%B9%A0%E8%B7%AF%E5%BE%84%E4%B8%8E%E8%AE%A4%E8%AF%81">十三、学习路径与认证</a></li>
+<li><a href="#%E5%8D%81%E5%9B%9B%E6%B3%95%E5%BE%8B%E4%B8%8E%E4%BC%A6%E7%90%86%E8%A7%84%E8%8C%83">十四、法律与伦理规范</a></li>
+<li><a href="#%E5%8D%81%E4%BA%94%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5">十五、常见问题排查</a></li>
+</ul>
+<hr>
+<h2>一、Kali Linux 简介</h2>
+<h3>什么是 Kali Linux</h3>
+<p>Kali Linux 是由 <strong>Offensive Security</strong> 开发的基于 Debian 的 Linux 发行版，专门用于：</p>
+<ul>
+<li>渗透测试（Penetration Testing）</li>
+<li>安全审计（Security Auditing）</li>
+<li>数字取证（Digital Forensics）</li>
+<li>逆向工程（Reverse Engineering）</li>
+<li>安全研究与教育</li>
+</ul>
+<h3>主要特点</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>特点</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>预装 600+ 安全工具</td>
+<td>涵盖信息收集、漏洞分析、Web 测试、密码攻击等</td>
+</tr>
+<tr>
+<td>基于 Debian</td>
+<td>稳定、软件生态丰富</td>
+</tr>
+<tr>
+<td>免费开源</td>
+<td>完全免费，源码开放</td>
+</tr>
+<tr>
+<td>多架构支持</td>
+<td>x86_64、ARM、虚拟机镜像、云镜像</td>
+</tr>
+<tr>
+<td>可定制性</td>
+<td>支持高度定制与自定义 ISO</td>
+</tr>
+<tr>
+<td>滚动更新</td>
+<td>持续获取最新工具与安全更新</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>适用人群</h3>
+<ul>
+<li>网络安全从业者 / 渗透测试工程师</li>
+<li>安全运维人员</li>
+<li>网络安全专业学生</li>
+<li>CTF 竞赛选手</li>
+<li>安全研究人员</li>
+</ul>
+<h3>与其他发行版对比</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>发行版</th>
+<th>定位</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Kali Linux</strong></td>
+<td>渗透测试</td>
+<td>工具最全，社区最大</td>
+</tr>
+<tr>
+<td><strong>Parrot Security</strong></td>
+<td>渗透 + 隐私</td>
+<td>更轻量，注重隐私保护</td>
+</tr>
+<tr>
+<td><strong>BlackArch</strong></td>
+<td>渗透测试</td>
+<td>基于 Arch，工具超 2800 个</td>
+</tr>
+<tr>
+<td><strong>BackBox</strong></td>
+<td>安全测试</td>
+<td>基于 Ubuntu，轻量</td>
+</tr>
+<tr>
+<td><strong>REMnux</strong></td>
+<td>恶意软件分析</td>
+<td>专注逆向与恶意代码分析</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>官方资源</h3>
+<ul>
+<li>官网：<a href="https://www.kali.org" rel="nofollow">https://www.kali.org</a></li>
+<li>文档：<a href="https://www.kali.org/docs" rel="nofollow">https://www.kali.org/docs</a></li>
+<li>论坛：<a href="https://forums.kali.org" rel="nofollow">https://forums.kali.org</a></li>
+<li>博客：<a href="https://www.kali.org/blog" rel="nofollow">https://www.kali.org/blog</a></li>
+<li>GitHub：<a href="https://gitlab.com/kalilinux" rel="nofollow">https://gitlab.com/kalilinux</a></li>
+</ul>
+<hr>
+<h2>二、系统安装</h2>
+<h3>2.1 下载镜像</h3>
+<p>从官网下载页面获取最新镜像：<a href="https://www.kali.org/get-kali" rel="nofollow">https://www.kali.org/get-kali</a></p>
+<p><strong>常见镜像类型：</strong></p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>镜像类型</th>
+<th>适用场景</th>
+<th>大小</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Installer</td>
+<td>完整安装到物理机</td>
+<td>~4GB</td>
+</tr>
+<tr>
+<td>Weekly</td>
+<td>每周构建的安装镜像</td>
+<td>~4GB</td>
+</tr>
+<tr>
+<td>Virtual Machines</td>
+<td>预配置虚拟机镜像</td>
+<td>~3-5GB</td>
+</tr>
+<tr>
+<td>VMware / VirtualBox</td>
+<td>专用虚拟机镜像</td>
+<td>~3-5GB</td>
+</tr>
+<tr>
+<td>ARM</td>
+<td>树莓派等 ARM 设备</td>
+<td>变化</td>
+</tr>
+<tr>
+<td>Cloud</td>
+<td>AWS / Azure / Docker</td>
+<td>变化</td>
+</tr>
+<tr>
+<td>NetInstaller</td>
+<td>网络安装（最小镜像）</td>
+<td>~400MB</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><strong>验证镜像完整性（重要）：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 下载 SHA256SUMS 文件后验证</span>
+sha256sum -c SHA256SUMS <span class="pl-k">2&gt;&amp;1</span> <span class="pl-k">|</span> grep -v <span class="pl-s"><span class="pl-pds">'</span>FAILED<span class="pl-pds">'</span></span> <span class="pl-k">|</span> grep OK
+
+<span class="pl-c"><span class="pl-c">#</span> 或单独计算</span>
+sha256sum kali-linux-2024.x-installer-amd64.iso</pre></div>
+<h3>2.2 虚拟机安装（推荐入门）</h3>
+<h4>VMware Workstation</h4>
+<pre class="notranslate"><code class="notranslate">1. 打开 VMware → 文件 → 新建虚拟机
+2. 选择"典型"配置
+3. 选择"稍后安装操作系统"
+4. 客户机操作系统选择 Linux → Debian 12.x 64-bit
+5. 命名虚拟机，选择存储位置
+6. 磁盘大小建议 ≥ 80GB（勾选"将虚拟磁盘拆分成多个文件"）
+7. 自定义硬件：
+   - 内存：≥ 4GB（推荐 8GB）
+   - 处理器：≥ 2 核（推荐 4 核）
+   - 网络适配器：
+     - NAT（可以上网，推荐入门）
+     - 桥接（与主机同一网络段）
+     - 仅主机（隔离环境，推荐安全测试）
+8. 选择 ISO 镜像文件
+9. 开启虚拟机进行安装
+</code></pre>
+<h4>VirtualBox</h4>
+<pre class="notranslate"><code class="notranslate">1. 打开 VirtualBox → 新建
+2. 名称：Kali Linux
+3. 类型：Linux
+4. 版本：Debian (64-bit)
+5. 内存：≥ 4096MB
+6. 创建虚拟硬盘：
+   - 类型：VDI
+   - 大小：≥ 80GB
+7. 设置 → 存储 → 选择 ISO 镜像
+8. 设置 → 网络 → 选择网络模式
+9. 启动进行安装
+</code></pre>
+<h3>2.3 物理机安装</h3>
+<p><strong>准备工作：</strong></p>
+<ul>
+<li>8GB 以上 U 盘</li>
+<li>制作启动盘工具（Rufus / balenaEtcher / dd）</li>
+<li>备份重要数据</li>
+</ul>
+<p><strong>制作启动盘：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> Linux 下使用 dd</span>
+lsblk                          <span class="pl-c"><span class="pl-c">#</span> 确认 U 盘设备名（如 /dev/sdb）</span>
+sudo dd if=kali-linux-2024.x-installer-amd64.iso of=/dev/sdb bs=4M status=progress
+sync</pre></div>
+<pre class="notranslate"><code class="notranslate"># Windows 下使用 Rufus
+1. 打开 Rufus
+2. 选择 U 盘设备
+3. 选择 Kali ISO 镜像
+4. 分区类型：GPT（UEFI）或 MBR（Legacy BIOS）
+5. 文件系统：FAT32
+6. 点击"开始"
+</code></pre>
+<p><strong>安装步骤：</strong></p>
+<pre class="notranslate"><code class="notranslate">1. 设置 BIOS/UEFI 从 U 盘启动
+2. 选择安装方式：
+   - Graphical Install（图形安装，推荐）
+   - Install（命令行安装）
+   - Live（试用，不安装）
+   - Advanced options
+3. 语言：中文（简体）或 English
+4. 地区：China 或你的所在地区
+5. 键盘布局：American English（推荐）
+6. 主机名：kali（自定义）
+7. 域名：留空
+8. 设置 root 密码（牢记）
+9. 分区方案：
+   - Guided - use entire disk（整个磁盘，推荐）
+   - Guided - use entire disk and set up LVM（LVM 分区）
+   - Guided - use entire disk and set up encrypted LVM（加密 LVM）
+   - Manual（手动分区）
+10. 软件选择：
+    - 桌面环境：Xfce（推荐）/ GNOME / KDE
+    - 工具集合：根据需要勾选
+11. 安装 GRUB 引导
+12. 安装完成，重启
+</code></pre>
+<p><strong>推荐分区方案（手动）：</strong></p>
+<pre class="notranslate"><code class="notranslate">/         50-60GB   ext4    系统根分区
+/boot     1GB       ext4    引导分区（可选）
+/swap     内存大小   swap    交换分区（内存 &lt; 8GB 时建议）
+/home     剩余空间   ext4    用户数据分区
+</code></pre>
+<h3>2.4 双系统安装（Windows + Kali）</h3>
+<pre class="notranslate"><code class="notranslate">1. 在 Windows 中压缩磁盘，留出 ≥ 80GB 未分配空间
+2. 设置 BIOS/UEFI：
+   - 关闭 Secure Boot
+   - 关闭 Fast Boot
+   - 设置从 U 盘启动
+3. 安装 Kali，分区时选择"手动"
+4. 在未分配空间中创建分区（不要动 Windows 分区）
+5. 安装 GRUB（会自动检测 Windows）
+6. 重启后可选择进入 Windows 或 Kali
+</code></pre>
+<h3>2.5 WSL2 安装（Windows 用户推荐）</h3>
+<div class="highlight highlight-source-powershell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 启用 WSL</span>
+wsl <span class="pl-k">--</span>install
+
+<span class="pl-c"><span class="pl-c">#</span> 或者手动启用</span>
+<span class="pl-c1">dism.exe</span> <span class="pl-k">/</span>online <span class="pl-k">/</span><span class="pl-c1">enable-feature</span> <span class="pl-k">/</span>featurename:Microsoft<span class="pl-k">-</span>Windows<span class="pl-k">-</span>Subsystem<span class="pl-k">-</span>Linux <span class="pl-k">/</span>all <span class="pl-k">/</span>norestart
+<span class="pl-c1">dism.exe</span> <span class="pl-k">/</span>online <span class="pl-k">/</span><span class="pl-c1">enable-feature</span> <span class="pl-k">/</span>featurename:VirtualMachinePlatform <span class="pl-k">/</span>all <span class="pl-k">/</span>norestart
+
+<span class="pl-c"><span class="pl-c">#</span> 重启后设置 WSL2 为默认</span>
+wsl <span class="pl-k">--</span><span class="pl-c1">set-default</span><span class="pl-k">-</span>version <span class="pl-c1">2</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 从 Microsoft Store 安装 Kali Linux</span>
+<span class="pl-c"><span class="pl-c">#</span> 或命令行：</span>
+wsl <span class="pl-k">--</span>install <span class="pl-k">-</span>d kali<span class="pl-k">-</span>linux
+
+<span class="pl-c"><span class="pl-c">#</span> 更新 Kali</span>
+sudo apt update &amp;&amp; sudo apt full<span class="pl-k">-</span>upgrade <span class="pl-k">-</span>y</pre></div>
+<blockquote>
+<p><g-emoji class="g-emoji" alias="warning">⚠️</g-emoji> WSL2 版本的 Kali 部分功能受限（如无线网卡注入、某些需要内核模块的工具）。</p>
+</blockquote>
+<h3>2.6 Docker 安装</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 拉取 Kali Docker 镜像</span>
+docker pull kalilinux/kali-rolling
+
+<span class="pl-c"><span class="pl-c">#</span> 运行容器</span>
+docker run -it --rm kalilinux/kali-rolling /bin/bash
+
+<span class="pl-c"><span class="pl-c">#</span> 在容器内更新并安装工具</span>
+apt update <span class="pl-k">&amp;&amp;</span> apt install -y kali-linux-headless
+
+<span class="pl-c"><span class="pl-c">#</span> 运行指定工具</span>
+docker run -it --rm kalilinux/kali-rolling nmap --version</pre></div>
+<hr>
+<h2>三、初始配置</h2>
+<h3>3.1 系统更新</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 更新软件包索引</span>
+sudo apt update
+
+<span class="pl-c"><span class="pl-c">#</span> 升级所有软件包</span>
+sudo apt full-upgrade -y
+
+<span class="pl-c"><span class="pl-c">#</span> 清理不需要的包</span>
+sudo apt autoremove -y
+sudo apt autoclean
+
+<span class="pl-c"><span class="pl-c">#</span> 重新启动（如果内核更新了）</span>
+sudo reboot</pre></div>
+<p><strong>配置自动更新：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt install unattended-upgrades
+sudo dpkg-reconfigure unattended-upgrades</pre></div>
+<h3>3.2 创建普通用户</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 默认只有 root 用户，建议创建普通用户</span>
+sudo adduser kaliuser
+
+<span class="pl-c"><span class="pl-c">#</span> 添加到 sudo 组</span>
+sudo usermod -aG sudo kaliuser
+
+<span class="pl-c"><span class="pl-c">#</span> 切换用户</span>
+su - kaliuser
+
+<span class="pl-c"><span class="pl-c">#</span> 测试 sudo</span>
+sudo whoami</pre></div>
+<p><strong>配置 sudo 免密码（可选）：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo visudo
+<span class="pl-c"><span class="pl-c">#</span> 添加一行：</span>
+kaliuser ALL=(ALL:ALL) NOPASSWD: ALL</pre></div>
+<h3>3.3 中文支持</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 安装中文字体</span>
+sudo apt install -y fonts-wqy-zenhei fonts-wqy-microhei
+
+<span class="pl-c"><span class="pl-c">#</span> 安装中文输入法（Fcitx5）</span>
+sudo apt install -y fcitx5 fcitx5-chinese-addons
+
+<span class="pl-c"><span class="pl-c">#</span> 设置环境变量</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">'</span>export GTK_IM_MODULE=fcitx</span>
+<span class="pl-s">export QT_IM_MODULE=fcitx</span>
+<span class="pl-s">export XMODIFIERS=@im=fcitx<span class="pl-pds">'</span></span> <span class="pl-k">&gt;&gt;</span> <span class="pl-k">~</span>/.profile
+
+<span class="pl-c"><span class="pl-c">#</span> 设置系统语言</span>
+sudo dpkg-reconfigure locales
+<span class="pl-c"><span class="pl-c">#</span> 选择 zh_CN.UTF-8 UTF-8</span></pre></div>
+<h3>3.4 网络配置</h3>
+<p><strong>有线网络（DHCP）：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> NetworkManager（图形界面管理）</span>
+nmcli device status
+nmcli device connect eth0
+
+<span class="pl-c"><span class="pl-c">#</span> 或使用 dhclient</span>
+sudo dhclient eth0</pre></div>
+<p><strong>静态 IP 配置：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 编辑 /etc/network/interfaces</span>
+sudo nano /etc/network/interfaces
+
+<span class="pl-c"><span class="pl-c">#</span> 添加配置</span>
+auto eth0
+iface eth0 inet static
+    address 192.168.1.100
+    netmask 255.255.255.0
+    gateway 192.168.1.1
+    dns-nameservers 8.8.8.8 8.8.4.4
+
+<span class="pl-c"><span class="pl-c">#</span> 重启网络</span>
+sudo systemctl restart networking</pre></div>
+<p><strong>NetworkManager 命令行配置：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 查看连接</span>
+nmcli connection show
+
+<span class="pl-c"><span class="pl-c">#</span> 修改连接</span>
+nmcli connection modify <span class="pl-s"><span class="pl-pds">"</span>Wired connection 1<span class="pl-pds">"</span></span> ipv4.addresses 192.168.1.100/24
+nmcli connection modify <span class="pl-s"><span class="pl-pds">"</span>Wired connection 1<span class="pl-pds">"</span></span> ipv4.gateway 192.168.1.1
+nmcli connection modify <span class="pl-s"><span class="pl-pds">"</span>Wired connection 1<span class="pl-pds">"</span></span> ipv4.dns <span class="pl-s"><span class="pl-pds">"</span>8.8.8.8 8.8.4.4<span class="pl-pds">"</span></span>
+nmcli connection modify <span class="pl-s"><span class="pl-pds">"</span>Wired connection 1<span class="pl-pds">"</span></span> ipv4.method manual
+
+<span class="pl-c"><span class="pl-c">#</span> 生效</span>
+nmcli connection up <span class="pl-s"><span class="pl-pds">"</span>Wired connection 1<span class="pl-pds">"</span></span></pre></div>
+<p><strong>DNS 配置：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 编辑 /etc/resolv.conf（临时）</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>nameserver 8.8.8.8<span class="pl-pds">"</span></span> <span class="pl-k">|</span> sudo tee /etc/resolv.conf
+
+<span class="pl-c"><span class="pl-c">#</span> 永久配置（systemd-resolved）</span>
+sudo nano /etc/systemd/resolved.conf
+<span class="pl-c"><span class="pl-c">#</span> DNS=8.8.8.8 8.8.4.4</span>
+sudo systemctl restart systemd-resolved</pre></div>
+<h3>3.5 SSH 配置</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 安装 SSH 服务</span>
+sudo apt install -y openssh-server
+
+<span class="pl-c"><span class="pl-c">#</span> 启动服务</span>
+sudo systemctl <span class="pl-c1">enable</span> ssh
+sudo systemctl start ssh
+
+<span class="pl-c"><span class="pl-c">#</span> 查看状态</span>
+sudo systemctl status ssh
+
+<span class="pl-c"><span class="pl-c">#</span> 查看端口</span>
+ss -tlnp <span class="pl-k">|</span> grep ssh
+
+<span class="pl-c"><span class="pl-c">#</span> 远程连接</span>
+ssh kaliuser@192.168.1.100
+
+<span class="pl-c"><span class="pl-c">#</span> 修改 SSH 配置（/etc/ssh/sshd_config）</span>
+sudo nano /etc/ssh/sshd_config
+<span class="pl-c"><span class="pl-c">#</span> 常用配置：</span>
+<span class="pl-c"><span class="pl-c">#</span> Port 2222                     # 修改端口</span>
+<span class="pl-c"><span class="pl-c">#</span> PermitRootLogin no            # 禁止 root 登录</span>
+<span class="pl-c"><span class="pl-c">#</span> PasswordAuthentication yes    # 允许密码登录</span>
+<span class="pl-c"><span class="pl-c">#</span> PubkeyAuthentication yes      # 允许密钥登录</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 重启 SSH</span>
+sudo systemctl restart ssh</pre></div>
+<p><strong>SSH 密钥登录（更安全）：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 生成密钥对</span>
+ssh-keygen -t ed25519 -C <span class="pl-s"><span class="pl-pds">"</span>kali@lab<span class="pl-pds">"</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> 复制公钥到远程主机</span>
+ssh-copy-id kaliuser@192.168.1.100
+
+<span class="pl-c"><span class="pl-c">#</span> 使用密钥登录</span>
+ssh -i <span class="pl-k">~</span>/.ssh/id_ed25519 kaliuser@192.168.1.100</pre></div>
+<h3>3.6 桌面环境配置</h3>
+<p><strong>安装额外桌面（以 KDE 为例）：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt install -y kali-desktop-kde
+
+<span class="pl-c"><span class="pl-c">#</span> 切换默认桌面</span>
+sudo update-alternatives --config x-session-manager
+
+<span class="pl-c"><span class="pl-c">#</span> 或在登录界面选择桌面环境</span></pre></div>
+<p><strong>常用桌面工具：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt install -y \
+    firefox-esr \
+    flameshot \
+    terminator \
+    vlc \
+    gparted \
+    timeshift</pre></div>
+<h3>3.7 主题与外观</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 安装 Kali 主题</span>
+sudo apt install -y kali-themes-common
+
+<span class="pl-c"><span class="pl-c">#</span> Xfce 外观设置</span>
+<span class="pl-c"><span class="pl-c">#</span> 应用程序 → 设置 → 外观 → 选择 Kali-Dark 主题</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 终端美化</span>
+sudo apt install -y zsh
+sh -c <span class="pl-s"><span class="pl-pds">"</span><span class="pl-s"><span class="pl-pds">$(</span>curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh<span class="pl-pds">)</span></span><span class="pl-pds">"</span></span></pre></div>
+<h3>3.8 系统快照与备份</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> Timeshift 系统快照（推荐）</span>
+sudo apt install -y timeshift
+
+<span class="pl-c"><span class="pl-c">#</span> 命令行创建快照</span>
+sudo timeshift --create --comments <span class="pl-s"><span class="pl-pds">"</span>安装完成后<span class="pl-pds">"</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> 列出快照</span>
+sudo timeshift --list
+
+<span class="pl-c"><span class="pl-c">#</span> 恢复快照</span>
+sudo timeshift --restore
+
+<span class="pl-c"><span class="pl-c">#</span> rsync 备份</span>
+sudo rsync -aAXv --exclude={<span class="pl-s"><span class="pl-pds">"</span>/dev/*<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>/proc/*<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>/sys/*<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>/tmp/*<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>/run/*<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>/mnt/*<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>/media/*<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>/lost+found<span class="pl-pds">"</span></span>} / /mnt/backup/</pre></div>
+<hr>
+<h2>四、基础操作</h2>
+<h3>4.1 终端基础</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 打开终端快捷键</span>
+<span class="pl-c"><span class="pl-c">#</span> Xfce: Ctrl + Alt + T</span>
+<span class="pl-c"><span class="pl-c">#</span> GNOME: Ctrl + Alt + T</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 常用快捷键</span>
+Ctrl + C          <span class="pl-c"><span class="pl-c">#</span> 终止当前命令</span>
+Ctrl + Z          <span class="pl-c"><span class="pl-c">#</span> 暂停任务（fg 恢复）</span>
+Ctrl + D          <span class="pl-c"><span class="pl-c">#</span> 退出终端 / 输入结束</span>
+Ctrl + R          <span class="pl-c"><span class="pl-c">#</span> 搜索历史命令</span>
+Ctrl + L          <span class="pl-c"><span class="pl-c">#</span> 清屏</span>
+Ctrl + A          <span class="pl-c"><span class="pl-c">#</span> 光标移到行首</span>
+Ctrl + E          <span class="pl-c"><span class="pl-c">#</span> 光标移到行尾</span>
+Ctrl + U          <span class="pl-c"><span class="pl-c">#</span> 删除光标前内容</span>
+Ctrl + K          <span class="pl-c"><span class="pl-c">#</span> 删除光标后内容</span>
+Ctrl + W          <span class="pl-c"><span class="pl-c">#</span> 删除前一个单词</span>
+Tab               <span class="pl-c"><span class="pl-c">#</span> 自动补全</span></pre></div>
+<h3>4.2 文件系统结构</h3>
+<pre class="notranslate"><code class="notranslate">/                 根目录
+├── bin           基本命令（二进制文件）
+├── boot          引导文件
+├── dev           设备文件
+├── etc           系统配置文件
+├── home          用户主目录
+│   ├── kali      默认用户目录
+│   └── kaliuser  自建用户目录
+├── lib / lib64   系统库文件
+├── media         可移动设备挂载点
+├── mnt           临时挂载点
+├── opt           第三方软件
+├── proc          进程信息（虚拟文件系统）
+├── root          root 用户主目录
+├── run           运行时数据
+├── sbin          系统管理命令
+├── srv           服务数据
+├── sys           系统信息（虚拟文件系统）
+├── tmp           临时文件
+├── usr           用户程序和数据
+│   ├── bin       用户命令
+│   ├── local     本地安装的软件
+│   ├── share     共享数据
+│   └── sbin      系统管理命令
+└── var           可变数据（日志等）
+    ├── log       日志文件
+    └── www       Web 服务器数据
+</code></pre>
+<h3>4.3 Kali 常用目录</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 工具相关</span>
+/usr/share/wordlists/       <span class="pl-c"><span class="pl-c">#</span> 字典文件</span>
+/usr/share/nmap/            <span class="pl-c"><span class="pl-c">#</span> Nmap 脚本</span>
+/usr/share/metasploit-framework/  <span class="pl-c"><span class="pl-c">#</span> Metasploit</span>
+/usr/share/john/            <span class="pl-c"><span class="pl-c">#</span> John the Ripper</span>
+/usr/share/hashcat/         <span class="pl-c"><span class="pl-c">#</span> Hashcat</span>
+/usr/share/dirb/            <span class="pl-c"><span class="pl-c">#</span> Dirb 字典</span>
+/usr/share/wordlists/rockyou.txt.gz  <span class="pl-c"><span class="pl-c">#</span> 常用密码字典</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 日志</span>
+/var/log/auth.log           <span class="pl-c"><span class="pl-c">#</span> 认证日志</span>
+/var/log/syslog             <span class="pl-c"><span class="pl-c">#</span> 系统日志</span>
+/var/log/kern.log           <span class="pl-c"><span class="pl-c">#</span> 内核日志</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 网络配置</span>
+/etc/network/interfaces     <span class="pl-c"><span class="pl-c">#</span> 网络接口配置</span>
+/etc/hosts                  <span class="pl-c"><span class="pl-c">#</span> 主机名映射</span>
+/etc/resolv.conf            <span class="pl-c"><span class="pl-c">#</span> DNS 配置</span>
+/etc/ssh/sshd_config        <span class="pl-c"><span class="pl-c">#</span> SSH 服务配置</span></pre></div>
+<h3>4.4 用户与权限</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 用户管理</span>
+sudo adduser username           <span class="pl-c"><span class="pl-c">#</span> 创建用户</span>
+sudo userdel -r username        <span class="pl-c"><span class="pl-c">#</span> 删除用户</span>
+sudo usermod -aG sudo username  <span class="pl-c"><span class="pl-c">#</span> 添加到 sudo 组</span>
+sudo passwd username            <span class="pl-c"><span class="pl-c">#</span> 修改密码</span>
+groups username                 <span class="pl-c"><span class="pl-c">#</span> 查看用户所属组</span>
+id username                     <span class="pl-c"><span class="pl-c">#</span> 查看用户 UID/GID</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 文件权限</span>
+chmod 755 file                  <span class="pl-c"><span class="pl-c">#</span> rwxr-xr-x</span>
+chmod +x script.sh              <span class="pl-c"><span class="pl-c">#</span> 添加执行权限</span>
+chmod -R 755 directory/         <span class="pl-c"><span class="pl-c">#</span> 递归修改</span>
+chown user:group file           <span class="pl-c"><span class="pl-c">#</span> 修改所有者</span>
+chown -R user:group directory/
+
+<span class="pl-c"><span class="pl-c">#</span> 特殊权限</span>
+chmod +s file                   <span class="pl-c"><span class="pl-c">#</span> SUID（以文件所有者身份执行）</span>
+chmod +t directory              <span class="pl-c"><span class="pl-c">#</span> Sticky bit（只有所有者能删除文件）</span></pre></div>
+<h3>4.5 进程管理</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 查看进程</span>
+ps aux                          <span class="pl-c"><span class="pl-c">#</span> 所有进程</span>
+ps aux <span class="pl-k">|</span> grep nmap              <span class="pl-c"><span class="pl-c">#</span> 查找进程</span>
+top                             <span class="pl-c"><span class="pl-c">#</span> 实时监控</span>
+htop                            <span class="pl-c"><span class="pl-c">#</span> 更好的监控工具</span>
+pgrep -f <span class="pl-s"><span class="pl-pds">"</span>process_name<span class="pl-pds">"</span></span>         <span class="pl-c"><span class="pl-c">#</span> 按名称查找 PID</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 管理进程</span>
+<span class="pl-c1">kill</span> PID                        <span class="pl-c"><span class="pl-c">#</span> 终止进程</span>
+<span class="pl-c1">kill</span> -9 PID                     <span class="pl-c"><span class="pl-c">#</span> 强制终止</span>
+killall process_name            <span class="pl-c"><span class="pl-c">#</span> 按名称终止</span>
+pkill -f <span class="pl-s"><span class="pl-pds">"</span>pattern<span class="pl-pds">"</span></span>              <span class="pl-c"><span class="pl-c">#</span> 按模式终止</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 后台运行</span>
+nohup <span class="pl-c1">command</span> <span class="pl-k">&amp;</span>                 <span class="pl-c"><span class="pl-c">#</span> 后台运行，不受终端关闭影响</span>
+screen -S session_name          <span class="pl-c"><span class="pl-c">#</span> 创建 screen 会话</span>
+tmux new -s session_name        <span class="pl-c"><span class="pl-c">#</span> 创建 tmux 会话</span>
+
+<span class="pl-c"><span class="pl-c">#</span> systemd 服务管理</span>
+systemctl start/stop/restart/status/enable/disable service_name
+systemctl list-units --type=service
+journalctl -u service_name -f   <span class="pl-c"><span class="pl-c">#</span> 查看服务日志</span></pre></div>
+<hr>
+<h2>五、软件包管理</h2>
+<h3>5.1 APT 包管理</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 基本操作</span>
+sudo apt update                          <span class="pl-c"><span class="pl-c">#</span> 更新软件包索引</span>
+sudo apt upgrade                         <span class="pl-c"><span class="pl-c">#</span> 升级已安装包</span>
+sudo apt full-upgrade                    <span class="pl-c"><span class="pl-c">#</span> 完整升级（处理依赖变化）</span>
+sudo apt install package_name            <span class="pl-c"><span class="pl-c">#</span> 安装</span>
+sudo apt install -y package_name         <span class="pl-c"><span class="pl-c">#</span> 自动确认安装</span>
+sudo apt remove package_name             <span class="pl-c"><span class="pl-c">#</span> 卸载（保留配置）</span>
+sudo apt purge package_name              <span class="pl-c"><span class="pl-c">#</span> 彻底卸载</span>
+sudo apt autoremove                      <span class="pl-c"><span class="pl-c">#</span> 清理不需要的依赖</span>
+sudo apt search keyword                  <span class="pl-c"><span class="pl-c">#</span> 搜索</span>
+sudo apt show package_name               <span class="pl-c"><span class="pl-c">#</span> 查看包详情</span>
+sudo apt list --installed                <span class="pl-c"><span class="pl-c">#</span> 已安装列表</span>
+sudo apt list --upgradable               <span class="pl-c"><span class="pl-c">#</span> 可升级列表</span></pre></div>
+<h3>5.2 Kali 元包（工具集合）</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 核心工具集</span>
+sudo apt install kali-linux-core          <span class="pl-c"><span class="pl-c">#</span> 核心工具</span>
+sudo apt install kali-linux-default       <span class="pl-c"><span class="pl-c">#</span> 默认工具集</span>
+sudo apt install kali-linux-large         <span class="pl-c"><span class="pl-c">#</span> 大型工具集</span>
+sudo apt install kali-linux-everything    <span class="pl-c"><span class="pl-c">#</span> 所有工具（非常大）</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 按类别安装</span>
+sudo apt install kali-tools-web           <span class="pl-c"><span class="pl-c">#</span> Web 应用安全</span>
+sudo apt install kali-tools-passwords     <span class="pl-c"><span class="pl-c">#</span> 密码攻击</span>
+sudo apt install kali-tools-wireless      <span class="pl-c"><span class="pl-c">#</span> 无线安全</span>
+sudo apt install kali-tools-reverse-engineering  <span class="pl-c"><span class="pl-c">#</span> 逆向工程</span>
+sudo apt install kali-tools-forensics     <span class="pl-c"><span class="pl-c">#</span> 数字取证</span>
+sudo apt install kali-tools-exploitation   <span class="pl-c"><span class="pl-c">#</span> 漏洞利用</span>
+sudo apt install kali-tools-sniffing-spoofing    <span class="pl-c"><span class="pl-c">#</span> 嗅探与欺骗</span>
+sudo apt install kali-tools-vulnerability <span class="pl-c"><span class="pl-c">#</span> 漏洞分析</span>
+sudo apt install kali-tools-information-gathering <span class="pl-c"><span class="pl-c">#</span> 信息收集</span>
+sudo apt install kali-tools-post-exploitation     <span class="pl-c"><span class="pl-c">#</span> 后渗透</span>
+sudo apt install kali-tools-social-engineering    <span class="pl-c"><span class="pl-c">#</span> 社会工程</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 查看所有元包</span>
+apt list <span class="pl-k">2&gt;</span>/dev/null <span class="pl-k">|</span> grep kali-tools-</pre></div>
+<h3>5.3 安装第三方软件</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 安装 .deb 包</span>
+sudo dpkg -i package.deb
+sudo apt install -f                     <span class="pl-c"><span class="pl-c">#</span> 修复依赖</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 安装 .tar.gz 源码包</span>
+tar -xzf package.tar.gz
+<span class="pl-c1">cd</span> package
+./configure
+make
+sudo make install
+
+<span class="pl-c"><span class="pl-c">#</span> Snap 包</span>
+sudo apt install snapd
+sudo snap install package_name
+
+<span class="pl-c"><span class="pl-c">#</span> Flatpak</span>
+sudo apt install flatpak
+flatpak install flathub package_name
+
+<span class="pl-c"><span class="pl-c">#</span> Python 包</span>
+pip3 install package_name
+pip3 install -r requirements.txt
+
+<span class="pl-c"><span class="pl-c">#</span> Node.js 包</span>
+npm install -g package_name
+
+<span class="pl-c"><span class="pl-c">#</span> Go 工具</span>
+go install github.com/user/tool@latest</pre></div>
+<h3>5.4 添加仓库</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 编辑源列表</span>
+sudo nano /etc/apt/sources.list
+
+<span class="pl-c"><span class="pl-c">#</span> Kali 官方源（国内可换阿里云/清华源）</span>
+<span class="pl-c"><span class="pl-c">#</span> 官方源</span>
+deb http://http.kali.org/kali kali-rolling main contrib non-free non-free-firmware
+
+<span class="pl-c"><span class="pl-c">#</span> 清华源</span>
+deb https://mirrors.tuna.tsinghua.edu.cn/kali kali-rolling main contrib non-free non-free-firmware
+
+<span class="pl-c"><span class="pl-c">#</span> 阿里云源</span>
+deb https://mirrors.aliyun.com/kali kali-rolling main contrib non-free non-free-firmware
+
+<span class="pl-c"><span class="pl-c">#</span> 更新</span>
+sudo apt update</pre></div>
+<hr>
+<h2>六、工具体系概览</h2>
+<blockquote>
+<p>以下为 Kali 预装工具的<strong>分类概览</strong>，帮助了解工具生态。具体使用请在授权环境中学习。</p>
+</blockquote>
+<h3>6.1 信息收集（Information Gathering）</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>工具</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">nmap</code></td>
+<td>网络扫描与主机发现</td>
+</tr>
+<tr>
+<td><code class="notranslate">masscan</code></td>
+<td>大规模端口扫描</td>
+</tr>
+<tr>
+<td><code class="notranslate">dnsenum</code></td>
+<td>DNS 信息收集</td>
+</tr>
+<tr>
+<td><code class="notranslate">dnsrecon</code></td>
+<td>DNS 枚举</td>
+</tr>
+<tr>
+<td><code class="notranslate">theHarvester</code></td>
+<td>邮箱、子域名收集</td>
+</tr>
+<tr>
+<td><code class="notranslate">recon-ng</code></td>
+<td>信息收集框架</td>
+</tr>
+<tr>
+<td><code class="notranslate">Maltego</code></td>
+<td>开源情报分析（图形化）</td>
+</tr>
+<tr>
+<td><code class="notranslate">spiderfoot</code></td>
+<td>自动化 OSINT</td>
+</tr>
+<tr>
+<td><code class="notranslate">shodan</code></td>
+<td>网络设备搜索引擎</td>
+</tr>
+<tr>
+<td><code class="notranslate">whois</code></td>
+<td>域名注册信息查询</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>6.2 漏洞分析（Vulnerability Analysis）</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>工具</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">nikto</code></td>
+<td>Web 服务器漏洞扫描</td>
+</tr>
+<tr>
+<td><code class="notranslate">nuclei</code></td>
+<td>模板化漏洞扫描</td>
+</tr>
+<tr>
+<td><code class="notranslate">openvas</code></td>
+<td>综合漏洞评估系统</td>
+</tr>
+<tr>
+<td><code class="notranslate">lynis</code></td>
+<td>系统安全审计</td>
+</tr>
+<tr>
+<td><code class="notranslate">legion</code></td>
+<td>网络漏洞扫描（图形化）</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>6.3 Web 应用安全（Web Application Analysis）</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>工具</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">burpsuite</code></td>
+<td>Web 安全测试平台</td>
+</tr>
+<tr>
+<td><code class="notranslate">sqlmap</code></td>
+<td>SQL 注入检测与利用</td>
+</tr>
+<tr>
+<td><code class="notranslate">dirb</code> / <code class="notranslate">dirbuster</code></td>
+<td>目录/文件枚举</td>
+</tr>
+<tr>
+<td><code class="notranslate">gobuster</code></td>
+<td>目录/文件/DNS 枚举</td>
+</tr>
+<tr>
+<td><code class="notranslate">ffuf</code></td>
+<td>Web Fuzzer</td>
+</tr>
+<tr>
+<td><code class="notranslate">wpscan</code></td>
+<td>WordPress 安全扫描</td>
+</tr>
+<tr>
+<td><code class="notranslate">whatweb</code></td>
+<td>Web 技术识别</td>
+</tr>
+<tr>
+<td><code class="notranslate">commix</code></td>
+<td>命令注入测试</td>
+</tr>
+<tr>
+<td><code class="notranslate">zaproxy</code></td>
+<td>OWASP ZAP 代理</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>6.4 密码攻击（Password Attacks）</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>工具</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">hashcat</code></td>
+<td>GPU 密码破解</td>
+</tr>
+<tr>
+<td><code class="notranslate">john</code></td>
+<td>John the Ripper 密码破解</td>
+</tr>
+<tr>
+<td><code class="notranslate">hydra</code></td>
+<td>网络登录暴力破解</td>
+</tr>
+<tr>
+<td><code class="notranslate">medusa</code></td>
+<td>并行网络登录破解</td>
+</tr>
+<tr>
+<td><code class="notranslate">cewl</code></td>
+<td>从网站生成字典</td>
+</tr>
+<tr>
+<td><code class="notranslate">crunch</code></td>
+<td>自定义字典生成</td>
+</tr>
+<tr>
+<td><code class="notranslate">wordlists</code></td>
+<td>内置字典集合</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>6.5 无线安全（Wireless Attacks）</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>工具</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">aircrack-ng</code></td>
+<td>无线安全审计套件</td>
+</tr>
+<tr>
+<td><code class="notranslate">wifite</code></td>
+<td>自动化无线攻击</td>
+</tr>
+<tr>
+<td><code class="notranslate">kismet</code></td>
+<td>无线网络检测</td>
+</tr>
+<tr>
+<td><code class="notranslate">fern-wifi-cracker</code></td>
+<td>图形化 WiFi 审计</td>
+</tr>
+<tr>
+<td><code class="notranslate">hostapd-mana</code></td>
+<td>恶意热点创建</td>
+</tr>
+<tr>
+<td><code class="notranslate">macchanger</code></td>
+<td>MAC 地址修改</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>6.6 漏洞利用（Exploitation Tools）</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>工具</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">metasploit-framework</code></td>
+<td>渗透测试框架</td>
+</tr>
+<tr>
+<td><code class="notranslate">msfconsole</code></td>
+<td>Metasploit 控制台</td>
+</tr>
+<tr>
+<td><code class="notranslate">searchsploit</code></td>
+<td>Exploit-DB 离线搜索</td>
+</tr>
+<tr>
+<td><code class="notranslate">beef-xss</code></td>
+<td>浏览器利用框架</td>
+</tr>
+<tr>
+<td><code class="notranslate">commix</code></td>
+<td>命令注入利用</td>
+</tr>
+<tr>
+<td><code class="notranslate">sqlmap</code></td>
+<td>SQL 注入利用</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>6.7 嗅探与欺骗（Sniffing &amp; Spoofing）</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>工具</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">wireshark</code></td>
+<td>网络抓包分析（图形化）</td>
+</tr>
+<tr>
+<td><code class="notranslate">tcpdump</code></td>
+<td>命令行抓包</td>
+</tr>
+<tr>
+<td><code class="notranslate">ettercap</code></td>
+<td>中间人攻击</td>
+</tr>
+<tr>
+<td><code class="notranslate">bettercap</code></td>
+<td>网络攻击与监控</td>
+</tr>
+<tr>
+<td><code class="notranslate">responder</code></td>
+<td>LLMNR/NBT-NS 中毒</td>
+</tr>
+<tr>
+<td><code class="notranslate">mitmproxy</code></td>
+<td>HTTP/HTTPS 代理</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>6.8 后渗透（Post Exploitation）</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>工具</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">meterpreter</code></td>
+<td>Metasploit 后渗透载荷</td>
+</tr>
+<tr>
+<td><code class="notranslate">empire</code></td>
+<td>后渗透框架</td>
+</tr>
+<tr>
+<td><code class="notranslate">powersploit</code></td>
+<td>PowerShell 后渗透工具</td>
+</tr>
+<tr>
+<td><code class="notranslate">weevely</code></td>
+<td>PHP Webshell 管理</td>
+</tr>
+<tr>
+<td><code class="notranslate">chisel</code></td>
+<td>隧道工具</td>
+</tr>
+<tr>
+<td><code class="notranslate">proxychains</code></td>
+<td>代理链</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>6.9 数字取证（Forensics）</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>工具</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">autopsy</code></td>
+<td>数字取证平台（图形化）</td>
+</tr>
+<tr>
+<td><code class="notranslate">sleuthkit</code></td>
+<td>文件系统分析</td>
+</tr>
+<tr>
+<td><code class="notranslate">volatility</code></td>
+<td>内存取证</td>
+</tr>
+<tr>
+<td><code class="notranslate">binwalk</code></td>
+<td>固件分析</td>
+</tr>
+<tr>
+<td><code class="notranslate">foremost</code></td>
+<td>文件恢复</td>
+</tr>
+<tr>
+<td><code class="notranslate">bulk_extractor</code></td>
+<td>大规模数据提取</td>
+</tr>
+<tr>
+<td><code class="notranslate">dc3dd</code></td>
+<td>取证级磁盘拷贝</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>6.10 逆向工程（Reverse Engineering）</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>工具</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">ghidra</code></td>
+<td>NSA 开源逆向工具</td>
+</tr>
+<tr>
+<td><code class="notranslate">radare2</code></td>
+<td>逆向分析框架</td>
+</tr>
+<tr>
+<td><code class="notranslate">gdb</code></td>
+<td>GNU 调试器</td>
+</tr>
+<tr>
+<td><code class="notranslate">pwntools</code></td>
+<td>CTF/PWN 开发框架</td>
+</tr>
+<tr>
+<td><code class="notranslate">checksec</code></td>
+<td>二进制安全检查</td>
+</tr>
+<tr>
+<td><code class="notranslate">strace</code></td>
+<td>系统调用追踪</td>
+</tr>
+<tr>
+<td><code class="notranslate">ltrace</code></td>
+<td>库函数调用追踪</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>6.11 社会工程（Social Engineering）</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>工具</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">set</code> (SET)</td>
+<td>社会工程学工具集</td>
+</tr>
+<tr>
+<td><code class="notranslate">maltego</code></td>
+<td>情报分析</td>
+</tr>
+<tr>
+<td><code class="notranslate">theHarvester</code></td>
+<td>信息收集</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>6.12 报告工具</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>工具</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">dradis</code></td>
+<td>渗透测试报告协作</td>
+</tr>
+<tr>
+<td><code class="notranslate">faraday</code></td>
+<td>集成安全测试平台</td>
+</tr>
+<tr>
+<td><code class="notranslate">pandoc</code></td>
+<td>文档格式转换</td>
+</tr>
+<tr>
+<td><code class="notranslate">cutycapt</code></td>
+<td>网页截图</td>
+</tr>
+<tr>
+<td><code class="notranslate">keepnote</code></td>
+<td>笔记工具</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<h2>七、网络基础与配置</h2>
+<h3>7.1 网络模式</h3>
+<pre class="notranslate"><code class="notranslate">NAT（网络地址转换）：
+- 虚拟机通过主机共享 IP 上网
+- 外部无法直接访问虚拟机
+- 适合：上网、下载工具、一般学习
+
+桥接（Bridged）：
+- 虚拟机与主机在同一网络，独立 IP
+- 同网络其他设备可以访问
+- 适合：模拟真实网络环境
+
+仅主机（Host-Only）：
+- 虚拟机只能与主机通信
+- 完全隔离的网络环境
+- 适合：安全测试、靶场实验
+
+内部网络（Internal）：
+- 虚拟机之间可以通信
+- 与主机和外部网络隔离
+- 适合：多虚拟机互联实验
+</code></pre>
+<h3>7.2 网络排查</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 查看网络接口</span>
+ip addr show
+ifconfig
+
+<span class="pl-c"><span class="pl-c">#</span> 查看路由表</span>
+ip route show
+route -n
+
+<span class="pl-c"><span class="pl-c">#</span> 测试连通性</span>
+ping -c 4 8.8.8.8
+ping -c 4 google.com
+
+<span class="pl-c"><span class="pl-c">#</span> DNS 解析</span>
+nslookup google.com
+dig google.com
+dig +short google.com
+
+<span class="pl-c"><span class="pl-c">#</span> 查看连接</span>
+ss -tlnp
+netstat -tlnp
+
+<span class="pl-c"><span class="pl-c">#</span> 追踪路由</span>
+traceroute google.com
+mtr google.com
+
+<span class="pl-c"><span class="pl-c">#</span> 抓包</span>
+sudo tcpdump -i eth0 -nn
+sudo tcpdump -i eth0 port 80 -nn
+sudo tcpdump -i any -w capture.pcap
+
+<span class="pl-c"><span class="pl-c">#</span> 查看 ARP 表</span>
+arp -a
+ip neigh show
+
+<span class="pl-c"><span class="pl-c">#</span> 接口监控</span>
+nload                           <span class="pl-c"><span class="pl-c">#</span> 实时流量监控</span>
+iftop                           <span class="pl-c"><span class="pl-c">#</span> 连接流量监控</span>
+nethogs                         <span class="pl-c"><span class="pl-c">#</span> 按进程显示流量</span></pre></div>
+<h3>7.3 防火墙（iptables / nftables）</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> iptables 基本操作</span>
+sudo iptables -L -n -v                  <span class="pl-c"><span class="pl-c">#</span> 查看规则</span>
+sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT   <span class="pl-c"><span class="pl-c">#</span> 允许 SSH</span>
+sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT   <span class="pl-c"><span class="pl-c">#</span> 允许 HTTP</span>
+sudo iptables -A INPUT -j DROP                       <span class="pl-c"><span class="pl-c">#</span> 拒绝其他</span>
+sudo iptables -F                                   <span class="pl-c"><span class="pl-c">#</span> 清除规则</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 保存规则</span>
+sudo apt install iptables-persistent
+sudo netfilter-persistent save
+
+<span class="pl-c"><span class="pl-c">#</span> nftables（新版默认）</span>
+sudo nft list ruleset
+sudo nft add table inet filter
+sudo nft add chain inet filter input { <span class="pl-c1">type</span> filter hook input priority 0 <span class="pl-cce">\;</span> }</pre></div>
+<h3>7.4 代理配置</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 环境变量代理</span>
+<span class="pl-k">export</span> http_proxy=http://127.0.0.1:8080
+<span class="pl-k">export</span> https_proxy=http://127.0.0.1:8080
+<span class="pl-k">export</span> no_proxy=localhost,127.0.0.1
+
+<span class="pl-c"><span class="pl-c">#</span> apt 代理</span>
+sudo nano /etc/apt/apt.conf.d/proxy
+<span class="pl-c"><span class="pl-c">#</span> Acquire::http::Proxy "http://127.0.0.1:8080";</span>
+
+<span class="pl-c"><span class="pl-c">#</span> proxychains（通过代理运行工具）</span>
+sudo nano /etc/proxychains4.conf
+<span class="pl-c"><span class="pl-c">#</span> 在末尾添加 SOCKS5 代理</span>
+<span class="pl-c"><span class="pl-c">#</span> socks5 127.0.0.1 9050</span>
+
+proxychains nmap -sT target_ip</pre></div>
+<h3>7.5 VPN 配置</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> OpenVPN</span>
+sudo apt install -y openvpn
+sudo openvpn --config client.ovpn
+
+<span class="pl-c"><span class="pl-c">#</span> WireGuard</span>
+sudo apt install -y wireguard
+sudo wg-quick up wg0
+
+<span class="pl-c"><span class="pl-c">#</span> 查看 VPN 状态</span>
+sudo wg show</pre></div>
+<hr>
+<h2>八、Web 应用安全测试基础</h2>
+<h3>8.1 测试流程概览</h3>
+<pre class="notranslate"><code class="notranslate">合法 Web 安全测试的标准流程：
+
+1. 信息收集
+   ├── 域名 / 子域名枚举
+   ├── IP / 端口识别
+   ├── Web 技术指纹识别
+   ├── 目录 / 文件枚举
+   └── 搜索引擎 / GitHub 信息泄露
+
+2. 漏洞扫描
+   ├── 自动化扫描（Nikto / Nuclei / OWASP ZAP）
+   ├── 手动测试（Burp Suite）
+   └── 版本漏洞匹配
+
+3. 漏洞验证与利用（在授权范围内）
+   ├── SQL 注入测试
+   ├── XSS 测试
+   ├── 文件上传测试
+   ├── 认证 / 会话管理测试
+   ├── 访问控制测试
+   └── 业务逻辑测试
+
+4. 报告输出
+   ├── 漏洞描述
+   ├── 复现步骤
+   ├── 风险等级
+   ├── 修复建议
+   └── 截图 / 证据
+</code></pre>
+<h3>8.2 OWASP Top 10（2021）</h3>
+<pre class="notranslate"><code class="notranslate">A01: Broken Access Control          失效的访问控制
+A02: Cryptographic Failures         加密机制失效
+A03: Injection                      注入（SQL、NoSQL、OS 命令、LDAP）
+A04: Insecure Design                不安全的设计
+A05: Security Misconfiguration      安全配置错误
+A06: Vulnerable Components          脆弱的组件
+A07: Identification &amp; Auth Failures 身份认证与会话管理失效
+A08: Software &amp; Data Integrity      软件与数据完整性失效
+A09: Security Logging Failures      安全日志与监控失效
+A10: SSRF                           服务端请求伪造
+</code></pre>
+<h3>8.3 常用 Web 测试工具操作</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 目录枚举</span>
+gobuster dir -u http://target.com -w /usr/share/wordlists/dirb/common.txt -x php,html,txt
+ffuf -u http://target.com/FUZZ -w /usr/share/wordlists/dirb/common.txt
+
+<span class="pl-c"><span class="pl-c">#</span> 技术识别</span>
+whatweb http://target.com
+nikto -h http://target.com
+
+<span class="pl-c"><span class="pl-c">#</span> Nuclei 漏洞扫描</span>
+nuclei -u http://target.com -t /path/to/templates/
+nuclei -l urls.txt -severity high,critical
+
+<span class="pl-c"><span class="pl-c">#</span> WordPress 扫描</span>
+wpscan --url http://target.com --enumerate u,ap,at
+
+<span class="pl-c"><span class="pl-c">#</span> 目录扫描字典</span>
+ls /usr/share/wordlists/dirb/
+ls /usr/share/seclists/    <span class="pl-c"><span class="pl-c">#</span> 需安装</span>
+sudo apt install seclists</pre></div>
+<h3>8.4 Burp Suite 使用要点</h3>
+<pre class="notranslate"><code class="notranslate">1. 配置代理
+   - Burp → Proxy → Options → 监听 127.0.0.1:8080
+   - 浏览器设置代理：127.0.0.1:8080
+   - 导入 Burp CA 证书（拦截 HTTPS 需要）
+
+2. 核心模块
+   - Proxy：抓包与修改请求
+   - Repeater：手动重放请求
+   - Intruder：自动化测试（参数 Fuzzing）
+   - Scanner：自动漏洞扫描（Pro 版）
+   - Decoder：编码/解码工具
+   - Comparer：对比工具
+   - Extender：插件扩展
+
+3. 常用操作
+   - 右键 → Send to Repeater（手动测试）
+   - 右键 → Send to Intruder（参数测试）
+   - 右键 → Do active scan（主动扫描）
+</code></pre>
+<h3>8.5 SQL 注入测试（基础概念）</h3>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> SQL 注入检测（在授权测试环境中）</span>
+<span class="pl-c"><span class="pl-c">--</span> 输入 ' 观察是否报错</span>
+<span class="pl-c"><span class="pl-c">--</span> 输入 ' OR '1'='1 观察是否返回全部数据</span>
+<span class="pl-c"><span class="pl-c">--</span> 输入 ' AND 1=1 -- 与 ' AND 1=2 -- 对比差异</span>
+
+<span class="pl-c"><span class="pl-c">--</span> sqlmap 自动化检测（授权测试）</span>
+sqlmap <span class="pl-k">-</span>u <span class="pl-s"><span class="pl-pds">"</span>http://target.com/page?id=1<span class="pl-pds">"</span></span> <span class="pl-c"><span class="pl-c">--</span>dbs</span>
+sqlmap <span class="pl-k">-</span>u <span class="pl-s"><span class="pl-pds">"</span>http://target.com/page?id=1<span class="pl-pds">"</span></span> <span class="pl-c"><span class="pl-c">--</span>tables -D database_name</span>
+sqlmap <span class="pl-k">-</span>u <span class="pl-s"><span class="pl-pds">"</span>http://target.com/page?id=1<span class="pl-pds">"</span></span> <span class="pl-c"><span class="pl-c">--</span>dump -T table_name -D database_name</span>
+
+<span class="pl-c"><span class="pl-c">--</span> 从请求文件运行</span>
+sqlmap <span class="pl-k">-</span>r <span class="pl-c1">request</span>.<span class="pl-c1">txt</span> <span class="pl-c"><span class="pl-c">--</span>batch</span></pre></div>
+<h3>8.6 安全编码实践（防御视角）</h3>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-c">// 使用参数化查询（防止 SQL 注入）</span>
+<span class="pl-smi">PreparedStatement</span> <span class="pl-s1">ps</span> = <span class="pl-s1">conn</span>.<span class="pl-en">prepareStatement</span>(<span class="pl-s">"SELECT * FROM users WHERE id = ?"</span>);
+<span class="pl-s1">ps</span>.<span class="pl-en">setInt</span>(<span class="pl-c1">1</span>, <span class="pl-s1">userId</span>);
+
+<span class="pl-c">// 输入验证</span>
+<span class="pl-k">if</span> (!<span class="pl-s1">input</span>.<span class="pl-en">matches</span>(<span class="pl-s">"^[a-zA-Z0-9]+$"</span>)) {
+    <span class="pl-k">throw</span> <span class="pl-k">new</span> <span class="pl-smi">IllegalArgumentException</span>(<span class="pl-s">"Invalid input"</span>);
+}
+
+<span class="pl-c">// 输出编码（防止 XSS）</span>
+<span class="pl-smi">String</span> <span class="pl-s1">safe</span> = <span class="pl-smi">StringEscapeUtils</span>.<span class="pl-en">escapeHtml4</span>(<span class="pl-s1">userInput</span>);
+
+<span class="pl-c">// 安全响应头</span>
+<span class="pl-s1">response</span>.<span class="pl-en">setHeader</span>(<span class="pl-s">"X-Content-Type-Options"</span>, <span class="pl-s">"nosniff"</span>);
+<span class="pl-s1">response</span>.<span class="pl-en">setHeader</span>(<span class="pl-s">"X-Frame-Options"</span>, <span class="pl-s">"DENY"</span>);
+<span class="pl-s1">response</span>.<span class="pl-en">setHeader</span>(<span class="pl-s">"Content-Security-Policy"</span>, <span class="pl-s">"default-src 'self'"</span>);
+<span class="pl-s1">response</span>.<span class="pl-en">setHeader</span>(<span class="pl-s">"Strict-Transport-Security"</span>, <span class="pl-s">"max-age=31536000"</span>);</pre></div>
+<hr>
+<h2>九、无线安全测试基础</h2>
+<h3>9.1 前提条件</h3>
+<pre class="notranslate"><code class="notranslate">- 支持监听模式（Monitor Mode）的无线网卡
+- 常见芯片：Atheros AR9271、Ralink RT3070、Realtek RTL8812AU
+- 在授权环境中测试
+</code></pre>
+<h3>9.2 网卡配置</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 查看无线接口</span>
+iwconfig
+ip link show
+
+<span class="pl-c"><span class="pl-c">#</span> 检查是否支持监听模式</span>
+sudo airmon-ng
+sudo airmon-ng check
+
+<span class="pl-c"><span class="pl-c">#</span> 开启监听模式</span>
+sudo airmon-ng start wlan0
+
+<span class="pl-c"><span class="pl-c">#</span> 查看监听接口</span>
+iwconfig wlan0mon
+
+<span class="pl-c"><span class="pl-c">#</span> 关闭监听模式</span>
+sudo airmon-ng stop wlan0mon
+
+<span class="pl-c"><span class="pl-c">#</span> 修改 MAC 地址</span>
+sudo macchanger -r wlan0</pre></div>
+<h3>9.3 无线安全评估流程（授权测试）</h3>
+<pre class="notranslate"><code class="notranslate">1. 侦察（Reconnaissance）
+   - 识别目标 AP（SSID、BSSID、信道、加密方式）
+   - 识别客户端设备
+
+2. 抓包（Capture）
+   - 捕获握手包（WPA/WPA2）
+   - 捕获管理帧
+
+3. 分析（Analysis）
+   - 分析加密强度
+   - 识别配置弱点
+
+4. 报告（Report）
+   - 记录发现
+   - 提供加固建议
+</code></pre>
+<h3>9.4 无线安全加固建议</h3>
+<pre class="notranslate"><code class="notranslate">1. 使用 WPA3 或 WPA2-AES（避免 WEP、WPA-TKIP）
+2. 使用强密码（12 位以上，混合字符）
+3. 隐藏 SSID（辅助措施）
+4. 启用 MAC 过滤（辅助措施）
+5. 关闭 WPS
+6. 更新路由器固件
+7. 定期更换密码
+8. 使用企业级认证（802.1X / RADIUS）
+9. 网络隔离（访客网络、IoT 网络分开）
+10. 启用无线入侵检测（WIDS）
+</code></pre>
+<hr>
+<h2>十、数字取证与逆向基础</h2>
+<h3>10.1 数字取证概述</h3>
+<pre class="notranslate"><code class="notranslate">数字取证主要方向：
+├── 磁盘取证：磁盘镜像、文件恢复、时间线分析
+├── 内存取证：内存转储、进程分析、恶意代码检测
+├── 网络取证：流量分析、协议还原、攻击痕迹追踪
+└── 移动设备取证：手机数据提取与分析
+</code></pre>
+<h3>10.2 磁盘取证</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 创建磁盘镜像（取证级）</span>
+sudo dc3dd if=/dev/sdb of=/evidence/disk.img hash=sha256 log=/evidence/log.txt
+
+<span class="pl-c"><span class="pl-c">#</span> 或使用 dd</span>
+sudo dd if=/dev/sdb of=/evidence/disk.img bs=4M status=progress
+
+<span class="pl-c"><span class="pl-c">#</span> 验证镜像完整性</span>
+sha256sum /evidence/disk.img
+
+<span class="pl-c"><span class="pl-c">#</span> 挂载镜像（只读）</span>
+sudo mount -o ro,loop /evidence/disk.img /mnt/evidence
+
+<span class="pl-c"><span class="pl-c">#</span> 文件系统分析（Sleuth Kit）</span>
+fls /evidence/disk.img              <span class="pl-c"><span class="pl-c">#</span> 列出文件</span>
+icat /evidence/disk.img 48          <span class="pl-c"><span class="pl-c">#</span> 提取文件（按 inode）</span>
+mmls /evidence/disk.img             <span class="pl-c"><span class="pl-c">#</span> 查看分区表</span>
+fsstat /evidence/disk.img           <span class="pl-c"><span class="pl-c">#</span> 文件系统信息</span>
+mactime -d /evidence/timeline.body  <span class="pl-c"><span class="pl-c">#</span> 时间线分析</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 文件恢复</span>
+foremost -i /evidence/disk.img -o /evidence/recovered/
+photorec /evidence/disk.img
+
+<span class="pl-c"><span class="pl-c">#</span> Autopsy（图形化取证平台）</span>
+sudo autopsy
+<span class="pl-c"><span class="pl-c">#</span> 浏览器访问 http://localhost:9999/autopsy</span></pre></div>
+<h3>10.3 内存取证</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 获取内存转储（Windows - WinPmem）</span>
+<span class="pl-c"><span class="pl-c">#</span> Linux - LiME 或 /proc/kcore</span>
+
+<span class="pl-c"><span class="pl-c">#</span> Volatility 内存分析</span>
+volatility -f memory.dump imageinfo                    <span class="pl-c"><span class="pl-c">#</span> 识别系统信息</span>
+volatility -f memory.dump --profile=Win10x64 pslist     <span class="pl-c"><span class="pl-c">#</span> 进程列表</span>
+volatility -f memory.dump --profile=Win10x64 netscan   <span class="pl-c"><span class="pl-c">#</span> 网络连接</span>
+volatility -f memory.dump --profile=Win10x64 filescan  <span class="pl-c"><span class="pl-c">#</span> 文件扫描</span>
+volatility -f memory.dump --profile=Win10x64 hashdump  <span class="pl-c"><span class="pl-c">#</span> 密码哈希</span>
+volatility -f memory.dump --profile=Win10x64 malfind   <span class="pl-c"><span class="pl-c">#</span> 可疑代码</span></pre></div>
+<h3>10.4 逆向工程基础</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 文件分析</span>
+file binary                     <span class="pl-c"><span class="pl-c">#</span> 识别文件类型</span>
+strings binary <span class="pl-k">|</span> grep -i flag   <span class="pl-c"><span class="pl-c">#</span> 提取字符串</span>
+binwalk binary                  <span class="pl-c"><span class="pl-c">#</span> 分析嵌入文件</span>
+checksec binary                 <span class="pl-c"><span class="pl-c">#</span> 检查安全机制</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 静态分析</span>
+radare2 binary                  <span class="pl-c"><span class="pl-c">#</span> Radare2 分析</span>
+<span class="pl-c"><span class="pl-c">#</span> r2 常用命令：aaa（分析）、pdf（反汇编）、iz（字符串）</span>
+
+<span class="pl-c"><span class="pl-c">#</span> Ghidra（图形化逆向）</span>
+ghidraRun
+
+<span class="pl-c"><span class="pl-c">#</span> 动态分析</span>
+gdb binary                      <span class="pl-c"><span class="pl-c">#</span> 调试</span>
+strace ./binary                 <span class="pl-c"><span class="pl-c">#</span> 系统调用追踪</span>
+ltrace ./binary                 <span class="pl-c"><span class="pl-c">#</span> 库函数追踪</span>
+
+<span class="pl-c"><span class="pl-c">#</span> Python 逆向辅助（pwntools）</span>
+python3 -c <span class="pl-s"><span class="pl-pds">"</span>from pwn import *; print(hex(ELF('./binary').entry))<span class="pl-pds">"</span></span></pre></div>
+<hr>
+<h2>十一、脚本与自动化</h2>
+<h3>11.1 Bash 脚本</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#!</span>/bin/bash</span>
+<span class="pl-c"><span class="pl-c">#</span> 批量端口扫描脚本示例</span>
+
+TARGETS_FILE=<span class="pl-s"><span class="pl-pds">"</span>targets.txt<span class="pl-pds">"</span></span>
+OUTPUT_DIR=<span class="pl-s"><span class="pl-pds">"</span>scan_results<span class="pl-pds">"</span></span>
+mkdir -p <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$OUTPUT_DIR</span><span class="pl-pds">"</span></span>
+
+<span class="pl-k">while</span> IFS= <span class="pl-c1">read</span> -r target<span class="pl-k">;</span> <span class="pl-k">do</span>
+    <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>[*] Scanning <span class="pl-smi">$target</span>...<span class="pl-pds">"</span></span>
+    nmap -sV -O -oA <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$OUTPUT_DIR</span>/<span class="pl-smi">$target</span><span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$target</span><span class="pl-pds">"</span></span>
+    <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>[+] Done: <span class="pl-smi">$target</span><span class="pl-pds">"</span></span>
+<span class="pl-k">done</span> <span class="pl-k">&lt;</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$TARGETS_FILE</span><span class="pl-pds">"</span></span>
+
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>[*] All scans complete. Results in <span class="pl-smi">$OUTPUT_DIR</span>/<span class="pl-pds">"</span></span></pre></div>
+<h3>11.2 Python 脚本</h3>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-c">#!/usr/bin/env python3</span>
+<span class="pl-s">"""批量端口扫描示例"""</span>
+
+<span class="pl-k">import</span> <span class="pl-s1">socket</span>
+<span class="pl-k">import</span> <span class="pl-s1">sys</span>
+<span class="pl-k">from</span> <span class="pl-s1">concurrent</span>.<span class="pl-s1">futures</span> <span class="pl-k">import</span> <span class="pl-v">ThreadPoolExecutor</span>
+
+<span class="pl-k">def</span> <span class="pl-en">scan_port</span>(<span class="pl-s1">host</span>, <span class="pl-s1">port</span>):
+    <span class="pl-k">try</span>:
+        <span class="pl-k">with</span> <span class="pl-s1">socket</span>.<span class="pl-c1">socket</span>(<span class="pl-s1">socket</span>.<span class="pl-c1">AF_INET</span>, <span class="pl-s1">socket</span>.<span class="pl-c1">SOCK_STREAM</span>) <span class="pl-k">as</span> <span class="pl-s1">s</span>:
+            <span class="pl-s1">s</span>.<span class="pl-c1">settimeout</span>(<span class="pl-c1">1</span>)
+            <span class="pl-s1">result</span> <span class="pl-c1">=</span> <span class="pl-s1">s</span>.<span class="pl-c1">connect_ex</span>((<span class="pl-s1">host</span>, <span class="pl-s1">port</span>))
+            <span class="pl-k">return</span> <span class="pl-s1">port</span> <span class="pl-k">if</span> <span class="pl-s1">result</span> <span class="pl-c1">==</span> <span class="pl-c1">0</span> <span class="pl-k">else</span> <span class="pl-c1">None</span>
+    <span class="pl-k">except</span> <span class="pl-v">Exception</span>:
+        <span class="pl-k">return</span> <span class="pl-c1">None</span>
+
+<span class="pl-k">def</span> <span class="pl-en">scan_host</span>(<span class="pl-s1">host</span>, <span class="pl-s1">ports</span>):
+    <span class="pl-s1">open_ports</span> <span class="pl-c1">=</span> []
+    <span class="pl-k">with</span> <span class="pl-en">ThreadPoolExecutor</span>(<span class="pl-s1">max_workers</span><span class="pl-c1">=</span><span class="pl-c1">100</span>) <span class="pl-k">as</span> <span class="pl-s1">executor</span>:
+        <span class="pl-s1">futures</span> <span class="pl-c1">=</span> {<span class="pl-s1">executor</span>.<span class="pl-c1">submit</span>(<span class="pl-s1">scan_port</span>, <span class="pl-s1">host</span>, <span class="pl-s1">p</span>): <span class="pl-s1">p</span> <span class="pl-k">for</span> <span class="pl-s1">p</span> <span class="pl-c1">in</span> <span class="pl-s1">ports</span>}
+        <span class="pl-k">for</span> <span class="pl-s1">future</span> <span class="pl-c1">in</span> <span class="pl-s1">futures</span>:
+            <span class="pl-s1">result</span> <span class="pl-c1">=</span> <span class="pl-s1">future</span>.<span class="pl-c1">result</span>()
+            <span class="pl-k">if</span> <span class="pl-s1">result</span>:
+                <span class="pl-s1">open_ports</span>.<span class="pl-c1">append</span>(<span class="pl-s1">result</span>)
+    <span class="pl-k">return</span> <span class="pl-en">sorted</span>(<span class="pl-s1">open_ports</span>)
+
+<span class="pl-k">if</span> <span class="pl-s1">__name__</span> <span class="pl-c1">==</span> <span class="pl-s">"__main__"</span>:
+    <span class="pl-s1">host</span> <span class="pl-c1">=</span> <span class="pl-s1">sys</span>.<span class="pl-c1">argv</span>[<span class="pl-c1">1</span>] <span class="pl-k">if</span> <span class="pl-en">len</span>(<span class="pl-s1">sys</span>.<span class="pl-c1">argv</span>) <span class="pl-c1">&gt;</span> <span class="pl-c1">1</span> <span class="pl-k">else</span> <span class="pl-s">"127.0.0.1"</span>
+    <span class="pl-s1">ports</span> <span class="pl-c1">=</span> <span class="pl-en">range</span>(<span class="pl-c1">1</span>, <span class="pl-c1">1025</span>)
+    <span class="pl-s1">open_ports</span> <span class="pl-c1">=</span> <span class="pl-en">scan_host</span>(<span class="pl-s1">host</span>, <span class="pl-s1">ports</span>)
+    <span class="pl-en">print</span>(<span class="pl-s">f"Open ports on <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">host</span><span class="pl-kos">}</span></span>: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">open_ports</span><span class="pl-kos">}</span></span>"</span>)</pre></div>
+<h3>11.3 Nmap 脚本引擎（NSE）</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 查看脚本</span>
+ls /usr/share/nmap/scripts/
+nmap --script-help all
+
+<span class="pl-c"><span class="pl-c">#</span> 使用脚本</span>
+nmap --script=http-title -p 80 target_ip
+nmap --script=vuln target_ip
+nmap --script=ssl-enum-ciphers -p 443 target_ip
+
+<span class="pl-c"><span class="pl-c">#</span> 自定义脚本（Lua）</span>
+<span class="pl-c"><span class="pl-c">#</span> 放在 /usr/share/nmap/scripts/ 目录</span>
+<span class="pl-c"><span class="pl-c">#</span> nmap --script=my-script target_ip</span></pre></div>
+<h3>11.4 自动化测试报告</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 批量扫描并生成报告</span>
+<span class="pl-c"><span class="pl-c">#!</span>/bin/bash</span>
+TARGET=<span class="pl-smi">$1</span>
+DATE=<span class="pl-s"><span class="pl-pds">$(</span>date +%Y%m%d_%H%M%S<span class="pl-pds">)</span></span>
+REPORT_DIR=<span class="pl-s"><span class="pl-pds">"</span>reports/<span class="pl-smi">${TARGET}</span>_<span class="pl-smi">${DATE}</span><span class="pl-pds">"</span></span>
+mkdir -p <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT_DIR</span><span class="pl-pds">"</span></span>
+
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>[*] Starting assessment for <span class="pl-smi">$TARGET</span><span class="pl-pds">"</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> 端口扫描</span>
+nmap -sV -sC -oA <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT_DIR</span>/nmap<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$TARGET</span><span class="pl-pds">"</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> Web 扫描</span>
+nikto -h <span class="pl-s"><span class="pl-pds">"</span>http://<span class="pl-smi">$TARGET</span><span class="pl-pds">"</span></span> -output <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT_DIR</span>/nikto.txt<span class="pl-pds">"</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> 目录枚举</span>
+gobuster dir -u <span class="pl-s"><span class="pl-pds">"</span>http://<span class="pl-smi">$TARGET</span><span class="pl-pds">"</span></span> -w /usr/share/wordlists/dirb/common.txt \
+    -o <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$REPORT_DIR</span>/gobuster.txt<span class="pl-pds">"</span></span>
+
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>[*] Assessment complete. Report in <span class="pl-smi">$REPORT_DIR</span>/<span class="pl-pds">"</span></span></pre></div>
+<hr>
+<h2>十二、虚拟化与实验室搭建</h2>
+<h3>12.1 搭建靶场环境</h3>
+<pre class="notranslate"><code class="notranslate">推荐靶场平台（合法学习用）：
+
+1. DVWA（Damn Vulnerable Web Application）
+   - Web 漏洞练习
+   - docker-compose up -d
+
+2. WebGoat（OWASP）
+   - OWASP Top 10 学习
+   - docker run -p 8080:8080 webgoat/webgoat
+
+3. VulnHub
+   - 虚拟机靶场镜像下载
+   - https://www.vulnhub.com
+
+4. HackTheBox
+   - 在线渗透测试练习平台
+   - https://www.hackthebox.com
+
+5. TryHackMe
+   - 入门友好的安全学习平台
+   - https://tryhackme.com
+
+6. PortSwigger Web Security Academy
+   - Web 安全免费实验室
+   - https://portswigger.net/web-security
+
+7. OWASP Juice Shop
+   - 现代 Web 应用漏洞练习
+   - docker run -d -p 3000:3000 bkimminich/juice-shop
+
+8. Metasploitable
+   - 故意配置脆弱的 Linux 靶机
+   - 用于练习 Metasploit
+
+9. Vulhub（Docker 漏洞环境）
+   - https://github.com/vulhub/vulhub
+   - 覆盖大量 CVE 漏洞环境
+
+10. PicoCTF / CTFHub
+    - CTF 竞赛练习
+</code></pre>
+<h3>12.2 Docker 靶场管理</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 启动 DVWA</span>
+git clone https://github.com/digininja/DVWA.git
+<span class="pl-c1">cd</span> DVWA
+docker-compose up -d
+
+<span class="pl-c"><span class="pl-c">#</span> 启动 Juice Shop</span>
+docker run -d --name juice-shop -p 3000:3000 bkimminich/juice-shop
+
+<span class="pl-c"><span class="pl-c">#</span> 启动 Vulhub 环境</span>
+git clone https://github.com/vulhub/vulhub.git
+<span class="pl-c1">cd</span> vulhub/some-vulnerability/
+docker-compose up -d
+
+<span class="pl-c"><span class="pl-c">#</span> 管理</span>
+docker ps                          <span class="pl-c"><span class="pl-c">#</span> 查看运行中的靶场</span>
+docker-compose down                <span class="pl-c"><span class="pl-c">#</span> 停止</span>
+docker-compose logs                <span class="pl-c"><span class="pl-c">#</span> 查看日志</span></pre></div>
+<h3>12.3 多虚拟机实验室拓扑</h3>
+<pre class="notranslate"><code class="notranslate">推荐实验拓扑：
+
+[攻击机 Kali] ←→ [内部网络 192.168.56.0/24] ←→ [靶机群]
+                                                    ├── Metasploitable2
+                                                    ├── DVWA (Web)
+                                                    ├── OWASP Broken Web Apps
+                                                    └── Windows Server (AD)
+
+VMware/VirtualBox 网络配置：
+- Kali: Host-Only + NAT（双网卡）
+- 靶机: Host-Only（仅内部网络）
+</code></pre>
+<h3>12.4 CTF 学习环境</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> CTF 常用工具</span>
+sudo apt install -y \
+    steghide \
+    binwalk \
+    foremost \
+    zsteg \
+    exiftool \
+    radare2 \
+    ghidra \
+    gdb \
+    pwntools \
+    ropgadget \
+    one_gadget \
+    volatility3
+
+<span class="pl-c"><span class="pl-c">#</span> Python CTF 库</span>
+pip3 install pwntools pycryptodome requests beautifulsoup4 z3-solver</pre></div>
+<hr>
+<h2>十三、学习路径与认证</h2>
+<h3>13.1 入门阶段（0-3 个月）</h3>
+<pre class="notranslate"><code class="notranslate">学习内容：
+├── Linux 基础命令与系统管理
+├── 计算机网络基础（TCP/IP、HTTP、DNS）
+├── Python / Bash 脚本基础
+├── 虚拟机安装与配置
+├── Kali Linux 基本操作
+└── 法律法规与职业道德
+
+推荐资源：
+- Kali Linux 官方文档
+- 《鸟哥的 Linux 私房菜》
+- 《计算机网络：自顶向下方法》
+- TryHackMe（Beginner Path）
+- OverTheWire（Bandit 系列）
+</code></pre>
+<h3>13.2 初级阶段（3-6 个月）</h3>
+<pre class="notranslate"><code class="notranslate">学习内容：
+├── Web 安全基础（OWASP Top 10）
+├── 网络扫描与信息收集
+├── 常用安全工具（Nmap、Burp Suite、SQLMap）
+├── 密码学基础
+├── 操作系统安全
+└── CTF 入门（Web、Misc）
+
+推荐资源：
+- PortSwigger Web Security Academy
+- DVWA / WebGoat / Juice Shop
+- 《白帽子讲 Web 安全》
+- 《Web 应用安全权威指南》
+- HackTheBox（Easy Machines）
+</code></pre>
+<h3>13.3 中级阶段（6-12 个月）</h3>
+<pre class="notranslate"><code class="notranslate">学习内容：
+├── 渗透测试方法论（PTES、OSSTMM）
+├── 漏洞原理与利用
+├── 内网渗透基础
+├── 无线安全
+├── 逆向工程入门
+├── CTF 进阶（Pwn、Reverse、Crypto）
+└── 安全报告编写
+
+推荐资源：
+- 《Metasploit 渗透测试指南》
+- 《黑客攻防技术宝典：Web 实战篇》
+- HackTheBox（Medium Machines）
+- VulnHub 靶场
+- CTFHub / BUUCTF / 攻防世界
+</code></pre>
+<h3>13.4 高级阶段（12 个月以上）</h3>
+<pre class="notranslate"><code class="notranslate">学习内容：
+├── 高级渗透测试（红队攻防）
+├── 内网深度渗透（AD 域、横向移动）
+├── 漏洞挖掘（源码审计、Fuzzing）
+├── 二进制安全（Pwn、内核漏洞）
+├── 安全工具开发
+├── 应急响应与溯源
+└── 安全架构设计
+
+推荐资源：
+- 《内网安全攻防》
+- 《0day 安全：软件漏洞分析技术》
+- HackTheBox（Hard/Insane Machines）
+- 国内外安全会议（DEF CON、KCon、XCon）
+- CVE 漏洞复现
+</code></pre>
+<h3>13.5 认证体系</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>认证</th>
+<th>颁发机构</th>
+<th>定位</th>
+<th>难度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CompTIA Security+</strong></td>
+<td>CompTIA</td>
+<td>安全基础</td>
+<td>⭐⭐</td>
+</tr>
+<tr>
+<td><strong>CEH</strong></td>
+<td>EC-Council</td>
+<td>道德黑客</td>
+<td>⭐⭐⭐</td>
+</tr>
+<tr>
+<td><strong>eJPT</strong></td>
+<td>INE/eLearnSecurity</td>
+<td>入门渗透测试</td>
+<td>⭐⭐</td>
+</tr>
+<tr>
+<td><strong>OSCP</strong></td>
+<td>OffSec (Offensive Security)</td>
+<td>实战渗透测试</td>
+<td>⭐⭐⭐⭐</td>
+</tr>
+<tr>
+<td><strong>OSWE</strong></td>
+<td>OffSec</td>
+<td>Web 应用高级安全</td>
+<td>⭐⭐⭐⭐⭐</td>
+</tr>
+<tr>
+<td><strong>OSEP</strong></td>
+<td>OffSec</td>
+<td>高级渗透测试</td>
+<td>⭐⭐⭐⭐⭐</td>
+</tr>
+<tr>
+<td><strong>OSCE3</strong></td>
+<td>OffSec</td>
+<td>综合高级认证</td>
+<td>⭐⭐⭐⭐⭐</td>
+</tr>
+<tr>
+<td><strong>GPEN</strong></td>
+<td>GIAC</td>
+<td>渗透测试</td>
+<td>⭐⭐⭐⭐</td>
+</tr>
+<tr>
+<td><strong>GXPN</strong></td>
+<td>GIAC</td>
+<td>高级渗透测试</td>
+<td>⭐⭐⭐⭐⭐</td>
+</tr>
+<tr>
+<td><strong>CISP</strong></td>
+<td>中国信息安全测评中心</td>
+<td>国内安全认证</td>
+<td>⭐⭐⭐</td>
+</tr>
+<tr>
+<td><strong>CISP-PTE</strong></td>
+<td>中国信息安全测评中心</td>
+<td>渗透测试工程师</td>
+<td>⭐⭐⭐⭐</td>
+</tr>
+<tr>
+<td><strong>CISSP</strong></td>
+<td>(ISC)²</td>
+<td>安全管理</td>
+<td>⭐⭐⭐⭐</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>13.6 CTF 学习资源</h3>
+<pre class="notranslate"><code class="notranslate">国内平台：
+- BUUCTF：https://buuoj.cn
+- CTFHub：https://www.ctfhub.com
+- 攻防世界：https://adworld.xctf.org.cn
+- XCTF 联赛：https://www.xctf.org.cn
+- NCTF / HCTF / 各高校 CTF
+
+国际平台：
+- CTFtime：https://ctftime.org
+- picoCTF：https://picoctf.org
+- HackTheBox：https://hackthebox.com
+- TryHackMe：https://tryhackme.com
+- Root-Me：https://www.root-me.org
+- Cryptohack：https://cryptohack.org（密码学）
+</code></pre>
+<hr>
+<h2>十四、法律与伦理规范</h2>
+<h3>14.1 相关法律法规</h3>
+<blockquote>
+<p>以下为中华人民共和国相关法律法规要点，请严格遵守：</p>
+</blockquote>
+<pre class="notranslate"><code class="notranslate">《中华人民共和国网络安全法》
+- 第 27 条：任何个人和组织不得从事非法侵入他人网络、干扰他人网络正常功能、
+  窃取网络数据等危害网络安全的活动
+- 第 44 条：不得窃取或者以其他非法方式获取个人信息
+
+《中华人民共和国刑法》
+- 第 285 条：非法侵入计算机信息系统罪
+- 第 286 条：破坏计算机信息系统罪
+- 第 287 条：利用计算机实施犯罪
+
+《中华人民共和国数据安全法》
+- 保障数据安全，促进数据开发利用
+
+《中华人民共和国个人信息保护法》
+- 保护个人信息权益，规范个人信息处理活动
+</code></pre>
+<h3>14.2 合法使用原则</h3>
+<pre class="notranslate"><code class="notranslate">1. 授权原则
+   - 任何安全测试必须获得系统所有者的书面授权
+   - 授权范围必须明确（时间、目标、方法）
+   - 超出授权范围的测试属于违法行为
+
+2. 最小影响原则
+   - 测试过程中尽量减少对业务的影响
+   - 避免使用破坏性操作
+   - 及时报告发现的问题
+
+3. 保密原则
+   - 测试中获取的数据不得泄露
+   - 报告仅限授权人员阅读
+   - 测试完成后清理所有测试数据
+
+4. 职业道德
+   - 不利用漏洞谋取私利
+   - 不在未授权系统上练习
+   - 不传播攻击工具和恶意代码
+   - 尊重隐私和数据保护
+</code></pre>
+<h3>14.3 合法练习环境</h3>
+<pre class="notranslate"><code class="notranslate">✅ 合法的学习方式：
+- 在自己的虚拟机 / 靶场中练习
+- 使用在线合法平台（HackTheBox、TryHackMe、DVWA）
+- 参加官方授权的 CTF 竞赛
+- 在公司授权范围内进行安全测试
+- 参与漏洞赏金计划（Bug Bounty）
+- 获得书面授权的渗透测试项目
+
+❌ 违法的行为：
+- 未经授权扫描/测试他人系统
+- 窃取他人数据或密码
+- 入侵他人系统或网站
+- 制作/传播恶意软件
+- 利用漏洞进行勒索
+- 在公共 WiFi 上嗅探他人数据
+</code></pre>
+<hr>
+<h2>十五、常见问题排查</h2>
+<h3>15.1 安装问题</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 问题：安装后无法联网</span>
+<span class="pl-c"><span class="pl-c">#</span> 解决：检查网络配置</span>
+ip addr show
+sudo dhclient eth0
+sudo systemctl restart networking
+
+<span class="pl-c"><span class="pl-c">#</span> 问题：安装后无法进入图形界面</span>
+<span class="pl-c"><span class="pl-c">#</span> 解决：重装桌面环境</span>
+sudo apt install -y kali-desktop-xfce
+sudo systemctl restart lightdm
+
+<span class="pl-c"><span class="pl-c">#</span> 问题：分辨率不对（虚拟机）</span>
+<span class="pl-c"><span class="pl-c">#</span> 解决：安装虚拟机增强工具</span>
+<span class="pl-c"><span class="pl-c">#</span> VMware: 安装 open-vm-tools</span>
+sudo apt install -y open-vm-tools open-vm-tools-desktop
+sudo reboot
+
+<span class="pl-c"><span class="pl-c">#</span> VirtualBox: 安装 Guest Additions</span>
+sudo apt install -y virtualbox-guest-x11
+sudo reboot
+
+<span class="pl-c"><span class="pl-c">#</span> 问题：GRUB 引导丢失（双系统）</span>
+<span class="pl-c"><span class="pl-c">#</span> 解决：用 Live USB 修复</span>
+sudo mount /dev/sdaX /mnt
+sudo grub-install --root-directory=/mnt /dev/sda
+sudo update-grub</pre></div>
+<h3>15.2 网络问题</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 问题：无线网卡不识别</span>
+lsusb                              <span class="pl-c"><span class="pl-c">#</span> 检查 USB 设备</span>
+lsmod <span class="pl-k">|</span> grep ath                   <span class="pl-c"><span class="pl-c">#</span> 检查驱动</span>
+sudo apt install -y firmware-atheros
+sudo modprobe ath9k_htc
+
+<span class="pl-c"><span class="pl-c">#</span> 问题：VMware NAT 网络不通</span>
+sudo systemctl restart NetworkManager
+sudo dhclient -v eth0
+
+<span class="pl-c"><span class="pl-c">#</span> 问题：DNS 解析失败</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>nameserver 8.8.8.8<span class="pl-pds">"</span></span> <span class="pl-k">|</span> sudo tee /etc/resolv.conf
+sudo systemctl restart systemd-resolved
+
+<span class="pl-c"><span class="pl-c">#</span> 问题：代理配置后无法上网</span>
+<span class="pl-c1">unset</span> http_proxy https_proxy</pre></div>
+<h3>15.3 软件问题</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 问题：apt update 报 GPG 错误</span>
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys <span class="pl-k">&lt;</span>KEY_ID<span class="pl-k">&gt;</span>
+<span class="pl-c"><span class="pl-c">#</span> 或</span>
+curl -fsSL https://archive.kali.org/archive-key.asc <span class="pl-k">|</span> sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/kali-archive-key.gpg
+
+<span class="pl-c"><span class="pl-c">#</span> 问题：apt 依赖损坏</span>
+sudo apt --fix-broken install
+sudo dpkg --configure -a
+
+<span class="pl-c"><span class="pl-c">#</span> 问题：找不到命令</span>
+which command_name
+apt search command_name
+sudo apt install package_name
+
+<span class="pl-c"><span class="pl-c">#</span> 问题：Python pip 安装报错</span>
+pip3 install --break-system-packages package_name
+<span class="pl-c"><span class="pl-c">#</span> 或使用虚拟环境</span>
+python3 -m venv venv
+<span class="pl-c1">source</span> venv/bin/activate
+pip install package_name</pre></div>
+<h3>15.4 性能问题</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 问题：虚拟机运行卡顿</span>
+<span class="pl-c"><span class="pl-c">#</span> 增加内存（≥ 4GB）和 CPU（≥ 2 核）</span>
+<span class="pl-c"><span class="pl-c">#</span> 启用 3D 加速</span>
+<span class="pl-c"><span class="pl-c">#</span> 关闭不需要的服务</span>
+sudo systemctl disable bluetooth
+sudo systemctl disable cups
+
+<span class="pl-c"><span class="pl-c">#</span> 问题：磁盘空间不足</span>
+df -h                              <span class="pl-c"><span class="pl-c">#</span> 查看磁盘使用</span>
+du -sh /var/log/<span class="pl-k">*</span>                  <span class="pl-c"><span class="pl-c">#</span> 查看日志占用</span>
+sudo journalctl --vacuum-size=100M <span class="pl-c"><span class="pl-c">#</span> 清理日志</span>
+sudo apt autoremove                <span class="pl-c"><span class="pl-c">#</span> 清理软件包</span>
+docker system prune -a             <span class="pl-c"><span class="pl-c">#</span> 清理 Docker</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 问题：开机慢</span>
+systemd-analyze                    <span class="pl-c"><span class="pl-c">#</span> 分析启动时间</span>
+systemd-analyze blame              <span class="pl-c"><span class="pl-c">#</span> 查看慢的服务</span>
+sudo systemctl disable 不需要的服务</pre></div>
+<hr>
+<h2>附录 A：Kali 快捷键速查</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>快捷键</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">Ctrl + Alt + T</code></td>
+<td>打开终端</td>
+</tr>
+<tr>
+<td><code class="notranslate">Ctrl + Alt + F1-F6</code></td>
+<td>切换到虚拟终端</td>
+</tr>
+<tr>
+<td><code class="notranslate">Ctrl + Alt + F7</code></td>
+<td>返回图形界面</td>
+</tr>
+<tr>
+<td><code class="notranslate">Ctrl + Shift + T</code></td>
+<td>新建终端标签</td>
+</tr>
+<tr>
+<td><code class="notranslate">Ctrl + Shift + N</code></td>
+<td>新建终端窗口</td>
+</tr>
+<tr>
+<td><code class="notranslate">Ctrl + L</code></td>
+<td>清屏</td>
+</tr>
+<tr>
+<td><code class="notranslate">Ctrl + R</code></td>
+<td>搜索历史命令</td>
+</tr>
+<tr>
+<td><code class="notranslate">Ctrl + C</code></td>
+<td>终止命令</td>
+</tr>
+<tr>
+<td><code class="notranslate">Ctrl + Z</code></td>
+<td>暂停任务</td>
+</tr>
+<tr>
+<td><code class="notranslate">Ctrl + Shift + C</code></td>
+<td>复制（终端）</td>
+</tr>
+<tr>
+<td><code class="notranslate">Ctrl + Shift + V</code></td>
+<td>粘贴（终端）</td>
+</tr>
+<tr>
+<td><code class="notranslate">Alt + Tab</code></td>
+<td>切换窗口</td>
+</tr>
+<tr>
+<td><code class="notranslate">Ctrl + Alt + D</code></td>
+<td>显示桌面</td>
+</tr>
+<tr>
+<td><code class="notranslate">PrtSc</code></td>
+<td>截图</td>
+</tr>
+<tr>
+<td><code class="notranslate">Alt + F2</code></td>
+<td>运行命令</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2>附录 B：推荐学习资源</h2>
+<h3>书籍</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>书名</th>
+<th>作者</th>
+<th>方向</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>《Kali Linux 渗透测试》</td>
+<td>OffSec</td>
+<td>Kali 入门</td>
+</tr>
+<tr>
+<td>《Metasploit 渲透测试指南》</td>
+<td>David Kennedy</td>
+<td>渗透测试</td>
+</tr>
+<tr>
+<td>《白帽子讲 Web 安全》</td>
+<td>吴翰清</td>
+<td>Web 安全</td>
+</tr>
+<tr>
+<td>《Web 应用安全权威指南》</td>
+<td>Justin Clarke</td>
+<td>Web 安全</td>
+</tr>
+<tr>
+<td>《内网安全攻防》</td>
+<td>徐焱</td>
+<td>内网渗透</td>
+</tr>
+<tr>
+<td>《逆向工程核心原理》</td>
+<td>李承远</td>
+<td>逆向工程</td>
+</tr>
+<tr>
+<td>《密码编码学与网络安全》</td>
+<td>William Stallings</td>
+<td>密码学</td>
+</tr>
+<tr>
+<td>《黑客攻防技术宝典》系列</td>
+<td>多位</td>
+<td>综合</td>
+</tr>
+<tr>
+<td>《鸟哥的 Linux 私房菜》</td>
+<td>鸟哥</td>
+<td>Linux 基础</td>
+</tr>
+<tr>
+<td>《计算机网络》</td>
+<td>谢希仁</td>
+<td>网络基础</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>在线资源</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>资源</th>
+<th>网址</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kali 官方文档</td>
+<td><a href="https://www.kali.org/docs" rel="nofollow">https://www.kali.org/docs</a></td>
+<td>最权威</td>
+</tr>
+<tr>
+<td>OWASP</td>
+<td><a href="https://owasp.org" rel="nofollow">https://owasp.org</a></td>
+<td>Web 安全标准</td>
+</tr>
+<tr>
+<td>PortSwigger Academy</td>
+<td><a href="https://portswigger.net/web-security" rel="nofollow">https://portswigger.net/web-security</a></td>
+<td>Web 安全实验</td>
+</tr>
+<tr>
+<td>HackTheBox</td>
+<td><a href="https://hackthebox.com" rel="nofollow">https://hackthebox.com</a></td>
+<td>渗透测试练习</td>
+</tr>
+<tr>
+<td>TryHackMe</td>
+<td><a href="https://tryhackme.com" rel="nofollow">https://tryhackme.com</a></td>
+<td>入门友好</td>
+</tr>
+<tr>
+<td>VulnHub</td>
+<td><a href="https://vulnhub.com" rel="nofollow">https://vulnhub.com</a></td>
+<td>虚拟机靶场</td>
+</tr>
+<tr>
+<td>Vulhub</td>
+<td><a href="https://github.com/vulhub/vulhub">https://github.com/vulhub/vulhub</a></td>
+<td>Docker 靶场</td>
+</tr>
+<tr>
+<td>Exploit-DB</td>
+<td><a href="https://www.exploit-db.com" rel="nofollow">https://www.exploit-db.com</a></td>
+<td>漏洞数据库</td>
+</tr>
+<tr>
+<td>NVD</td>
+<td><a href="https://nvd.nist.gov" rel="nofollow">https://nvd.nist.gov</a></td>
+<td>CVE 漏洞库</td>
+</tr>
+<tr>
+<td>CTFtime</td>
+<td><a href="https://ctftime.org" rel="nofollow">https://ctftime.org</a></td>
+<td>CTF 赛事</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<blockquote>
+<p><strong>最后提醒：</strong> 学习网络安全技术的目的是守护网络空间安全，而非破坏。请始终在合法、合规、授权的环境中使用 Kali Linux 和相关安全工具。技术是中性的，使用它的人决定了它的善恶。</p>
+</blockquote></div>
+<div style="font-size:small;margin-top:8px;float:right;">转载请注明出处</div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://helloblog.eik.cc">你好博客</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if("09/25/2026"!=""){
+    var startSite=new Date("09/25/2026");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行 "+diffDay+" 天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","techjiang/Gmeek-HelloBlog");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script><script src='https://blog.meekdai.com/Gmeek/plugins/lightbox.js'></script>
+
+</html>
