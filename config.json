@@ -10,9 +10,9 @@
   "bottomText": "转载请注明出处",
 
   "// === 🎨 视觉与主题资源 ===": "",
-  "avatarUrl": "https://img2.tofaka.com/autoupload/f/3624q/20260926/caKC/1024X1024/Hello-Logo.png",
-  "faviconUrl": "https://img2.tofaka.com/autoupload/f/3624q/20260926/caKC/1024X1024/Hello-Logo.png",
-  "ogImage": "https://img2.tofaka.com/autoupload/f/3624q/20260926/caKC/1024X1024/Hello-Logo.png",
+  "avatarUrl": "/Hello-Logo.png",
+  "faviconUrl": "/Hello-Logo.png",
+  "ogImage": "/Hello-Logo.png",
   "commentLabelColor": "#006b75",
   "yearColorList": ["#bc4c00", "#0969da", "#1f883d", "#A333D0"],
   "themeMode": "manual",
