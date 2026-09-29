@@ -1,0 +1,2166 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <meta name='description' content='你好博客是一个专注于技术分享、编程笔记与生活感悟的个人博客，提供高质量原创内容。'><meta name='keywords' content='你好博客,技术博客,编程笔记,Gmeek,前端开发,个人网站'><meta name='author' content='你好博客'><meta name='robots' content='index,follow'><link rel='canonical' href='https://helloblog.eik.cc/'><script type='application/ld+json'>{"@context":"https://schema.org","@type":"WebSite","name":"你好博客","url":"https://helloblog.eik.cc/","description":"专注于技术分享、编程笔记与生活感悟的个人博客","author":{"@type":"Person","name":"你好博客","email":"official@tech.asoe.cn"},"potentialAction":{"@type":"SearchAction","target":"https://helloblog.eik.cc/?q={search_term_string}","query-input":"required name=search_term_string"}}</script><script src='https://blog.meekdai.com/Gmeek/plugins/GmeekBSZ.js'></script><script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script>
+    <link rel="icon" href="https://img2.tofaka.com/autoupload/f/3624q/20260926/caKC/1024X1024/Hello-Logo.png"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="> **版本**：v1.0　|　**适用对象**：零基础到中高级开发者　|　**阅读方式**：线性阅读 + 按需查阅附录
+>
+> **说明**：Git 命令行为稳定，本文所有命令均长期有效；GitHub 网页界面（按钮位置、菜单名称）会随产品迭代变化，涉及界面操作处请以 [GitHub 官方文档](https://docs.github.com) 最新说明为准。">
+<meta property="og:title" content="GitHub从入门到精通：一份写给工程师的完整实践手册">
+<meta property="og:description" content="> **版本**：v1.0　|　**适用对象**：零基础到中高级开发者　|　**阅读方式**：线性阅读 + 按需查阅附录
+>
+> **说明**：Git 命令行为稳定，本文所有命令均长期有效；GitHub 网页界面（按钮位置、菜单名称）会随产品迭代变化，涉及界面操作处请以 [GitHub 官方文档](https://docs.github.com) 最新说明为准。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://helloblog.eik.cc/post/GitHub-cong-ru-men-dao-jing-tong-%EF%BC%9A-yi-fen-xie-gei-gong-cheng-shi-de-wan-zheng-shi-jian-shou-ce.html">
+<meta property="og:image" content="https://img2.tofaka.com/autoupload/f/3624q/20260926/caKC/1024X1024/Hello-Logo.png">
+<title>GitHub从入门到精通：一份写给工程师的完整实践手册</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">GitHub从入门到精通：一份写给工程师的完整实践手册</h1>
+<div class="title-right">
+    <a href="https://helloblog.eik.cc" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/techjiang/Gmeek-HelloBlog/issues/23" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><blockquote>
+<p><strong>版本</strong>：v1.0　|　<strong>适用对象</strong>：零基础到中高级开发者　|　<strong>阅读方式</strong>：线性阅读 + 按需查阅附录</p>
+<p><strong>说明</strong>：Git 命令行为稳定，本文所有命令均长期有效；GitHub 网页界面（按钮位置、菜单名称）会随产品迭代变化，涉及界面操作处请以 <a href="https://docs.github.com">GitHub 官方文档</a> 最新说明为准。文中所有示例均可在本地沙箱环境中安全复现。</p>
+</blockquote>
+<hr>
+<h2>目录</h2>
+<ul>
+<li><a href="#1-%E6%A6%82%E5%BF%B5%E5%9F%BA%E7%A1%80">1. 概念基础</a></li>
+<li><a href="#2-%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87%E4%B8%8E%E8%B4%A6%E5%8F%B7%E9%85%8D%E7%BD%AE">2. 环境准备与账号配置</a></li>
+<li><a href="#3-%E6%9C%AC%E5%9C%B0%E4%BB%93%E5%BA%93%E6%A0%B8%E5%BF%83%E6%93%8D%E4%BD%9C">3. 本地仓库核心操作</a></li>
+<li><a href="#4-%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93%E4%B8%8E%E5%A4%9A%E4%BA%BA%E5%8D%8F%E4%BD%9C">4. 远程仓库与多人协作</a></li>
+<li><a href="#5-%E5%88%86%E6%94%AF%E6%A8%A1%E5%9E%8B%E4%B8%8E%E9%9B%86%E6%88%90%E7%AD%96%E7%95%A5">5. 分支模型与集成策略</a></li>
+<li><a href="#6-github-%E5%B9%B3%E5%8F%B0%E5%8D%8F%E4%BD%9C%E5%AE%9E%E6%88%98">6. GitHub 平台协作实战</a></li>
+<li><a href="#7-%E8%87%AA%E5%8A%A8%E5%8C%96github-actions">7. 自动化：GitHub Actions</a></li>
+<li><a href="#8-%E6%96%87%E6%A1%A3%E7%AB%99%E7%82%B9%E4%B8%8E%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86">8. 文档、站点与项目管理</a></li>
+<li><a href="#9-%E5%AE%89%E5%85%A8%E5%90%88%E8%A7%84%E4%B8%8E%E8%B4%A8%E9%87%8F%E4%BF%9D%E9%9A%9C">9. 安全、合规与质量保障</a></li>
+<li><a href="#10-%E8%BF%9B%E9%98%B6%E5%91%BD%E4%BB%A4%E4%B8%8E%E9%AB%98%E7%BA%A7%E6%8A%80%E5%B7%A7">10. 进阶命令与高级技巧</a></li>
+<li><a href="#11-%E7%96%91%E9%9A%BE%E6%8E%92%E9%94%99%E6%89%8B%E5%86%8C">11. 疑难排错手册</a></li>
+<li><a href="#12-%E5%B7%A5%E7%A8%8B%E5%8C%96%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5">12. 工程化最佳实践</a></li>
+<li><a href="#%E9%99%84%E5%BD%95-a-%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E8%A1%A8">附录 A. 命令速查表</a></li>
+<li><a href="#%E9%99%84%E5%BD%95-b-%E6%9C%AF%E8%AF%AD%E8%A1%A8">附录 B. 术语表</a></li>
+<li><a href="#%E9%99%84%E5%BD%95-c-%E5%BB%B6%E4%BC%B8%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90">附录 C. 延伸学习资源</a></li>
+</ul>
+<hr>
+<h2>1. 概念基础</h2>
+<h3>1.1 Git 与 GitHub 的区别</h3>
+<p>这是初学者最常见的混淆点，必须先厘清：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>维度</th>
+<th>Git</th>
+<th>GitHub</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>本质</td>
+<td>版本控制<strong>软件</strong>，运行在你的机器上</td>
+<td>托管 Git 仓库的<strong>云平台</strong>（SaaS）</td>
+</tr>
+<tr>
+<td>依赖关系</td>
+<td>不依赖任何网络或平台</td>
+<td>依赖 Git，是 Git 生态的上层服务</td>
+</tr>
+<tr>
+<td>断网可用</td>
+<td>完全可用</td>
+<td>不可用</td>
+</tr>
+<tr>
+<td>同类产品</td>
+<td>SVN、Mercurial、Perforce</td>
+<td>GitLab、Bitbucket、Gitee、Coding</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p>一句话记忆：<strong>Git 是引擎，GitHub 是修在引擎之上的高速公路、服务区和车友会。</strong> 你完全可以在不上 GitHub 的情况下精通 Git；但要参与现代开源协作，两者都需要掌握。</p>
+<h3>1.2 分布式版本控制的核心思想</h3>
+<p>集中式版本控制（如 SVN）的每一次提交都要与中央服务器通信；<strong>分布式</strong>版本控制下，每个开发者本地都拥有仓库的<strong>完整副本</strong>，包括全部历史。</p>
+<p>这带来三个直接收益：</p>
+<ol>
+<li><strong>离线工作</strong>：提交、查看历史、创建分支均不联网。</li>
+<li><strong>天然备份</strong>：任何一台机器上的副本都能完整恢复项目。</li>
+<li><strong>廉价分支</strong>：分支只是对某个提交对象的可移动指针，创建成本几乎为零。</li>
+</ol>
+<p>代价是需要理解更多的概念模型——而 Git 的概念模型一旦打通，剩下的只是命令记忆。</p>
+<h3>1.3 Git 的三区模型与文件状态</h3>
+<p>理解 Git 的全部日常操作，只需要掌握一个模型：</p>
+<pre class="notranslate"><code class="notranslate">工作区(Working Directory)  --git add--&gt;  暂存区(Staging Area / Index)  --git commit--&gt;  本地仓库(Repository)
+</code></pre>
+<p>文件在任一时刻处于四种状态之一：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>状态</th>
+<th>含义</th>
+<th>常用查看命令</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">untracked</code></td>
+<td>新文件，Git 尚未跟踪</td>
+<td><code class="notranslate">git status</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">modified</code></td>
+<td>已跟踪文件被改动，未暂存</td>
+<td><code class="notranslate">git diff</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">staged</code></td>
+<td>改动已放入暂存区，待提交</td>
+<td><code class="notranslate">git diff --staged</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">committed</code></td>
+<td>已写入仓库，形成快照</td>
+<td><code class="notranslate">git log</code></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><strong>关键心法</strong>：<code class="notranslate">git commit</code> 提交的是<strong>暂存区的内容</strong>，而不是工作区的当前状态。很多「我明明改了代码为什么没提交上去」的问题都源于此。</p>
+<h3>1.4 仓库里到底有什么：.git 目录</h3>
+<p>执行 <code class="notranslate">git init</code> 后，当前目录下会生成一个隐藏的 <code class="notranslate">.git</code> 文件夹。它是仓库的全部：对象数据库、引用（分支与标签的指针）、配置、暂存区快照、钩子脚本等。</p>
+<ul>
+<li><strong>删掉 <code class="notranslate">.git</code></strong> = 删掉全部版本历史（只剩当前工作区文件）。</li>
+<li><strong>拷贝 <code class="notranslate">.git</code> 到别处</strong> = 完整复制整个仓库。</li>
+</ul>
+<p>因此，<code class="notranslate">git clone</code> 实际上就是「拷贝对象数据库 + 检出工作区文件」。</p>
+<h3>1.5 提交对象与 SHA：为什么 Git 快而可靠</h3>
+<p>每次 <code class="notranslate">git commit</code> 都会产生一个<strong>提交对象（commit object）</strong>，包含：</p>
+<ul>
+<li>项目根的<strong>树对象（tree）</strong> 指针（即完整快照）；</li>
+<li>一个或多个<strong>父提交</strong>指针；</li>
+<li>作者、提交者、时间戳；</li>
+<li>提交信息。</li>
+</ul>
+<p>这四者做哈希后得到一个 40 位 SHA-1/SHA-256 标识（如 <code class="notranslate">a1b2c3d...</code>）。</p>
+<p>三个推论值得记住：</p>
+<ol>
+<li><strong>历史不可篡改</strong>：改一个字符，哈希全变，后续所有提交的哈希都会连锁改变。</li>
+<li><strong>内容寻址</strong>：内容相同的文件只存一份，这也是 Git 远比想象中节省空间的原因。</li>
+<li><strong>引用是指针</strong>：<code class="notranslate">main</code>、<code class="notranslate">feature-x</code>、<code class="notranslate">v1.0.0</code> 本质上都是「指向某个提交的书签」，移动书签的成本是 O(1)。</li>
+</ol>
+<h3>1.6 常见误解澄清</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>误解</th>
+<th>事实</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>「Git 存的是文件差异」</td>
+<td>Git 存的是<strong>完整快照</strong>，未修改的文件用指针复用旧对象</td>
+</tr>
+<tr>
+<td>「<code class="notranslate">git pull</code> 就是下载代码」</td>
+<td><code class="notranslate">pull</code> = <code class="notranslate">fetch</code> + 合并（merge 或 rebase），会产生新提交</td>
+</tr>
+<tr>
+<td>「删掉分支就删掉了代码」</td>
+<td>只删除了指针，提交对象仍在，短期内可用 <code class="notranslate">git reflog</code> 找回</td>
+</tr>
+<tr>
+<td>「commit 是推给 GitHub」</td>
+<td><code class="notranslate">commit</code> 只写本地，必须 <code class="notranslate">push</code> 才会上传</td>
+</tr>
+<tr>
+<td>「GitHub = 代码网盘」</td>
+<td>GitHub 的价值在于围绕 Git 的协作流、自动化与生态</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<h2>2. 环境准备与账号配置</h2>
+<h3>2.1 安装 Git</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>平台</th>
+<th>方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Windows</td>
+<td>从 <a href="https://git-scm.com/download/win" rel="nofollow">git-scm.com/download/win</a> 下载安装包；安装时建议选择 <em>Add Git to PATH</em>、使用 VS Code 作为默认编辑器</td>
+</tr>
+<tr>
+<td>macOS</td>
+<td><code class="notranslate">xcode-select --install</code>，或 <code class="notranslate">brew install git</code></td>
+</tr>
+<tr>
+<td>Linux (Debian/Ubuntu)</td>
+<td><code class="notranslate">sudo apt update &amp;&amp; sudo apt install git</code></td>
+</tr>
+<tr>
+<td>Linux (RHEL/Fedora)</td>
+<td><code class="notranslate">sudo dnf install git</code></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p>安装后验证：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">git --version
+<span class="pl-c"><span class="pl-c">#</span> 期望输出类似：git version 2.45.2</span></pre></div>
+<h3>2.2 首次全局配置</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 1. 身份（会写入每一次提交的元数据，务必与 GitHub 账号邮箱一致）</span>
+git config --global user.name  <span class="pl-s"><span class="pl-pds">"</span>你的名字<span class="pl-pds">"</span></span>
+git config --global user.email <span class="pl-s"><span class="pl-pds">"</span>you@example.com<span class="pl-pds">"</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> 2. 默认分支名（现代惯例为 main）</span>
+git config --global init.defaultBranch main
+
+<span class="pl-c"><span class="pl-c">#</span> 3. 默认编辑器（二选一）</span>
+git config --global core.editor <span class="pl-s"><span class="pl-pds">"</span>code --wait<span class="pl-pds">"</span></span>      <span class="pl-c"><span class="pl-c">#</span> VS Code</span>
+git config --global core.editor <span class="pl-s"><span class="pl-pds">"</span>vim<span class="pl-pds">"</span></span>              <span class="pl-c"><span class="pl-c">#</span> Vim</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 4. 换行符处理（跨平台团队必配）</span>
+<span class="pl-c"><span class="pl-c">#</span> Windows:</span>
+git config --global core.autocrlf <span class="pl-c1">true</span>
+<span class="pl-c"><span class="pl-c">#</span> macOS / Linux:</span>
+git config --global core.autocrlf input
+
+<span class="pl-c"><span class="pl-c">#</span> 5. 输出美化</span>
+git config --global color.ui auto
+git config --global pull.rebase <span class="pl-c1">false</span>   <span class="pl-c"><span class="pl-c">#</span> 或 true，见 5.5 节</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 6. 常用别名（强烈推荐）</span>
+git config --global alias.st  <span class="pl-s"><span class="pl-pds">"</span>status -sb<span class="pl-pds">"</span></span>
+git config --global alias.co  <span class="pl-s"><span class="pl-pds">"</span>checkout<span class="pl-pds">"</span></span>
+git config --global alias.br  <span class="pl-s"><span class="pl-pds">"</span>branch<span class="pl-pds">"</span></span>
+git config --global alias.ci  <span class="pl-s"><span class="pl-pds">"</span>commit<span class="pl-pds">"</span></span>
+git config --global alias.lg  <span class="pl-s"><span class="pl-pds">"</span>log --oneline --graph --decorate --all<span class="pl-pds">"</span></span></pre></div>
+<p>查看与检查配置：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">git config --list --show-origin     <span class="pl-c"><span class="pl-c">#</span> 列出全部配置及其来源文件</span>
+git config --global --get user.email</pre></div>
+<p>配置文件位置：<code class="notranslate">~/.gitconfig</code>（全局）、<code class="notranslate">.git/config</code>（仓库级）、<code class="notranslate">/etc/gitconfig</code>（系统级）。优先级：<strong>仓库 &gt; 全局 &gt; 系统</strong>。</p>
+<h3>2.3 选择连接方式：SSH 还是 HTTPS</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>维度</th>
+<th>SSH</th>
+<th>HTTPS + Token</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>首次配置</td>
+<td>略繁琐（需生成密钥）</td>
+<td>简单</td>
+</tr>
+<tr>
+<td>日常体验</td>
+<td>免密、快</td>
+<td>需凭据管理器缓存</td>
+</tr>
+<tr>
+<td>企业防火墙</td>
+<td>可能被封 22 端口</td>
+<td>走 443，兼容性好</td>
+</tr>
+<tr>
+<td>适用场景</td>
+<td>个人长期开发</td>
+<td>受限网络 / CI</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<blockquote>
+<p><strong>重要事实</strong>：自 2021 年 8 月起，GitHub <strong>不再接受账号密码</strong>作为 Git 操作的认证方式，必须使用 SSH 密钥或 Personal Access Token（PAT）。</p>
+</blockquote>
+<h3>2.4 生成并添加 SSH 密钥</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 1. 生成密钥（推荐 Ed25519，更安全更短）</span>
+ssh-keygen -t ed25519 -C <span class="pl-s"><span class="pl-pds">"</span>you@example.com<span class="pl-pds">"</span></span>
+<span class="pl-c"><span class="pl-c">#</span> 一路回车即可；如需设置 passphrase，务必记住</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 2. 启动 ssh-agent 并加载私钥</span>
+<span class="pl-c1">eval</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-s"><span class="pl-pds">$(</span>ssh-agent -s<span class="pl-pds">)</span></span><span class="pl-pds">"</span></span>
+ssh-add <span class="pl-k">~</span>/.ssh/id_ed25519
+
+<span class="pl-c"><span class="pl-c">#</span> 3. 复制公钥内容</span>
+<span class="pl-c"><span class="pl-c">#</span> macOS:</span>
+pbcopy <span class="pl-k">&lt;</span> <span class="pl-k">~</span>/.ssh/id_ed25519.pub
+<span class="pl-c"><span class="pl-c">#</span> Linux:</span>
+xclip -selection clipboard <span class="pl-k">&lt;</span> <span class="pl-k">~</span>/.ssh/id_ed25519.pub
+<span class="pl-c"><span class="pl-c">#</span> Windows (PowerShell):</span>
+Get-Content <span class="pl-k">~</span>/.ssh/id_ed25519.pub <span class="pl-k">|</span> Set-Clipboard</pre></div>
+<p>然后在 GitHub 网页端：<strong>Settings → SSH and GPG keys → New SSH key</strong>，粘贴公钥并保存。最后测试：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">ssh -T git@github.com
+<span class="pl-c"><span class="pl-c">#</span> 成功输出：Hi &lt;username&gt;! You've successfully authenticated...</span></pre></div>
+<h3>2.5 Personal Access Token（PAT）</h3>
+<p>适用于 HTTPS 方式。在 <strong>Settings → Developer settings</strong> 中创建：</p>
+<ul>
+<li><strong>Fine-grained token</strong>（推荐）：可限定仓库范围与具体权限（读/写）。</li>
+<li><strong>Classic token</strong>：可选 <code class="notranslate">repo</code>、<code class="notranslate">workflow</code>、<code class="notranslate">read:org</code> 等粗粒度 scope。</li>
+</ul>
+<p>安全守则：</p>
+<ol>
+<li>设置<strong>最小必要权限</strong>与<strong>合理有效期</strong>。</li>
+<li>绝不提交到代码仓库，绝不通过聊天工具明文传输。</li>
+<li>泄露立即撤销并重新生成。</li>
+<li>CI 中使用 GitHub Actions 的 <code class="notranslate">secrets</code>，不要硬编码。</li>
+</ol>
+<p>Windows 与 macOS 的 Git 通常自带凭据管理器（Git Credential Manager），<code class="notranslate">git push</code> 一次后会安全缓存凭据。Linux 可用 <code class="notranslate">libsecret</code> 帮手或改用 SSH。</p>
+<h3>2.6 多账号配置</h3>
+<p>同一台机器同时使用公司账号与个人账号时，用 <code class="notranslate">~/.ssh/config</code> 分流：</p>
+<pre class="notranslate"><code class="notranslate">Host github.com
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/id_ed25519_personal
+  IdentitiesOnly yes
+
+Host github-work
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/id_ed25519_work
+  IdentitiesOnly yes
+</code></pre>
+<p>个人仓库正常克隆；公司仓库使用 <code class="notranslate">git clone git@github-work:company/repo.git</code>，再单独设置仓库级身份：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">git config user.name  <span class="pl-s"><span class="pl-pds">"</span>张三（工作）<span class="pl-pds">"</span></span>
+git config user.email <span class="pl-s"><span class="pl-pds">"</span>zhangsan@company.com<span class="pl-pds">"</span></span></pre></div>
+<h3>2.7 验证环境</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">git config --get user.name
+git config --get user.email
+ssh -T git@github.com          <span class="pl-c"><span class="pl-c">#</span> SSH 方式</span>
+git ls-remote origin           <span class="pl-c"><span class="pl-c">#</span> 能列出远程引用即为连通</span></pre></div>
+<hr>
+<h2>3. 本地仓库核心操作</h2>
+<h3>3.1 创建仓库的两种方式</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 方式 A：本地新建，之后再关联远程</span>
+mkdir my-project <span class="pl-k">&amp;&amp;</span> <span class="pl-c1">cd</span> my-project
+git init
+
+<span class="pl-c"><span class="pl-c">#</span> 方式 B：克隆已有仓库</span>
+git clone git@github.com:user/repo.git
+<span class="pl-c1">cd</span> repo</pre></div>
+<p><code class="notranslate">git clone</code> 会自动完成三件事：下载全部历史、检出默认分支、配置 <code class="notranslate">origin</code> 远程并建立上游跟踪。</p>
+<h3>3.2 第一次提交完整流程</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 1. 创建文件</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span># My Project<span class="pl-pds">"</span></span> <span class="pl-k">&gt;</span> README.md
+
+<span class="pl-c"><span class="pl-c">#</span> 2. 查看状态（养成随时 status 的习惯）</span>
+git status
+
+<span class="pl-c"><span class="pl-c">#</span> 3. 暂存</span>
+git add README.md
+
+<span class="pl-c"><span class="pl-c">#</span> 4. 提交（-m 直接写信息）</span>
+git commit -m <span class="pl-s"><span class="pl-pds">"</span>docs: 初始化项目 README<span class="pl-pds">"</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> 5. 关联远程并推送</span>
+git remote add origin git@github.com:user/my-project.git
+git push -u origin main</pre></div>
+<blockquote>
+<p><code class="notranslate">-u</code>（即 <code class="notranslate">--set-upstream</code>）建立本地分支与远程分支的跟踪关系，此后只需 <code class="notranslate">git push</code> / <code class="notranslate">git pull</code>。</p>
+</blockquote>
+<h3>3.3 查看状态与历史</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">git status                      <span class="pl-c"><span class="pl-c">#</span> 完整状态</span>
+git status -sb                  <span class="pl-c"><span class="pl-c">#</span> 简洁版 + 与上游差异</span>
+git diff                        <span class="pl-c"><span class="pl-c">#</span> 工作区 vs 暂存区</span>
+git diff --staged               <span class="pl-c"><span class="pl-c">#</span> 暂存区 vs 上一次提交</span>
+git diff main..feature-x        <span class="pl-c"><span class="pl-c">#</span> 两个分支差异</span>
+
+git log                         <span class="pl-c"><span class="pl-c">#</span> 完整历史</span>
+git log --oneline --graph --decorate --all   <span class="pl-c"><span class="pl-c">#</span> 图形化历史</span>
+git log -5                      <span class="pl-c"><span class="pl-c">#</span> 最近 5 条</span>
+git log --author=<span class="pl-s"><span class="pl-pds">"</span>张三<span class="pl-pds">"</span></span>          <span class="pl-c"><span class="pl-c">#</span> 按作者</span>
+git log -- path/to/file.py      <span class="pl-c"><span class="pl-c">#</span> 单文件历史</span>
+git log --stat                  <span class="pl-c"><span class="pl-c">#</span> 附带改动统计</span>
+git show <span class="pl-k">&lt;</span>commit-sha<span class="pl-k">&gt;</span>           <span class="pl-c"><span class="pl-c">#</span> 查看某次提交详情</span>
+git shortlog -sn                <span class="pl-c"><span class="pl-c">#</span> 贡献者提交统计</span>
+git blame path/to/file.py       <span class="pl-c"><span class="pl-c">#</span> 逐行追溯责任人</span></pre></div>
+<h3>3.4 暂存区的艺术</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">git add <span class="pl-k">&lt;</span>file<span class="pl-k">&gt;</span>                  <span class="pl-c"><span class="pl-c">#</span> 暂存整个文件</span>
+git add <span class="pl-c1">.</span>                       <span class="pl-c"><span class="pl-c">#</span> 暂存当前目录全部改动（谨慎）</span>
+git add -p                      <span class="pl-c"><span class="pl-c">#</span> 交互式逐块暂存（强烈推荐）</span>
+git add -A                      <span class="pl-c"><span class="pl-c">#</span> 暂存全部，含新增与删除</span>
+git restore --staged <span class="pl-k">&lt;</span>file<span class="pl-k">&gt;</span>     <span class="pl-c"><span class="pl-c">#</span> 取消暂存（文件改动保留在工作区）</span>
+git rm --cached <span class="pl-k">&lt;</span>file<span class="pl-k">&gt;</span>          <span class="pl-c"><span class="pl-c">#</span> 停止跟踪但保留本地文件</span>
+git rm <span class="pl-k">&lt;</span>file<span class="pl-k">&gt;</span>                   <span class="pl-c"><span class="pl-c">#</span> 删除文件并暂存删除操作</span></pre></div>
+<p><strong><code class="notranslate">git add -p</code> 是区分新手与熟手的分水岭</strong>：它让你把一个文件里的多个逻辑改动拆分到不同提交中，让提交历史真正可读。</p>
+<h3>3.5 撤销与修改：五种场景对照</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>场景</th>
+<th>命令</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>改错了工作区文件，想恢复</td>
+<td><code class="notranslate">git restore &lt;file&gt;</code></td>
+</tr>
+<tr>
+<td>暂存错了，想退回工作区</td>
+<td><code class="notranslate">git restore --staged &lt;file&gt;</code></td>
+</tr>
+<tr>
+<td>提交信息写错了（未 push）</td>
+<td><code class="notranslate">git commit --amend -m "新信息"</code></td>
+</tr>
+<tr>
+<td>漏了文件（未 push）</td>
+<td><code class="notranslate">git add &lt;file&gt; &amp;&amp; git commit --amend --no-edit</code></td>
+</tr>
+<tr>
+<td>已 push 的提交需要抵消</td>
+<td><code class="notranslate">git revert &lt;sha&gt;</code>（生成反向提交，安全）</td>
+</tr>
+<tr>
+<td>未 push，想丢弃最近 N 个提交</td>
+<td><code class="notranslate">git reset --hard HEAD~N</code>（危险）</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> revert：历史友好，适合共享分支</span>
+git revert abc1234
+
+<span class="pl-c"><span class="pl-c">#</span> reset：改写历史，仅限本地未推送分支</span>
+git reset --soft  HEAD~1   <span class="pl-c"><span class="pl-c">#</span> 保留暂存区与工作区（最温和）</span>
+git reset --mixed HEAD~1   <span class="pl-c"><span class="pl-c">#</span> 保留工作区（默认）</span>
+git reset --hard  HEAD~1   <span class="pl-c"><span class="pl-c">#</span> 全部丢弃（最危险）</span></pre></div>
+<h3>3.6 .gitignore</h3>
+<p><code class="notranslate">.gitignore</code> 只对<strong>尚未被跟踪</strong>的文件生效。已经被 Git 跟踪的文件不会因为加入 <code class="notranslate">.gitignore</code> 而被忽略。</p>
+<p>典型模板：</p>
+<div class="highlight highlight-source-gitignore"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 依赖</span>
+<span class="pl-e">node_modules</span>/
+<span class="pl-e">vendor</span>/
+<span class="pl-e">.venv</span>/
+<span class="pl-e">__pycache__</span>/
+
+<span class="pl-c"><span class="pl-c">#</span> 构建产物</span>
+<span class="pl-e">dist</span>/
+<span class="pl-e">build</span>/
+<span class="pl-k">*</span><span class="pl-e">.log</span>
+<span class="pl-k">*</span><span class="pl-e">.tmp</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 环境与密钥（务必忽略）</span>
+<span class="pl-e">.env</span>
+<span class="pl-e">.env.</span><span class="pl-k">*</span>
+<span class="pl-k">!</span><span class="pl-e">.env.example</span>
+<span class="pl-k">*</span><span class="pl-e">.pem</span>
+<span class="pl-k">*</span><span class="pl-e">.key</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 系统与编辑器</span>
+<span class="pl-e">.DS_Store</span>
+<span class="pl-e">Thumbs.db</span>
+<span class="pl-e">.idea</span>/
+<span class="pl-e">.vscode</span>/<span class="pl-k">*</span>
+<span class="pl-k">!</span><span class="pl-e">.vscode</span>/<span class="pl-e">settings.json</span>
+<span class="pl-k">!</span><span class="pl-e">.vscode</span>/<span class="pl-e">extensions.json</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 覆盖规则示例：忽略所有 .md，但保留 README.md</span>
+<span class="pl-k">*</span><span class="pl-e">.md</span>
+<span class="pl-k">!</span><span class="pl-e">README.md</span></pre></div>
+<p>调试忽略规则的利器：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">git check-ignore -v config/local.env   <span class="pl-c"><span class="pl-c">#</span> 显示是哪条规则命中了该文件</span></pre></div>
+<p><strong>团队必做</strong>：项目第一天就提交 <code class="notranslate">.gitignore</code>，并通过 <code class="notranslate">.gitignore</code> 之外的 <code class="notranslate">.gitattributes</code> 固定换行符与二进制标记（见 11.3 节）。</p>
+<h3>3.7 提交信息规范</h3>
+<p>推荐采用 <strong>Conventional Commits</strong>（约定式提交）：</p>
+<pre class="notranslate"><code class="notranslate">&lt;type&gt;(&lt;scope&gt;): &lt;简短描述&gt;
+
+&lt;正文（可选，解释动机与背景）&gt;
+
+&lt;页脚（可选，BREAKING CHANGE / 关闭的 Issue）&gt;
+</code></pre>
+<p>常用 <code class="notranslate">type</code>：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>type</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">feat</code></td>
+<td>新功能</td>
+</tr>
+<tr>
+<td><code class="notranslate">fix</code></td>
+<td>缺陷修复</td>
+</tr>
+<tr>
+<td><code class="notranslate">docs</code></td>
+<td>文档</td>
+</tr>
+<tr>
+<td><code class="notranslate">style</code></td>
+<td>格式（不影响语义）</td>
+</tr>
+<tr>
+<td><code class="notranslate">refactor</code></td>
+<td>重构（非新功能、非修 bug）</td>
+</tr>
+<tr>
+<td><code class="notranslate">perf</code></td>
+<td>性能优化</td>
+</tr>
+<tr>
+<td><code class="notranslate">test</code></td>
+<td>测试</td>
+</tr>
+<tr>
+<td><code class="notranslate">build</code></td>
+<td>构建系统或外部依赖</td>
+</tr>
+<tr>
+<td><code class="notranslate">ci</code></td>
+<td>CI 配置</td>
+</tr>
+<tr>
+<td><code class="notranslate">chore</code></td>
+<td>杂务</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p>示例：</p>
+<pre class="notranslate"><code class="notranslate">feat(auth): 支持邮箱验证码登录
+
+用户反馈密码登录流程过长，新增 6 位验证码登录入口，
+验证码有效期 5 分钟，连续错误 5 次后锁定 10 分钟。
+
+Closes #128
+</code></pre>
+<p>写好提交信息的三条铁律：</p>
+<ol>
+<li><strong>首行 ≤ 72 字符</strong>，用祈使语气（"add" 而非 "added" / "adds"）。</li>
+<li><strong>正文解释 why，而不是复述 what</strong>（what 已经在 diff 里了）。</li>
+<li><strong>一次提交只做一件事</strong>。做不到就用 <code class="notranslate">git add -p</code> 拆分。</li>
+</ol>
+<hr>
+<h2>4. 远程仓库与多人协作</h2>
+<h3>4.1 远程管理</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">git remote -v                      <span class="pl-c"><span class="pl-c">#</span> 查看远程</span>
+git remote add upstream git@github.com:original/repo.git   <span class="pl-c"><span class="pl-c">#</span> 添加上游</span>
+git remote rename origin fork
+git remote remove upstream
+git remote show origin             <span class="pl-c"><span class="pl-c">#</span> 查看远程详细信息</span>
+git fetch --prune                  <span class="pl-c"><span class="pl-c">#</span> 清理本地已失效的远程跟踪分支</span></pre></div>
+<h3>4.2 push / fetch / pull 的区别</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>命令</th>
+<th>网络</th>
+<th>是否改工作区</th>
+<th>是否产生提交</th>
+<th>安全性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">git fetch</code></td>
+<td>下载</td>
+<td>否</td>
+<td>否</td>
+<td>最安全，只更新远程跟踪分支</td>
+</tr>
+<tr>
+<td><code class="notranslate">git pull</code></td>
+<td>下载 + 集成</td>
+<td>可能改动</td>
+<td>可能产生合并提交</td>
+<td>可能引发冲突</td>
+</tr>
+<tr>
+<td><code class="notranslate">git push</code></td>
+<td>上传</td>
+<td>否</td>
+<td>否</td>
+<td>被拒时需先同步</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<div class="highlight highlight-source-shell"><pre class="notranslate">git fetch origin                <span class="pl-c"><span class="pl-c">#</span> 拉取但不合并</span>
+git log main..origin/main       <span class="pl-c"><span class="pl-c">#</span> 先看看远程多了什么</span>
+git pull --rebase origin main   <span class="pl-c"><span class="pl-c">#</span> 决定合并策略后再集成</span></pre></div>
+<p><strong>推荐习惯</strong>：不确定远程发生了什么时，先 <code class="notranslate">fetch</code> + 查看，再决定 <code class="notranslate">merge</code> 还是 <code class="notranslate">rebase</code>。</p>
+<h3>4.3 强制推送</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">git push --force-with-lease     <span class="pl-c"><span class="pl-c">#</span> 相对安全：仅当远程未被他人更新时才覆盖</span>
+git push --force                <span class="pl-c"><span class="pl-c">#</span> 无条件覆盖，慎用</span></pre></div>
+<p><code class="notranslate">--force-with-lease</code> 是 <code class="notranslate">--force</code> 的安全替代品，它会检查远程分支是否仍是本地记录的那个状态，若他人已推送则拒绝执行。<strong>在共享分支上永远不要使用任何形式的强制推送。</strong></p>
+<h3>4.4 多人协作的两种形态</h3>
+<p><strong>形态 A：共享仓库（企业内部常见）</strong><br>
+所有人有写权限，直接向主仓库推送分支并发起 PR。</p>
+<p><strong>形态 B：Fork 工作流（开源项目常见）</strong><br>
+贡献者无主仓库写权限，流程为：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 1. Fork 后克隆自己的副本</span>
+git clone git@github.com:your-name/repo.git
+<span class="pl-c1">cd</span> repo
+
+<span class="pl-c"><span class="pl-c">#</span> 2. 关联上游</span>
+git remote add upstream git@github.com:original/repo.git
+
+<span class="pl-c"><span class="pl-c">#</span> 3. 保持与上游同步</span>
+git fetch upstream
+git checkout main
+git merge upstream/main          <span class="pl-c"><span class="pl-c">#</span> 或 rebase</span>
+git push origin main
+
+<span class="pl-c"><span class="pl-c">#</span> 4. 开发</span>
+git checkout -b feature/my-change
+<span class="pl-c"><span class="pl-c">#</span> ...修改、add、commit...</span>
+git push -u origin feature/my-change
+
+<span class="pl-c"><span class="pl-c">#</span> 5. 在 GitHub 上向 upstream 发起 Pull Request</span></pre></div>
+<h3>4.5 避免常见的同步冲突</h3>
+<ul>
+<li>每天开工先 <code class="notranslate">git pull --rebase</code>，收工前 <code class="notranslate">git push</code>。</li>
+<li>长期分支定期同步主干，避免最后一次性合并产生「冲突海啸」。</li>
+<li>合并前用 <code class="notranslate">git fetch</code> + <code class="notranslate">git diff main...feature</code> 自查改动范围。</li>
+</ul>
+<hr>
+<h2>5. 分支模型与集成策略</h2>
+<h3>5.1 为什么需要分支</h3>
+<p>分支让「并行开发」成为可能：功能开发、缺陷修复、实验性重构互不干扰。在 Git 中创建分支只是写入一个 41 字节左右的引用文件，因此<strong>应当频繁建分支、及时合并、及时删除</strong>。</p>
+<h3>5.2 分支基础命令</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">git branch                        <span class="pl-c"><span class="pl-c">#</span> 列出本地分支</span>
+git branch -a                     <span class="pl-c"><span class="pl-c">#</span> 含远程分支</span>
+git branch --show-current         <span class="pl-c"><span class="pl-c">#</span> 当前分支名</span>
+git branch feature/login          <span class="pl-c"><span class="pl-c">#</span> 创建分支（不切换）</span>
+git switch -c feature/login       <span class="pl-c"><span class="pl-c">#</span> 创建并切换（推荐）</span>
+git switch main                   <span class="pl-c"><span class="pl-c">#</span> 切换</span>
+git branch -m new-name            <span class="pl-c"><span class="pl-c">#</span> 重命名当前分支</span>
+git branch -d feature/login       <span class="pl-c"><span class="pl-c">#</span> 删除已合并分支</span>
+git branch -D feature/login       <span class="pl-c"><span class="pl-c">#</span> 强制删除未合并分支</span>
+git push origin --delete feature/login   <span class="pl-c"><span class="pl-c">#</span> 删除远程分支</span></pre></div>
+<blockquote>
+<p><code class="notranslate">git switch</code> 与 <code class="notranslate">git restore</code> 是 Git 2.23 引入的语义化命令，用于取代职责不清的 <code class="notranslate">git checkout</code>。新项目建议直接使用新命令。</p>
+</blockquote>
+<h3>5.3 合并：fast-forward 与三方合并</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">git switch main
+git merge feature/login
+git merge --no-ff feature/login   <span class="pl-c"><span class="pl-c">#</span> 强制保留合并节点</span>
+git merge --squash feature/login  <span class="pl-c"><span class="pl-c">#</span> 压缩为单个提交（需手动 commit）</span></pre></div>
+<ul>
+<li><strong>fast-forward（快进）</strong>：目标分支没有新提交时，<code class="notranslate">main</code> 指针直接前移，不产生合并提交。</li>
+<li><strong>三方合并</strong>：两边都有新提交时，Git 找到共同祖先，生成一个有两个父提交的合并节点。</li>
+</ul>
+<p><strong>选择建议</strong>：功能分支保留完整历史用 <code class="notranslate">--no-ff</code>；希望主干历史线性、单个功能只有一个节点用 <code class="notranslate">--squash</code>。</p>
+<h3>5.4 冲突解决标准流程</h3>
+<p>冲突发生在 Git 无法自动决定取舍时：</p>
+<pre class="notranslate"><code class="notranslate">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+你的代码（当前分支）
+=======
+对方的代码（被合并分支）
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/other
+</code></pre>
+<p>标准处置流程：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 1. 触发冲突后，status 会列出 both modified</span>
+git status
+
+<span class="pl-c"><span class="pl-c">#</span> 2. 手动编辑文件，删除冲突标记，决定最终内容</span>
+<span class="pl-c"><span class="pl-c">#</span>    建议用 IDE 的冲突解决面板（VS Code 提供 Accept Current/Incoming/Both）</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 3. 标记为已解决</span>
+git add <span class="pl-k">&lt;</span>file<span class="pl-k">&gt;</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 4. 继续合并 / 变基</span>
+git merge --continue        <span class="pl-c"><span class="pl-c">#</span> 或 git merge（早期版本）</span>
+git rebase --continue
+
+<span class="pl-c"><span class="pl-c">#</span> 5. 如需中止，回到冲突前状态</span>
+git merge --abort
+git rebase --abort</pre></div>
+<p>冲突预防：</p>
+<ul>
+<li>小步提交、频繁同步，缩短分支生命周期。</li>
+<li>团队约定代码格式化工具（Prettier / Black / gofmt），减少纯格式冲突。</li>
+<li>大规模重构单独开分支并<strong>快速合并</strong>，不与其他功能混行。</li>
+</ul>
+<h3>5.5 rebase 的正确打开方式</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">git switch feature/login
+git rebase main                 <span class="pl-c"><span class="pl-c">#</span> 把 feature 的提交搬到 main 最新提交之上</span>
+git rebase -i HEAD~3            <span class="pl-c"><span class="pl-c">#</span> 交互式整理最近 3 个提交</span>
+git push --force-with-lease     <span class="pl-c"><span class="pl-c">#</span> 变基后需强制推送自己的分支</span></pre></div>
+<p>交互式 rebase 可对提交执行 <code class="notranslate">pick</code> / <code class="notranslate">reword</code> / <code class="notranslate">squash</code> / <code class="notranslate">fixup</code> / <code class="notranslate">drop</code> / <code class="notranslate">edit</code>，是打造整洁历史的核心工具。</p>
+<blockquote>
+<p><strong>黄金法则：绝不 rebase 已经推送给他人并被他人基于其工作的提交。</strong> 变基会重写提交哈希，对他人而言是「凭空消失的历史」。</p>
+</blockquote>
+<h3>5.6 merge 还是 rebase</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>维度</th>
+<th>merge</th>
+<th>rebase</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>历史形态</td>
+<td>有分叉、有合并节点</td>
+<td>线性</td>
+</tr>
+<tr>
+<td>可追溯性</td>
+<td>完整保留真实协作轨迹</td>
+<td>改写历史</td>
+</tr>
+<tr>
+<td>冲突处理</td>
+<td>一次性解决</td>
+<td>可能逐个提交解决</td>
+</tr>
+<tr>
+<td>适用场景</td>
+<td>共享分支、release 集成</td>
+<td>个人分支同步主干、整理提交</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><strong>推荐策略</strong>：个人分支同步主干用 <code class="notranslate">rebase</code>；功能分支合入主干用 <code class="notranslate">merge</code>（或 squash merge）。</p>
+<h3>5.7 常见分支模型</h3>
+<p><strong>GitHub Flow（轻量，适合持续部署）</strong><br>
+仅 <code class="notranslate">main</code> + 短命功能分支：<code class="notranslate">branch → commit → PR → review → merge → deploy</code>。规则：<code class="notranslate">main</code> 始终可发布；一切改动走 PR。</p>
+<p><strong>Git Flow（适合有明确版本发布的软件）</strong><br>
+长期分支：<code class="notranslate">main</code>（发布）、<code class="notranslate">develop</code>（集成）；辅助分支：<code class="notranslate">feature/*</code>、<code class="notranslate">release/*</code>、<code class="notranslate">hotfix/*</code>。流程严谨但较重，Web 项目通常不必采用。</p>
+<p><strong>Trunk-Based（主干开发）</strong><br>
+所有人直接向 <code class="notranslate">main</code> 提交（或用极短分支，&lt; 1 天），配合特性开关（feature flag）与完善的 CI。适合高频发布、自动化成熟的团队。</p>
+<p><strong>选择建议</strong>：多数团队用 <strong>GitHub Flow</strong> 起步，在发布节奏变复杂时再引入 Git Flow 元素。</p>
+<h3>5.8 标签与版本号</h3>
+<p>采用 <strong>语义化版本（SemVer）</strong>：<code class="notranslate">主版本.次版本.修订号</code>（MAJOR.MINOR.PATCH）</p>
+<ul>
+<li><strong>PATCH</strong>：向后兼容的缺陷修复。</li>
+<li><strong>MINOR</strong>：向后兼容的新功能。</li>
+<li><strong>MAJOR</strong>：不兼容的 API 变更。</li>
+</ul>
+<div class="highlight highlight-source-shell"><pre class="notranslate">git tag                         <span class="pl-c"><span class="pl-c">#</span> 列出标签</span>
+git tag v1.2.0                  <span class="pl-c"><span class="pl-c">#</span> 轻量标签</span>
+git tag -a v1.2.0 -m <span class="pl-s"><span class="pl-pds">"</span>发布 1.2.0：新增导出功能<span class="pl-pds">"</span></span>   <span class="pl-c"><span class="pl-c">#</span> 附注标签（推荐）</span>
+git show v1.2.0
+git push origin v1.2.0          <span class="pl-c"><span class="pl-c">#</span> 推送单个标签</span>
+git push origin --tags          <span class="pl-c"><span class="pl-c">#</span> 推送全部标签</span>
+git tag -d v1.2.0               <span class="pl-c"><span class="pl-c">#</span> 删除本地标签</span>
+git push origin --delete v1.2.0 <span class="pl-c"><span class="pl-c">#</span> 删除远程标签</span></pre></div>
+<hr>
+<h2>6. GitHub 平台协作实战</h2>
+<h3>6.1 创建仓库与初始化</h3>
+<p>新建仓库时的决策清单：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>项目</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>可见性</td>
+<td>开源选 Public；含业务逻辑/密钥一律 Private</td>
+</tr>
+<tr>
+<td>README</td>
+<td>项目第一天就写，哪怕只有三行</td>
+</tr>
+<tr>
+<td>.gitignore</td>
+<td>选择对应语言模板</td>
+</tr>
+<tr>
+<td>LICENSE</td>
+<td>开源项目<strong>必须</strong>选择（见 9.1）</td>
+</tr>
+<tr>
+<td>描述与 Topics</td>
+<td>3–5 个主题标签，提升可发现性</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p>README 推荐结构：</p>
+<div class="highlight highlight-text-md"><pre class="notranslate"><span class="pl-mh"># <span class="pl-en">项目名</span></span>
+
+<span class="pl-ent"><span class="pl-ent">&gt; </span>一句话说明这个项目解决什么问题。</span>
+<span class="pl-ent"></span>
+<span class="pl-mh">## <span class="pl-en">特性</span></span>
+<span class="pl-mh">## <span class="pl-en">快速开始</span></span>
+<span class="pl-mh">## <span class="pl-en">使用示例</span></span>
+<span class="pl-mh">## <span class="pl-en">配置项</span></span>
+<span class="pl-mh">## <span class="pl-en">部署</span></span>
+<span class="pl-mh">## <span class="pl-en">贡献指南</span></span>
+<span class="pl-mh">## <span class="pl-en">许可证</span></span></pre></div>
+<h3>6.2 Issue 的写法与标签体系</h3>
+<p>一个高质量 Issue 应包含：<strong>标题（what）+ 环境信息 + 复现步骤 + 期望行为 + 实际行为 + 日志/截图 + 可能的解决方案</strong>。</p>
+<p>推荐标签体系：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>类别</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>类型</td>
+<td><code class="notranslate">bug</code>、<code class="notranslate">feature</code>、<code class="notranslate">docs</code>、<code class="notranslate">question</code>、<code class="notranslate">chore</code></td>
+</tr>
+<tr>
+<td>优先级</td>
+<td><code class="notranslate">P0</code>、<code class="notranslate">P1</code>、<code class="notranslate">P2</code></td>
+</tr>
+<tr>
+<td>状态</td>
+<td><code class="notranslate">good first issue</code>、<code class="notranslate">help wanted</code>、<code class="notranslate">wontfix</code>、<code class="notranslate">duplicate</code></td>
+</tr>
+<tr>
+<td>模块</td>
+<td><code class="notranslate">ui</code>、<code class="notranslate">api</code>、<code class="notranslate">infra</code>、<code class="notranslate">perf</code></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><code class="notranslate">good first issue</code> 与 <code class="notranslate">help wanted</code> 是 GitHub 官方推荐的新人友好标签，能显著提升开源项目的参与度。</p>
+<h3>6.3 Pull Request 完整流程</h3>
+<ol>
+<li><strong>创建分支</strong>：从最新的 <code class="notranslate">main</code> 切出 <code class="notranslate">feature/xxx</code> 或 <code class="notranslate">fix/issue-128</code>。</li>
+<li><strong>开发与提交</strong>：小步、规范提交信息。</li>
+<li><strong>自检</strong>：跑测试、跑 lint、确认无调试代码与敏感信息。</li>
+<li><strong>推送并发起 PR</strong>：<code class="notranslate">git push -u origin feature/xxx</code>，然后在网页端创建 PR。</li>
+<li><strong>填写 PR 描述</strong>：动机、改动点、影响范围、如何验证、关联 Issue（<code class="notranslate">Closes #128</code>）。</li>
+<li><strong>代码评审</strong>：回应每条评论，用 <code class="notranslate">git commit --fixup</code> 或追加提交修复。</li>
+<li><strong>CI 通过 + 评审人批准</strong>后合并。</li>
+<li><strong>清理</strong>：删除功能分支，必要时同步主干。</li>
+</ol>
+<p>PR 标题同样遵循约定式提交规范，这样合并后主干历史自动整洁。</p>
+<h3>6.4 Code Review 礼仪</h3>
+<p><strong>给评审人</strong>：</p>
+<ul>
+<li>24 小时内给出首次反馈（哪怕是「我今天晚些看」）。</li>
+<li>区分<strong>阻塞问题</strong>（must）与<strong>建议</strong>（nit / suggestion）。</li>
+<li>用提问句代替命令句：「这里是否考虑过 X 场景？」</li>
+<li>单次评审代码量控制在 400 行以内，超过则建议拆分。</li>
+</ul>
+<p><strong>给提交人</strong>：</p>
+<ul>
+<li>PR 尽量小（&lt; 400 行变更），一个 PR 只做一件事。</li>
+<li>自己先审一遍 diff 再请求评审。</li>
+<li>对每条评论要么修改、要么解释，不要已读不回。</li>
+<li>采纳建议后用 👍 等简短回应，避免无意义的「done」串。</li>
+</ul>
+<h3>6.5 用 Pull Request 参与开源</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> Fork → 克隆 → 建分支 → 修改 → 提交 → 推送 → 发起 PR</span>
+git clone git@github.com:your-name/project.git
+<span class="pl-c1">cd</span> project
+git remote add upstream git@github.com:org/project.git
+git switch -c fix/typo-in-docs
+<span class="pl-c"><span class="pl-c">#</span> ...编辑...</span>
+git add docs/README.md
+git commit -docs: 修正文档中的安装命令拼写错误<span class="pl-s"><span class="pl-pds">"</span></span>
+<span class="pl-s">git push -u origin fix/typo-in-docs</span></pre></div>
+<p>然后在自己仓库页面点击 <strong>Contribute → Open pull request</strong>。首次贡献前请务必阅读仓库根目录的 <code class="notranslate">CONTRIBUTING.md</code>。</p>
+<h3>6.6 Release 与发布</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">git switch main
+git tag -a v2.0.0 -m <span class="pl-s"><span class="pl-pds">"</span>v2.0.0<span class="pl-pds">"</span></span>
+git push origin v2.0.0</pre></div>
+<p>在 GitHub 上通过 <strong>Releases → Draft a new release</strong> 选择该标签，撰写发布说明（可自动生成变更列表），并上传编译产物。启用「自动生成发布说明」可节省大量时间。</p>
+<h3>6.7 项目管理：Projects</h3>
+<p>GitHub Projects（新版）是内建的看板/表格工具，支持：</p>
+<ul>
+<li>自定义字段（优先级、迭代、负责人、预估工时）。</li>
+<li>自动化（PR 合并后自动关闭卡片、Issue 创建后自动入列）。</li>
+<li>与 Issues / PR 双向关联。</li>
+</ul>
+<p>小型团队完全可以替代外部项目管理工具，做到「代码与计划在同一处」。</p>
+<h3>6.8 协作自动化模板</h3>
+<p><strong>Issue 模板</strong>（<code class="notranslate">.github/ISSUE_TEMPLATE/bug_report.md</code>）：</p>
+<div class="highlight highlight-text-md"><pre class="notranslate"><span class="pl-s">---</span>
+<span class="pl-ent">name</span>: <span class="pl-s">缺陷反馈</span>
+<span class="pl-ent">about</span>: <span class="pl-s">报告一个可复现的问题</span>
+<span class="pl-ent">title</span>: <span class="pl-s"><span class="pl-pds">"</span>[bug] <span class="pl-pds">"</span></span>
+<span class="pl-ent">labels</span>: <span class="pl-s">bug</span>
+<span class="pl-ent">assignees</span>: <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>
+<span class="pl-s">---</span>
+
+<span class="pl-mh">## <span class="pl-en">环境</span></span>
+<span class="pl-v">-</span> 操作系统：
+<span class="pl-v">-</span> 版本号：
+<span class="pl-v">-</span> 运行环境：
+
+<span class="pl-mh">## <span class="pl-en">复现步骤</span></span>
+<span class="pl-s">1</span><span class="pl-v">.</span>
+<span class="pl-s">2</span><span class="pl-v">.</span>
+<span class="pl-s">3</span><span class="pl-v">.</span>
+
+<span class="pl-mh">## <span class="pl-en">期望行为</span></span>
+<span class="pl-mh">## <span class="pl-en">实际行为</span></span>
+<span class="pl-mh">## <span class="pl-en">日志 / 截图</span></span></pre></div>
+<p><strong>PR 模板</strong>（<code class="notranslate">.github/pull_request_template.md</code>）：</p>
+<div class="highlight highlight-text-md"><pre class="notranslate"><span class="pl-mh">## <span class="pl-en">改动说明</span></span>
+<span class="pl-mh">## <span class="pl-en">关联 Issue</span></span>
+Closes #
+<span class="pl-mh">## <span class="pl-en">影响范围</span></span>
+<span class="pl-mh">## <span class="pl-en">自测清单</span></span>
+<span class="pl-v">-</span> <span class="pl-k">[ ]</span> 单元测试通过
+<span class="pl-v">-</span> <span class="pl-k">[ ]</span> 本地验证通过
+<span class="pl-v">-</span> <span class="pl-k">[ ]</span> 无调试代码 / 敏感信息
+<span class="pl-v">-</span> <span class="pl-k">[ ]</span> 文档已同步更新</pre></div>
+<p><strong>代码所有者</strong>（<code class="notranslate">.github/CODEOWNERS</code>）：</p>
+<pre class="notranslate"><code class="notranslate"># 语法：路径  负责人
+*                 @org/core-team
+/docs/            @org/tech-writers
+/src/api/         @org/backend-team
+*.sql             @org/dba
+</code></pre>
+<p>配置后，涉及对应路径的 PR 会自动请求相应评审人，可配合分支保护强制要求其批准。</p>
+<h3>6.9 GitHub CLI：<code class="notranslate">gh</code></h3>
+<p>官方命令行工具，把网页操作搬进终端：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">gh auth login                          <span class="pl-c"><span class="pl-c">#</span> 登录</span>
+gh repo create my-project --public     <span class="pl-c"><span class="pl-c">#</span> 创建仓库</span>
+gh issue list --label bug              <span class="pl-c"><span class="pl-c">#</span> 列出 Issue</span>
+gh issue create --title <span class="pl-s"><span class="pl-pds">"</span>...<span class="pl-pds">"</span></span> --body <span class="pl-s"><span class="pl-pds">"</span>...<span class="pl-pds">"</span></span>
+gh pr create --fill                    <span class="pl-c"><span class="pl-c">#</span> 用提交信息自动填充 PR</span>
+gh pr status                           <span class="pl-c"><span class="pl-c">#</span> 查看 PR 状态</span>
+gh pr checkout 128                     <span class="pl-c"><span class="pl-c">#</span> 检出某个 PR 分支</span>
+gh pr merge 128 --squash --delete-branch
+gh run list                            <span class="pl-c"><span class="pl-c">#</span> 查看 Actions 运行记录</span>
+gh run watch                           <span class="pl-c"><span class="pl-c">#</span> 实时跟踪运行</span>
+gh release create v1.0.0 ./dist/<span class="pl-k">*</span>.zip  <span class="pl-c"><span class="pl-c">#</span> 创建 Release 并上传产物</span></pre></div>
+<hr>
+<h2>7. 自动化：GitHub Actions</h2>
+<h3>7.1 核心概念</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>概念</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Workflow（工作流）</td>
+<td><code class="notranslate">.github/workflows/*.yml</code> 中定义的自动化流程</td>
+</tr>
+<tr>
+<td>Event（事件）</td>
+<td>触发条件，如 <code class="notranslate">push</code>、<code class="notranslate">pull_request</code>、<code class="notranslate">schedule</code></td>
+</tr>
+<tr>
+<td>Job（作业）</td>
+<td>一个运行环境上的一组步骤，多个 Job 默认并行</td>
+</tr>
+<tr>
+<td>Step（步骤）</td>
+<td>作业内的单条指令，可为 shell 命令或预置 Action</td>
+</tr>
+<tr>
+<td>Action（动作）</td>
+<td>可复用的自动化单元，支持官方、社区或自研</td>
+</tr>
+<tr>
+<td>Runner（运行器）</td>
+<td>执行作业的机器（GitHub 托管或自托管）</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>7.2 实战：Node.js 项目 CI</h3>
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> .github/workflows/ci.yml</span>
+<span class="pl-ent">name</span>: <span class="pl-s">CI</span>
+
+<span class="pl-ent">on</span>:
+  <span class="pl-ent">push</span>:
+    <span class="pl-ent">branches</span>: <span class="pl-s">[ main ]</span>
+  <span class="pl-ent">pull_request</span>:
+    <span class="pl-ent">branches</span>: <span class="pl-s">[ main ]</span>
+
+<span class="pl-ent">permissions</span>:
+  <span class="pl-ent">contents</span>: <span class="pl-s">read</span>
+
+<span class="pl-ent">concurrency</span>:
+  <span class="pl-ent">group</span>: <span class="pl-s">ci-${{ github.ref }}</span>
+  <span class="pl-ent">cancel-in-progress</span>: <span class="pl-c1">true</span>
+
+<span class="pl-ent">jobs</span>:
+  <span class="pl-ent">build</span>:
+    <span class="pl-ent">runs-on</span>: <span class="pl-s">ubuntu-latest</span>
+    <span class="pl-ent">strategy</span>:
+      <span class="pl-ent">fail-fast</span>: <span class="pl-c1">false</span>
+      <span class="pl-ent">matrix</span>:
+        <span class="pl-ent">node-version</span>: <span class="pl-s">[18.x, 20.x, 22.x]</span>
+    <span class="pl-ent">steps</span>:
+      - <span class="pl-ent">uses</span>: <span class="pl-s">actions/checkout@v4</span>
+
+      - <span class="pl-ent">name</span>: <span class="pl-s">Setup Node.js</span>
+        <span class="pl-ent">uses</span>: <span class="pl-s">actions/setup-node@v4</span>
+        <span class="pl-ent">with</span>:
+          <span class="pl-ent">node-version</span>: <span class="pl-s">${{ matrix.node-version }}</span>
+          <span class="pl-ent">cache</span>: <span class="pl-s">npm</span>
+
+      - <span class="pl-ent">name</span>: <span class="pl-s">Install dependencies</span>
+        <span class="pl-ent">run</span>: <span class="pl-s">npm ci</span>
+
+      - <span class="pl-ent">name</span>: <span class="pl-s">Lint</span>
+        <span class="pl-ent">run</span>: <span class="pl-s">npm run lint --if-present</span>
+
+      - <span class="pl-ent">name</span>: <span class="pl-s">Test</span>
+        <span class="pl-ent">run</span>: <span class="pl-s">npm test --if-present</span>
+
+      - <span class="pl-ent">name</span>: <span class="pl-s">Build</span>
+        <span class="pl-ent">run</span>: <span class="pl-s">npm run build --if-present</span></pre></div>
+<p>要点解读：</p>
+<ul>
+<li><code class="notranslate">permissions: contents: read</code> 落实<strong>最小权限</strong>原则。</li>
+<li><code class="notranslate">concurrency</code> 避免同一分支的多次推送重复占用构建资源。</li>
+<li><code class="notranslate">matrix</code> 让同一份流程在多个 Node 版本上并行验证。</li>
+<li><code class="notranslate">npm ci</code> 相比 <code class="notranslate">npm install</code> 严格按 lockfile 安装，更适合 CI。</li>
+</ul>
+<blockquote>
+<p><strong>版本提示</strong>：<code class="notranslate">actions/checkout@v4</code>、<code class="notranslate">actions/setup-node@v4</code> 等版本号会持续迭代，采用前请到 GitHub Marketplace 核对最新主版本号。</p>
+</blockquote>
+<h3>7.3 常用触发器</h3>
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">on</span>:
+  <span class="pl-ent">push</span>:
+    <span class="pl-ent">branches</span>: <span class="pl-s">[ main, "release/**" ]</span>
+    <span class="pl-ent">tags</span>: <span class="pl-s">[ "v*" ]</span>
+  <span class="pl-ent">pull_request</span>:
+    <span class="pl-ent">branches</span>: <span class="pl-s">[ main ]</span>
+  <span class="pl-ent">schedule</span>:
+    - <span class="pl-ent">cron</span>: <span class="pl-s"><span class="pl-pds">"</span>0 2 * * 1<span class="pl-pds">"</span></span>     <span class="pl-c"><span class="pl-c">#</span> 每周一 UTC 02:00</span>
+  <span class="pl-ent">workflow_dispatch</span>:          <span class="pl-c"><span class="pl-c">#</span> 手动触发</span>
+  <span class="pl-ent">issues</span>:
+    <span class="pl-ent">types</span>: <span class="pl-s">[ opened, labeled ]</span></pre></div>
+<h3>7.4 Secrets 与环境变量</h3>
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">jobs</span>:
+  <span class="pl-ent">deploy</span>:
+    <span class="pl-ent">runs-on</span>: <span class="pl-s">ubuntu-latest</span>
+    <span class="pl-ent">environment</span>: <span class="pl-s">production</span>
+    <span class="pl-ent">steps</span>:
+      - <span class="pl-ent">name</span>: <span class="pl-s">Use secret</span>
+        <span class="pl-ent">env</span>:
+          <span class="pl-ent">API_KEY</span>: <span class="pl-s">${{ secrets.API_KEY }}</span>
+        <span class="pl-ent">run</span>: <span class="pl-s">./deploy.sh</span></pre></div>
+<p>安全要点：</p>
+<ul>
+<li>敏感值一律放 <strong>Settings → Secrets and variables → Actions</strong>，分 <code class="notranslate">Repository</code> 与 <code class="notranslate">Environment</code> 两级。</li>
+<li>不要在 <code class="notranslate">run</code> 中 <code class="notranslate">echo</code> 密钥（GitHub 会自动脱敏，但不要依赖它）。</li>
+<li>PR 来自 Fork 时<strong>无法读取</strong>仓库 Secrets，这是刻意的安全设计。</li>
+</ul>
+<h3>7.5 缓存与性能</h3>
+<div class="highlight highlight-source-yaml"><pre class="notranslate">- <span class="pl-ent">uses</span>: <span class="pl-s">actions/setup-node@v4</span>
+  <span class="pl-ent">with</span>:
+    <span class="pl-ent">node-version</span>: <span class="pl-c1">20</span>
+    <span class="pl-ent">cache</span>: <span class="pl-s">npm              </span><span class="pl-c"><span class="pl-c">#</span> 内建缓存</span></pre></div>
+<p>或手动缓存：</p>
+<div class="highlight highlight-source-yaml"><pre class="notranslate">- <span class="pl-ent">uses</span>: <span class="pl-s">actions/cache@v4</span>
+  <span class="pl-ent">with</span>:
+    <span class="pl-ent">path</span>: <span class="pl-s">~/.npm</span>
+    <span class="pl-ent">key</span>: <span class="pl-s">${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}</span>
+    <span class="pl-ent">restore-keys</span>: <span class="pl-s">|</span>
+<span class="pl-s">      ${{ runner.os }}-npm-</span></pre></div>
+<h3>7.6 部署到 GitHub Pages</h3>
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> .github/workflows/deploy-pages.yml</span>
+<span class="pl-ent">name</span>: <span class="pl-s">Deploy to GitHub Pages</span>
+
+<span class="pl-ent">on</span>:
+  <span class="pl-ent">push</span>:
+    <span class="pl-ent">branches</span>: <span class="pl-s">[ main ]</span>
+  <span class="pl-ent">workflow_dispatch</span>:
+
+<span class="pl-ent">permissions</span>:
+  <span class="pl-ent">contents</span>: <span class="pl-s">read</span>
+  <span class="pl-ent">pages</span>: <span class="pl-s">write</span>
+  <span class="pl-ent">id-token</span>: <span class="pl-s">write</span>
+
+<span class="pl-ent">concurrency</span>:
+  <span class="pl-ent">group</span>: <span class="pl-s">pages</span>
+  <span class="pl-ent">cancel-in-progress</span>: <span class="pl-c1">false</span>
+
+<span class="pl-ent">jobs</span>:
+  <span class="pl-ent">build</span>:
+    <span class="pl-ent">runs-on</span>: <span class="pl-s">ubuntu-latest</span>
+    <span class="pl-ent">steps</span>:
+      - <span class="pl-ent">uses</span>: <span class="pl-s">actions/checkout@v4</span>
+      - <span class="pl-ent">uses</span>: <span class="pl-s">actions/setup-node@v4</span>
+        <span class="pl-ent">with</span>:
+          <span class="pl-ent">node-version</span>: <span class="pl-c1">20</span>
+          <span class="pl-ent">cache</span>: <span class="pl-s">npm</span>
+      - <span class="pl-ent">run</span>: <span class="pl-s">npm ci</span>
+      - <span class="pl-ent">run</span>: <span class="pl-s">npm run build</span>
+      - <span class="pl-ent">uses</span>: <span class="pl-s">actions/configure-pages@v5</span>
+      - <span class="pl-ent">uses</span>: <span class="pl-s">actions/upload-pages-artifact@v3</span>
+        <span class="pl-ent">with</span>:
+          <span class="pl-ent">path</span>: <span class="pl-s">./dist</span>
+
+  <span class="pl-ent">deploy</span>:
+    <span class="pl-ent">needs</span>: <span class="pl-s">build</span>
+    <span class="pl-ent">runs-on</span>: <span class="pl-s">ubuntu-latest</span>
+    <span class="pl-ent">environment</span>:
+      <span class="pl-ent">name</span>: <span class="pl-s">github-pages</span>
+      <span class="pl-ent">url</span>: <span class="pl-s">${{ steps.deployment.outputs.page_url }}</span>
+    <span class="pl-ent">steps</span>:
+      - <span class="pl-ent">id</span>: <span class="pl-s">deployment</span>
+        <span class="pl-ent">uses</span>: <span class="pl-s">actions/deploy-pages@v4</span></pre></div>
+<p>启用路径：仓库 <strong>Settings → Pages → Source</strong> 选择 <strong>GitHub Actions</strong>。</p>
+<h3>7.7 常用工作流清单</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>场景</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lint + Test</td>
+<td>每个 PR 自动化质量门禁</td>
+</tr>
+<tr>
+<td>自动发布</td>
+<td>打 tag 后自动构建并创建 Release</td>
+</tr>
+<tr>
+<td>依赖升级</td>
+<td>定时构建以提前发现依赖破坏性变更</td>
+</tr>
+<tr>
+<td>Issue/PR 分类</td>
+<td>依据路径自动打标签、指派负责人</td>
+</tr>
+<tr>
+<td>文档部署</td>
+<td>文档变更自动构建并发布站点</td>
+</tr>
+<tr>
+<td>镜像构建</td>
+<td>构建并推送容器镜像至镜像仓库</td>
+</tr>
+<tr>
+<td>定时报告</td>
+<td>每日生成未关闭 Issue 摘要</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<h2>8. 文档、站点与项目管理</h2>
+<h3>8.1 文档体系</h3>
+<p>成熟的仓库通常包含：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>文件</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">README.md</code></td>
+<td>项目门面，5 分钟内让人跑起来</td>
+</tr>
+<tr>
+<td><code class="notranslate">CONTRIBUTING.md</code></td>
+<td>贡献流程、开发环境、提交规范</td>
+</tr>
+<tr>
+<td><code class="notranslate">CHANGELOG.md</code></td>
+<td>按版本记录变更，可配合自动工具生成</td>
+</tr>
+<tr>
+<td><code class="notranslate">CODE_OF_CONDUCT.md</code></td>
+<td>社区行为准则</td>
+</tr>
+<tr>
+<td><code class="notranslate">SECURITY.md</code></td>
+<td>漏洞上报渠道与响应承诺</td>
+</tr>
+<tr>
+<td><code class="notranslate">LICENSE</code></td>
+<td>法律许可文本</td>
+</tr>
+<tr>
+<td><code class="notranslate">docs/</code></td>
+<td>深度文档、架构设计、API 说明</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><code class="notranslate">CHANGELOG</code> 推荐按 <strong>Keep a Changelog</strong> 结构组织：<code class="notranslate">Added / Changed / Deprecated / Removed / Fixed / Security</code>。</p>
+<h3>8.2 GitHub Pages</h3>
+<p>三种常见形态：</p>
+<ol>
+<li><strong>文档站</strong>：使用 MkDocs / Docusaurus / VitePress 构建，配合 Actions 自动部署。</li>
+<li><strong>项目主页</strong>：仓库根目录放 <code class="notranslate">index.html</code>，直接发布。</li>
+<li><strong>个人主页</strong>：创建同名仓库 <code class="notranslate">&lt;username&gt;.github.io</code>。</li>
+</ol>
+<p>自定义域名时，需在仓库根目录放置 <code class="notranslate">CNAME</code> 文件，并在域名服务商处配置 DNS（<code class="notranslate">A</code> 记录指向 GitHub Pages 的 IP，或 <code class="notranslate">CNAME</code> 指向 <code class="notranslate">&lt;username&gt;.github.io</code>）。</p>
+<h3>8.3 Discussions 与 Wiki</h3>
+<ul>
+<li><strong>Discussions</strong>：适合问答、想法征集、Show &amp; Tell，减轻 Issue 列表噪音。</li>
+<li><strong>Wiki</strong>：适合长篇、需要版本化的协作式文档；缺点是与代码不在同一提交历史中。小型项目优先使用 <code class="notranslate">docs/</code> 目录。</li>
+</ul>
+<h3>8.4 Codespaces 与 devcontainer</h3>
+<p>Codespaces 提供云端开发环境，配套 <code class="notranslate">.devcontainer/devcontainer.json</code> 可固化开发环境：</p>
+<div class="highlight highlight-source-json"><pre class="notranslate">{
+  <span class="pl-ent">"name"</span>: <span class="pl-s"><span class="pl-pds">"</span>Node.js Dev<span class="pl-pds">"</span></span>,
+  <span class="pl-ent">"image"</span>: <span class="pl-s"><span class="pl-pds">"</span>mcr.microsoft.com/devcontainers/javascript-node:20<span class="pl-pds">"</span></span>,
+  <span class="pl-ent">"postCreateCommand"</span>: <span class="pl-s"><span class="pl-pds">"</span>npm install<span class="pl-pds">"</span></span>,
+  <span class="pl-ent">"customizations"</span>: {
+    <span class="pl-ent">"vscode"</span>: {
+      <span class="pl-ent">"extensions"</span>: [
+        <span class="pl-s"><span class="pl-pds">"</span>dbaeumer.vscode-eslint<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>esbenp.prettier-vscode<span class="pl-pds">"</span></span>
+      ]
+    }
+  }
+}</pre></div>
+<p>收益：新人「一键进入开发」，环境不一致导致的「在我机器上是好的」问题显著减少。</p>
+<hr>
+<h2>9. 安全、合规与质量保障</h2>
+<h3>9.1 许可证选择</h3>
+<p>没有 <code class="notranslate">LICENSE</code> 文件的公开仓库，法律上默认「保留所有权利」，他人无权使用。</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>许可证</th>
+<th>特点</th>
+<th>适用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MIT</td>
+<td>极简、宽松、几乎无限制</td>
+<td>大多数工具库</td>
+</tr>
+<tr>
+<td>Apache-2.0</td>
+<td>宽松 + 明确专利授权 + 商标条款</td>
+<td>企业级开源</td>
+</tr>
+<tr>
+<td>BSD-3-Clause</td>
+<td>宽松 + 禁止用作者名义宣传</td>
+<td>学术与基础库</td>
+</tr>
+<tr>
+<td>MPL-2.0</td>
+<td>文件级弱著佐权</td>
+<td>想保持衍生开源的项目</td>
+</tr>
+<tr>
+<td>GPL-3.0</td>
+<td>强著佐权，衍生作品须开源</td>
+<td>希望保持自由的软件</td>
+</tr>
+<tr>
+<td>AGPL-3.0</td>
+<td>著佐权 + 网络服务也须开源</td>
+<td>SaaS 场景</td>
+</tr>
+<tr>
+<td>LGPL-3.0</td>
+<td>库级别著佐权，可被闭源调用</td>
+<td>开源基础库</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><strong>快速建议</strong>：个人工具用 MIT；带专利风险的大型项目用 Apache-2.0；坚持开源传播用 GPL/AGPL。团队采用前请咨询法务。</p>
+<h3>9.2 依赖安全</h3>
+<p><strong>Dependabot</strong>（<code class="notranslate">.github/dependabot.yml</code>）：</p>
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">version</span>: <span class="pl-c1">2</span>
+<span class="pl-ent">updates</span>:
+  - <span class="pl-ent">package-ecosystem</span>: <span class="pl-s">npm</span>
+    <span class="pl-ent">directory</span>: <span class="pl-s"><span class="pl-pds">"</span>/<span class="pl-pds">"</span></span>
+    <span class="pl-ent">schedule</span>:
+      <span class="pl-ent">interval</span>: <span class="pl-s">weekly</span>
+    <span class="pl-ent">open-pull-requests-limit</span>: <span class="pl-c1">10</span>
+
+  - <span class="pl-ent">package-ecosystem</span>: <span class="pl-s">github-actions</span>
+    <span class="pl-ent">directory</span>: <span class="pl-s"><span class="pl-pds">"</span>/<span class="pl-pds">"</span></span>
+    <span class="pl-ent">schedule</span>:
+      <span class="pl-ent">interval</span>: <span class="pl-s">monthly</span>
+
+  - <span class="pl-ent">package-ecosystem</span>: <span class="pl-s">docker</span>
+    <span class="pl-ent">directory</span>: <span class="pl-s"><span class="pl-pds">"</span>/<span class="pl-pds">"</span></span>
+    <span class="pl-ent">schedule</span>:
+      <span class="pl-ent">interval</span>: <span class="pl-s">weekly</span></pre></div>
+<p>配合仓库 <strong>Settings → Code security</strong> 开启：</p>
+<ul>
+<li><strong>Dependency graph</strong>（依赖图谱）</li>
+<li><strong>Dependabot alerts</strong>（漏洞告警）</li>
+<li><strong>Dependabot security updates</strong>（自动安全升级）</li>
+<li><strong>Secret scanning</strong>（密钥扫描）</li>
+<li><strong>Push protection</strong>（推送前拦截密钥，强烈建议开启）</li>
+</ul>
+<h3>9.3 敏感信息泄露的处置</h3>
+<p><strong>假设最坏情况：你已经把密钥提交并推送了。</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 1. 立即到服务提供方撤销 / 轮换该密钥（这是第一步，也是最重要的一步）</span>
+<span class="pl-c"><span class="pl-c">#</span> 2. 从当前代码中移除</span>
+git rm --cached config/secrets.json
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>config/secrets.json<span class="pl-pds">"</span></span> <span class="pl-k">&gt;&gt;</span> .gitignore
+git add .gitignore
+git commit -m <span class="pl-s"><span class="pl-pds">"</span>chore: 移除误提交的敏感配置<span class="pl-pds">"</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> 3. 如需彻底抹除历史（谨慎！会改写所有相关提交哈希）</span>
+pip install git-filter-repo
+git filter-repo --invert-paths --path config/secrets.json
+git remote add origin git@github.com:user/repo.git
+git push --force --all</pre></div>
+<blockquote>
+<p><strong>警告</strong>：<code class="notranslate">filter-repo</code> 会改写整个仓库历史，所有协作者需要重新克隆。<strong>轮换密钥永远优先于清洗历史</strong>——因为任何一次克隆、任何一次 fork、任何一个 CI 缓存都可能已经保存了它。</p>
+</blockquote>
+<p>预防措施：<code class="notranslate">.env</code> 加入 <code class="notranslate">.gitignore</code>、仓库开启 Push protection、使用 Secrets Manager 而非配置文件、提交前用 <code class="notranslate">git diff --staged</code> 复查。</p>
+<h3>9.4 分支保护与规则集</h3>
+<p>在 <strong>Settings → Branches</strong>（或新版 <strong>Rules / Rulesets</strong>）中可为 <code class="notranslate">main</code> 配置：</p>
+<ul>
+<li>要求 Pull Request 才能合并（禁止直接 push）。</li>
+<li>要求至少 N 名评审人批准。</li>
+<li>要求 CODEOWNERS 审批。</li>
+<li>要求状态检查通过（CI 必须绿）。</li>
+<li>要求提交签名。</li>
+<li>禁止强制推送、禁止删除分支。</li>
+<li>要求线性历史（配合 squash/rebase 合并）。</li>
+<li>合并前必须解决全部对话。</li>
+</ul>
+<p><strong>强烈建议</strong>：任何多人协作仓库都应对 <code class="notranslate">main</code> 启用「需 PR + 需 CI 通过」两项保护。</p>
+<h3>9.5 代码扫描</h3>
+<ul>
+<li><strong>CodeQL</strong>：GitHub 官方语义化静态分析，可配置 <code class="notranslate">codeql-action</code> 在 CI 中运行，覆盖常见漏洞类别（注入、路径穿越、硬编码密钥等）。</li>
+<li><strong>第三方生态</strong>：SonarCloud、Snyk、Trivy 等均提供 Action，可嵌入同一工作流。</li>
+</ul>
+<h3>9.6 提交签名</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> GPG 方式</span>
+gpg --full-generate-key
+gpg --list-secret-keys --keyid-format=long
+git config --global user.signingkey <span class="pl-k">&lt;</span>KEY_ID<span class="pl-k">&gt;</span>
+git config --global commit.gpgsign <span class="pl-c1">true</span>
+git config --global tag.gpgsign <span class="pl-c1">true</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 或使用 SSH 签名（Git 2.34+，更简单）</span>
+git config --global gpg.format ssh
+git config --global user.signingkey <span class="pl-k">~</span>/.ssh/id_ed25519.pub
+git config --global commit.gpgsign <span class="pl-c1">true</span></pre></div>
+<p>之后把公钥添加到 GitHub 的 <strong>SSH and GPG keys</strong>，提交会显示 <strong>Verified</strong> 徽章。配合分支保护的「要求签名」可防止身份伪造。</p>
+<h3>9.7 企业级治理要点</h3>
+<ul>
+<li><strong>权限最小化</strong>：按团队与仓库授予 Write / Triage / Maintain，避免全员 Admin。</li>
+<li><strong>审计日志</strong>：导出并留存关键操作记录。</li>
+<li><strong>合规策略</strong>：统一许可证白名单、统一密钥管理规范。</li>
+<li><strong>SBOM</strong>：通过依赖图谱或第三方工具生成软件物料清单。</li>
+<li><strong>灾难恢复</strong>：定期镜像备份关键仓库（<code class="notranslate">git clone --mirror</code> + 定时拉取）。</li>
+</ul>
+<hr>
+<h2>10. 进阶命令与高级技巧</h2>
+<h3>10.1 stash：临时收纳改动</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">git stash push -m <span class="pl-s"><span class="pl-pds">"</span>登录页改到一半<span class="pl-pds">"</span></span>
+git stash list
+git stash show -p stash@{0}
+git stash pop                 <span class="pl-c"><span class="pl-c">#</span> 恢复并删除</span>
+git stash apply stash@{0}     <span class="pl-c"><span class="pl-c">#</span> 恢复但保留记录</span>
+git stash drop stash@{0}
+git stash clear
+git stash push -u             <span class="pl-c"><span class="pl-c">#</span> 含未跟踪文件</span></pre></div>
+<h3>10.2 cherry-pick：精确搬运提交</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">git cherry-pick abc1234            <span class="pl-c"><span class="pl-c">#</span> 把某提交应用到当前分支</span>
+git cherry-pick abc1234 def5678    <span class="pl-c"><span class="pl-c">#</span> 多个提交</span>
+git cherry-pick abc1234..def5678   <span class="pl-c"><span class="pl-c">#</span> 区间（不含 abc1234）</span>
+git cherry-pick -x abc1234         <span class="pl-c"><span class="pl-c">#</span> 在信息中记录来源，便于追溯</span></pre></div>
+<p>典型用途：紧急 hotfix 需要同时出现在 <code class="notranslate">main</code> 与 <code class="notranslate">release/2.x</code>。</p>
+<h3>10.3 reflog：误操作的后悔药</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">git reflog                          <span class="pl-c"><span class="pl-c">#</span> 查看 HEAD 的所有历史位置</span>
+git reset --hard HEAD@{3}           <span class="pl-c"><span class="pl-c">#</span> 回到某个历史位置</span>
+git branch recover-branch abc1234   <span class="pl-c"><span class="pl-c">#</span> 从某个提交恢复分支</span></pre></div>
+<p>reflog 默认保留 90 天，是找回「误删分支 / 误 reset」的最强手段。</p>
+<h3>10.4 交互式 rebase 整理历史</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">git rebase -i HEAD~4</pre></div>
+<pre class="notranslate"><code class="notranslate">pick a111111 feat: 新增登录表单
+fixup a222222 fix: 修正拼写错误
+reword a333333 feat: 接入验证码接口
+drop a444444 wip: 临时调试代码
+</code></pre>
+<h3>10.5 worktree：同一仓库多工作区</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">git worktree add ../repo-hotfix hotfix/urgent
+git worktree list
+git worktree remove ../repo-hotfix</pre></div>
+<p>适合「正在写大功能，但需要紧急修 bug」的场景，无需 <code class="notranslate">stash</code> 或重复克隆。</p>
+<h3>10.6 子模块与 Monorepo</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">git submodule add git@github.com:org/lib.git libs/lib
+git submodule update --init --recursive
+git clone --recurse-submodules git@github.com:org/main.git
+git submodule update --remote libs/lib    <span class="pl-c"><span class="pl-c">#</span> 更新到子模块最新提交</span></pre></div>
+<p>注意子模块<strong>记录的是固定提交号</strong>，更新需要显式提交一次。</p>
+<p>大型项目也可考虑 Monorepo + 工作区工具（npm workspaces、pnpm、Bazel、Turborepo、Nx），在「代码统一治理」与「构建效率」之间取舍。</p>
+<h3>10.7 大文件与性能优化</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> Git LFS：管理二进制大文件</span>
+git lfs install
+git lfs track <span class="pl-s"><span class="pl-pds">"</span>*.psd<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span>*.zip<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span>*.mp4<span class="pl-pds">"</span></span>
+git add .gitattributes
+git lfs ls-files
+
+<span class="pl-c"><span class="pl-c">#</span> 部分克隆 / 稀疏检出（大仓库提速）</span>
+git clone --filter=blob:none git@github.com:org/huge.git
+git sparse-checkout <span class="pl-c1">set</span> src/api
+
+<span class="pl-c"><span class="pl-c">#</span> 仓库瘦身</span>
+git gc --aggressive --prune=now
+git count-objects -vH</pre></div>
+<h3>10.8 bisect：二分定位引入问题的提交</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">git bisect start
+git bisect bad                <span class="pl-c"><span class="pl-c">#</span> 当前版本有问题</span>
+git bisect good v1.0.0        <span class="pl-c"><span class="pl-c">#</span> 该版本正常</span>
+<span class="pl-c"><span class="pl-c">#</span> Git 自动检出中间提交，你只需运行测试并标记 good / bad</span>
+git bisect good               <span class="pl-c"><span class="pl-c">#</span> 或 git bisect bad</span>
+git bisect reset              <span class="pl-c"><span class="pl-c">#</span> 结束并回到原分支</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 自动化二分</span>
+git bisect run npm <span class="pl-c1">test</span>       <span class="pl-c"><span class="pl-c">#</span> 用脚本自动判定</span></pre></div>
+<p>在数千个提交中定位回归，<code class="notranslate">bisect</code> 通常只需十余次测试。</p>
+<h3>10.9 其他实用命令</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">git diff --check                    <span class="pl-c"><span class="pl-c">#</span> 检查行尾空白与冲突标记残留</span>
+git log --follow -- file            <span class="pl-c"><span class="pl-c">#</span> 跨重命名追踪文件</span>
+git restore --source=HEAD~2 -- file <span class="pl-c"><span class="pl-c">#</span> 从历史版本恢复单个文件</span>
+git range-diff main...feature       <span class="pl-c"><span class="pl-c">#</span> 比较两个分支差异集</span>
+git show --stat abc1234             <span class="pl-c"><span class="pl-c">#</span> 单次提交的改动统计</span>
+git ls-files                       <span class="pl-c"><span class="pl-c">#</span> 列出被跟踪文件</span>
+git grep <span class="pl-s"><span class="pl-pds">"</span>TODO<span class="pl-pds">"</span></span>                    <span class="pl-c"><span class="pl-c">#</span> 在全部版本中搜索</span></pre></div>
+<hr>
+<h2>11. 疑难排错手册</h2>
+<h3>11.1 detached HEAD（游离头指针）</h3>
+<p><strong>症状</strong>：<code class="notranslate">git status</code> 提示 <code class="notranslate">You are in 'detached HEAD' state</code>。</p>
+<p><strong>原因</strong>：直接 <code class="notranslate">checkout</code> 了某个提交或标签，而非分支。</p>
+<p><strong>处置</strong>：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 希望保留改动</span>
+git switch -c temp-branch
+
+<span class="pl-c"><span class="pl-c">#</span> 不需要改动，回到分支</span>
+git switch main</pre></div>
+<h3>11.2 push 被拒：non-fast-forward</h3>
+<p><strong>症状</strong>：<code class="notranslate">! [rejected] main -&gt; main (non-fast-forward)</code>。</p>
+<p><strong>原因</strong>：远程有你本地没有的提交。</p>
+<p><strong>处置</strong>：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">git fetch origin
+git rebase origin/main          <span class="pl-c"><span class="pl-c">#</span> 或 git merge origin/main</span>
+<span class="pl-c"><span class="pl-c">#</span> 解决冲突后</span>
+git push                        <span class="pl-c"><span class="pl-c">#</span> 不要直接 --force</span></pre></div>
+<h3>11.3 换行符混乱（CRLF / LF）</h3>
+<p><strong>症状</strong>：文件未改动却显示全部行变更；团队成员互相冲突。</p>
+<p><strong>处置</strong>：在仓库根目录添加 <code class="notranslate">.gitattributes</code>：</p>
+<div class="highlight highlight-source-gitattributes"><pre class="notranslate"><span class="pl-k">*</span> <span class="pl-v">text</span>=<span class="pl-c1">auto</span> <span class="pl-v">eol</span>=<span class="pl-c1">lf</span>
+<span class="pl-k">*</span><span class="pl-e">.sh</span>   <span class="pl-v">text</span> <span class="pl-v">eol</span>=<span class="pl-c1">lf</span>
+<span class="pl-k">*</span><span class="pl-e">.bat</span>  <span class="pl-v">text</span> <span class="pl-v">eol</span>=<span class="pl-c1">crlf</span>
+<span class="pl-k">*</span><span class="pl-e">.png</span>  <span class="pl-v">binary</span>
+<span class="pl-k">*</span><span class="pl-e">.jpg</span>  <span class="pl-v">binary</span>
+<span class="pl-k">*</span><span class="pl-e">.pdf</span>  <span class="pl-v">binary</span></pre></div>
+<p>然后统一规范化一次：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">git add --renormalize <span class="pl-c1">.</span>
+git commit -m <span class="pl-s"><span class="pl-pds">"</span>chore: 统一换行符为 LF<span class="pl-pds">"</span></span></pre></div>
+<h3>11.4 中文文件名显示为转义码</h3>
+<p><strong>症状</strong>：<code class="notranslate">\346\226\207\344\273\266.md</code>。</p>
+<p><strong>处置</strong>：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">git config --global core.quotepath <span class="pl-c1">false</span></pre></div>
+<h3>11.5 忽略规则不生效</h3>
+<p><strong>原因</strong>：文件已被 Git 跟踪。</p>
+<p><strong>处置</strong>：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">git rm --cached <span class="pl-k">&lt;</span>file<span class="pl-k">&gt;</span>        <span class="pl-c"><span class="pl-c">#</span> 停止跟踪，保留本地文件</span>
+git commit -m <span class="pl-s"><span class="pl-pds">"</span>chore: 停止跟踪本地配置文件<span class="pl-pds">"</span></span></pre></div>
+<h3>11.6 pull 引发冲突</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">git pull --rebase
+<span class="pl-c"><span class="pl-c">#</span> 解决冲突</span>
+git add <span class="pl-k">&lt;</span>files<span class="pl-k">&gt;</span>
+git rebase --continue
+<span class="pl-c"><span class="pl-c">#</span> 若越解越乱，可随时中止</span>
+git rebase --abort</pre></div>
+<h3>11.7 网络与代理问题</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> HTTP(S) 走代理</span>
+git config --global http.proxy http://127.0.0.1:7890
+git config --global https.proxy http://127.0.0.1:7890
+git config --global --unset http.proxy      <span class="pl-c"><span class="pl-c">#</span> 取消</span>
+
+<span class="pl-c"><span class="pl-c">#</span> SSH 走 443 端口（22 被封时）</span>
+ssh-keyscan -p 443 ssh.github.com <span class="pl-k">&gt;&gt;</span> <span class="pl-k">~</span>/.ssh/known_hosts
+<span class="pl-c"><span class="pl-c">#</span> 在 ~/.ssh/config 中添加：</span>
+<span class="pl-c"><span class="pl-c">#</span> Host ssh.github.com</span>
+<span class="pl-c"><span class="pl-c">#</span>   HostName ssh.github.com</span>
+<span class="pl-c"><span class="pl-c">#</span>   Port 443</span>
+<span class="pl-c"><span class="pl-c">#</span>   User git</span></pre></div>
+<h3>11.8 仓库体积异常增长</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">git count-objects -vH               <span class="pl-c"><span class="pl-c">#</span> 查看对象体积</span>
+git lfs ls-files                    <span class="pl-c"><span class="pl-c">#</span> 检查 LFS 使用情况</span>
+git gc --prune=now                  <span class="pl-c"><span class="pl-c">#</span> 垃圾回收</span></pre></div>
+<p>长期解决：用 Git LFS 管理二进制、<code class="notranslate">.gitignore</code> 排除构建产物、必要时用 <code class="notranslate">git filter-repo</code> 清理历史（见 9.3 节警告）。</p>
+<h3>11.9 常见错误速查</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>现象</th>
+<th>常见原因</th>
+<th>解决</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">Permission denied (publickey)</code></td>
+<td>公钥未添加 / 用错密钥</td>
+<td>检查 <code class="notranslate">ssh -T git@github.com</code> 与 <code class="notranslate">~/.ssh/config</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">Please tell me who you are</code></td>
+<td>未配置身份</td>
+<td><code class="notranslate">git config user.name/email</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">src refspec main does not match any</code></td>
+<td>本地分支名不同或无提交</td>
+<td><code class="notranslate">git branch</code> 确认后重推</td>
+</tr>
+<tr>
+<td><code class="notranslate">error: failed to push</code></td>
+<td>远程领先</td>
+<td><code class="notranslate">git pull --rebase</code> 再推</td>
+</tr>
+<tr>
+<td><code class="notranslate">CONFLICT (content): Merge conflict</code></td>
+<td>语义冲突</td>
+<td>手动解决后 <code class="notranslate">git add</code> + <code class="notranslate">--continue</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">fatal: not a git repository</code></td>
+<td>目录非仓库</td>
+<td><code class="notranslate">git init</code> 或进入正确目录</td>
+</tr>
+<tr>
+<td><code class="notranslate">index.lock exists</code></td>
+<td>上次命令异常中断</td>
+<td>确认无 Git 进程后删除 <code class="notranslate">.git/index.lock</code></td>
+</tr>
+<tr>
+<td>提交作者显示陌生邮箱</td>
+<td>仓库级配置覆盖</td>
+<td><code class="notranslate">git config --list --show-origin</code> 排查</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<h2>12. 工程化最佳实践</h2>
+<h3>12.1 仓库初始化检查单</h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> <code class="notranslate">README.md</code>：一句话定位 + 5 分钟上手指南</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> <code class="notranslate">LICENSE</code>：明确许可</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> <code class="notranslate">.gitignore</code>：按语言与工具配置</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> <code class="notranslate">.gitattributes</code>：固定换行符与二进制标记</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> <code class="notranslate">CONTRIBUTING.md</code>：贡献流程与规范</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> <code class="notranslate">SECURITY.md</code>：漏洞上报方式</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> CI 工作流：至少包含 lint + test</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 分支保护：<code class="notranslate">main</code> 需 PR + 需 CI 通过</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> Secret scanning 与 Push protection 已开启</li>
+</ul>
+<h3>12.2 提交与分支规范</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>项目</th>
+<th>约定</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>分支命名</td>
+<td><code class="notranslate">feat/xxx</code>、<code class="notranslate">fix/issue-128</code>、<code class="notranslate">chore/xxx</code>、<code class="notranslate">release/v1.2</code></td>
+</tr>
+<tr>
+<td>提交信息</td>
+<td>Conventional Commits，首行 ≤ 72 字符</td>
+</tr>
+<tr>
+<td>提交粒度</td>
+<td>一次提交一个逻辑单元，可独立回滚</td>
+</tr>
+<tr>
+<td>分支寿命</td>
+<td>功能分支尽量 &lt; 3 天</td>
+</tr>
+<tr>
+<td>合并方式</td>
+<td>Squash merge 保持主干线性；release 用 merge 保留节点</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>12.3 Code Review 检查单</h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 改动是否与 PR 描述一致、范围是否过大</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 是否有调试代码、注释掉的代码、硬编码配置</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 是否有敏感信息（密钥、内网地址、个人信息）</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 边界与异常路径是否处理</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 是否有配套测试，测试是否真的能失败</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 命名与接口设计是否清晰</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 文档与 CHANGELOG 是否需要同步</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 是否引入新的依赖，其许可证与安全状况如何</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 是否存在性能与并发隐患</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 是否向后兼容，是否需要迁移说明</li>
+</ul>
+<h3>12.4 上线前检查单</h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> CI 全绿，含单元、集成、端到端测试</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 无未解决的评审对话</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 版本号已按 SemVer 升级</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> <code class="notranslate">CHANGELOG.md</code> 已更新</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 数据库迁移脚本可回滚</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 监控与告警已就位，具备回滚方案</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 敏感配置通过 Secrets 注入，未打包进产物</li>
+</ul>
+<h3>12.5 学习路径建议</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>阶段</th>
+<th>目标</th>
+<th>重点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>入门（1–2 周）</td>
+<td>能独立完成 add / commit / push</td>
+<td>三区模型、提交规范、.gitignore</td>
+</tr>
+<tr>
+<td>进阶（1–2 月）</td>
+<td>能参与团队协作</td>
+<td>分支、PR、Code Review、冲突解决</td>
+</tr>
+<tr>
+<td>熟练（3–6 月）</td>
+<td>能搭建工程化流程</td>
+<td>Actions、分支保护、自动化发布</td>
+</tr>
+<tr>
+<td>精通（6 月+）</td>
+<td>能治理大型仓库与事故</td>
+<td>rebase 历史手术、reflog、filter-repo、安全治理</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<h2>附录 A. 命令速查表</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>场景</th>
+<th>命令</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>初始化仓库</td>
+<td><code class="notranslate">git init</code></td>
+</tr>
+<tr>
+<td>克隆仓库</td>
+<td><code class="notranslate">git clone &lt;url&gt;</code></td>
+</tr>
+<tr>
+<td>查看状态</td>
+<td><code class="notranslate">git status -sb</code></td>
+</tr>
+<tr>
+<td>暂存文件</td>
+<td><code class="notranslate">git add &lt;file&gt;</code> / <code class="notranslate">git add -p</code></td>
+</tr>
+<tr>
+<td>提交</td>
+<td><code class="notranslate">git commit -m "msg"</code></td>
+</tr>
+<tr>
+<td>修改上次提交</td>
+<td><code class="notranslate">git commit --amend --no-edit</code></td>
+</tr>
+<tr>
+<td>查看差异</td>
+<td><code class="notranslate">git diff</code> / <code class="notranslate">git diff --staged</code></td>
+</tr>
+<tr>
+<td>查看历史</td>
+<td><code class="notranslate">git log --oneline --graph --decorate --all</code></td>
+</tr>
+<tr>
+<td>创建并切换分支</td>
+<td><code class="notranslate">git switch -c &lt;branch&gt;</code></td>
+</tr>
+<tr>
+<td>切换分支</td>
+<td><code class="notranslate">git switch &lt;branch&gt;</code></td>
+</tr>
+<tr>
+<td>合并分支</td>
+<td><code class="notranslate">git merge &lt;branch&gt;</code></td>
+</tr>
+<tr>
+<td>变基</td>
+<td><code class="notranslate">git rebase &lt;branch&gt;</code></td>
+</tr>
+<tr>
+<td>交互式整理提交</td>
+<td><code class="notranslate">git rebase -i HEAD~N</code></td>
+</tr>
+<tr>
+<td>拉取远程</td>
+<td><code class="notranslate">git fetch origin</code></td>
+</tr>
+<tr>
+<td>拉取并集成</td>
+<td><code class="notranslate">git pull --rebase</code></td>
+</tr>
+<tr>
+<td>推送</td>
+<td><code class="notranslate">git push -u origin &lt;branch&gt;</code></td>
+</tr>
+<tr>
+<td>安全强制推送</td>
+<td><code class="notranslate">git push --force-with-lease</code></td>
+</tr>
+<tr>
+<td>删除远程分支</td>
+<td><code class="notranslate">git push origin --delete &lt;branch&gt;</code></td>
+</tr>
+<tr>
+<td>打标签</td>
+<td><code class="notranslate">git tag -a v1.0.0 -m "msg"</code></td>
+</tr>
+<tr>
+<td>撤销工作区改动</td>
+<td><code class="notranslate">git restore &lt;file&gt;</code></td>
+</tr>
+<tr>
+<td>取消暂存</td>
+<td><code class="notranslate">git restore --staged &lt;file&gt;</code></td>
+</tr>
+<tr>
+<td>抵消历史提交</td>
+<td><code class="notranslate">git revert &lt;sha&gt;</code></td>
+</tr>
+<tr>
+<td>丢弃本地提交</td>
+<td><code class="notranslate">git reset --hard HEAD~N</code></td>
+</tr>
+<tr>
+<td>暂存改动</td>
+<td><code class="notranslate">git stash push -m "msg"</code></td>
+</tr>
+<tr>
+<td>恢复暂存</td>
+<td><code class="notranslate">git stash pop</code></td>
+</tr>
+<tr>
+<td>搬运提交</td>
+<td><code class="notranslate">git cherry-pick &lt;sha&gt;</code></td>
+</tr>
+<tr>
+<td>找回误删</td>
+<td><code class="notranslate">git reflog</code></td>
+</tr>
+<tr>
+<td>二分定位</td>
+<td><code class="notranslate">git bisect start</code></td>
+</tr>
+<tr>
+<td>查看责任人</td>
+<td><code class="notranslate">git blame &lt;file&gt;</code></td>
+</tr>
+<tr>
+<td>追踪单文件历史</td>
+<td><code class="notranslate">git log --follow -- &lt;file&gt;</code></td>
+</tr>
+<tr>
+<td>检查忽略规则</td>
+<td><code class="notranslate">git check-ignore -v &lt;file&gt;</code></td>
+</tr>
+<tr>
+<td>清理远程失效分支</td>
+<td><code class="notranslate">git fetch --prune</code></td>
+</tr>
+<tr>
+<td>垃圾回收</td>
+<td><code class="notranslate">git gc --prune=now</code></td>
+</tr>
+<tr>
+<td>查看仓库体积</td>
+<td><code class="notranslate">git count-objects -vH</code></td>
+</tr>
+<tr>
+<td>配置别名</td>
+<td><code class="notranslate">git config --global alias.lg "log --oneline --graph"</code></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<h2>附录 B. 术语表</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>术语</th>
+<th>释义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Repository（仓库）</td>
+<td>包含全部版本历史与工作区的项目目录</td>
+</tr>
+<tr>
+<td>Working Directory</td>
+<td>当前可见、可编辑的文件区域</td>
+</tr>
+<tr>
+<td>Staging Area / Index</td>
+<td>提交前的暂存区，决定下次提交的内容</td>
+</tr>
+<tr>
+<td>Commit</td>
+<td>一次不可变的快照，附带作者、时间与信息</td>
+</tr>
+<tr>
+<td>Tree / Blob</td>
+<td>Git 对象：目录结构 / 文件内容</td>
+</tr>
+<tr>
+<td>SHA</td>
+<td>提交与对象的内容哈希标识</td>
+</tr>
+<tr>
+<td>Branch</td>
+<td>指向某个提交的可移动引用</td>
+</tr>
+<tr>
+<td>HEAD</td>
+<td>指向当前分支（或提交）的指针</td>
+</tr>
+<tr>
+<td>Remote</td>
+<td>远程仓库的本地别名，如 <code class="notranslate">origin</code></td>
+</tr>
+<tr>
+<td>Upstream</td>
+<td>本地分支跟踪的远程分支</td>
+</tr>
+<tr>
+<td>Fetch</td>
+<td>下载远程对象与引用，不改动工作区</td>
+</tr>
+<tr>
+<td>Pull</td>
+<td>Fetch + Merge/Rebase</td>
+</tr>
+<tr>
+<td>Push</td>
+<td>上传本地提交到远程</td>
+</tr>
+<tr>
+<td>Merge</td>
+<td>将两个分支历史汇合</td>
+</tr>
+<tr>
+<td>Rebase</td>
+<td>将提交搬到另一基点，重写历史</td>
+</tr>
+<tr>
+<td>Fast-forward</td>
+<td>目标分支无新提交时的指针直移</td>
+</tr>
+<tr>
+<td>Conflict</td>
+<td>双方改动无法自动合并的状态</td>
+</tr>
+<tr>
+<td>Tag</td>
+<td>固定指向某个提交的标记，常用于版本发布</td>
+</tr>
+<tr>
+<td>Fork</td>
+<td>在自己名下复制他人仓库</td>
+</tr>
+<tr>
+<td>Pull Request</td>
+<td>请求将自己分支的改动合入目标分支</td>
+</tr>
+<tr>
+<td>Issue</td>
+<td>任务、缺陷或讨论的记录单元</td>
+</tr>
+<tr>
+<td>CI / CD</td>
+<td>持续集成 / 持续交付</td>
+</tr>
+<tr>
+<td>Runner</td>
+<td>执行工作流的机器</td>
+</tr>
+<tr>
+<td>Workflow</td>
+<td>GitHub Actions 的自动化流程定义</td>
+</tr>
+<tr>
+<td>SBOM</td>
+<td>软件物料清单，记录全部依赖组件</td>
+</tr>
+<tr>
+<td>Conventional Commits</td>
+<td>约定式提交信息规范</td>
+</tr>
+<tr>
+<td>SemVer</td>
+<td>语义化版本号规范</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<h2>附录 C. 延伸学习资源</h2>
+<ol>
+<li><strong>Pro Git（官方书籍，含中文版）</strong> — <a href="https://git-scm.com/book/zh/v2" rel="nofollow">git-scm.com/book/zh/v2</a><br>
+系统性理解 Git 内部原理的最佳材料，第 1、3、7 章尤其值得精读。</li>
+<li><strong>Git 官方参考手册</strong> — <a href="https://git-scm.com/docs" rel="nofollow">git-scm.com/docs</a><br>
+命令行为的最终依据，遇到歧义时查阅此处。</li>
+<li><strong>GitHub 官方文档</strong> — <a href="https://docs.github.com">docs.github.com</a><br>
+平台功能、安全策略与 Actions 语法的权威来源。</li>
+<li><strong>GitHub Skills</strong> — <a href="https://skills.github.com">skills.github.com</a><br>
+交互式实操课程，覆盖 PR、Actions、Pages 等主题。</li>
+<li><strong>Learn Git Branching</strong> — <a href="https://learngitbranching.js.org" rel="nofollow">learngitbranching.js.org</a><br>
+可视化分支练习，把 merge / rebase / cherry-pick 玩成肌肉记忆。</li>
+<li><strong>Conventional Commits 规范</strong> — <a href="https://www.conventionalcommits.org" rel="nofollow">conventionalcommits.org</a></li>
+<li><strong>Keep a Changelog</strong> — <a href="https://keepachangelog.com" rel="nofollow">keepachangelog.com</a></li>
+<li><strong>Semantic Versioning</strong> — <a href="https://semver.org" rel="nofollow">semver.org</a></li>
+</ol>
+<hr>
+<blockquote>
+<p><strong>结语</strong>：Git 的学习曲线陡峭在「心智模型」，而不是命令数量。把三区模型、提交对象与分支指针这三件事想透，剩下的命令只是在不同场景下移动这些指针。工具会更新，界面会改版，但**「小步提交、清晰历史、可回滚、可追溯」**这十六字原则，会在你的整个职业生涯里持续生效。</p>
+</blockquote></div>
+<div style="font-size:small;margin-top:8px;float:right;">转载请注明出处</div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://helloblog.eik.cc">你好博客</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if("09/25/2026"!=""){
+    var startSite=new Date("09/25/2026");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行 "+diffDay+" 天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","techjiang/Gmeek-HelloBlog");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script><script src='https://blog.meekdai.com/Gmeek/plugins/lightbox.js'></script>
+
+</html>
