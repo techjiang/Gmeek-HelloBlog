@@ -1,5 +1,449 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>你好博客</title><link>https://helloblog.eik.cc</link><description>你好博客，你好世界！</description><copyright>你好博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://docs.asoe.cn/img/Hello-Logo.svg</url><title>avatar</title><link>https://helloblog.eik.cc</link></image><lastBuildDate>Wed, 30 Sep 2026 11:33:37 +0000</lastBuildDate><managingEditor>你好博客</managingEditor><ttl>60</ttl><webMaster>你好博客</webMaster><item><title>Vue从入门到精通：Vue3现代前端开发完全实践手册</title><link>https://helloblog.eik.cc/post/Vue-cong-ru-men-dao-jing-tong-%EF%BC%9AVue3-xian-dai-qian-duan-kai-fa-wan-quan-shi-jian-shou-ce.html</link><description>&gt; **版本**：v1.0　|　**适用对象**：零基础到中高级前端工程师　|　**阅读方式**：线性阅读 + 按需查阅附录
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>你好博客</title><link>https://helloblog.eik.cc</link><description>你好博客，你好世界！</description><copyright>你好博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://docs.asoe.cn/img/Hello-Logo.svg</url><title>avatar</title><link>https://helloblog.eik.cc</link></image><lastBuildDate>Wed, 30 Sep 2026 20:36:13 +0000</lastBuildDate><managingEditor>你好博客</managingEditor><ttl>60</ttl><webMaster>你好博客</webMaster><item><title>Vue从入门到精通：Vue3现代接口开发实践手册(第二部分)</title><link>https://helloblog.eik.cc/post/Vue-cong-ru-men-dao-jing-tong-%EF%BC%9AVue3-xian-dai-jie-kou-kai-fa-shi-jian-shou-ce-%28-di-er-bu-fen-%29.html</link><description>## 10. 自定义指令
+
+### 10.1 基础自定义指令
+
+```typescript
+// directives/vFocus.ts
+import type { Directive, DirectiveBinding } from 'vue'
+
+export const vFocus: Directive&lt;HTMLElement, boolean&gt; = {
+  // 元素挂载后触发
+  mounted(el, binding) {
+    if (binding.value !== false) {
+      el.focus()
+    }
+  },
+
+  // 元素更新前
+  beforeUpdate(el, binding) {
+    console.log('before update')
+  },
+
+  // 元素更新后
+  updated(el, binding) {
+    console.log('updated')
+  },
+
+  // 元素卸载前
+  beforeUnmount(el) {
+    console.log('before unmount')
+  },
+
+  // 元素卸载后
+  unmounted(el) {
+    console.log('unmounted')
+  }
+}
+```
+
+### 10.2 使用自定义指令
+
+```vue
+&lt;script setup lang='ts'&gt;
+import { vFocus } from '@/directives/vFocus'
+import { vPermission } from '@/directives/vPermission'
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;!-- 自动聚焦 --&gt;
+  &lt;input v-focus&gt;
+
+  &lt;!-- 条件聚焦 --&gt;
+  &lt;input v-focus='shouldFocus'&gt;
+
+  &lt;!-- 权限指令 --&gt;
+  &lt;button v-permission=''admin''&gt;仅管理员可见&lt;/button&gt;
+  &lt;button v-permission='['admin', 'editor']'&gt;管理员或编辑可见&lt;/button&gt;
+&lt;/template&gt;
+```
+
+### 10.3 实用指令示例
+
+```typescript
+// directives/vPermission.ts
+import type { Directive } from 'vue'
+import { useAuthStore } from '@/stores/auth'
+
+export const vPermission: Directive&lt;HTMLElement, string | string[]&gt; = {
+  mounted(el, binding) {
+    const auth = useAuthStore()
+    const required = Array.isArray(binding.value) ? binding.value : [binding.value]
+    const hasPermission = required.some((perm) =&gt; auth.permissions.includes(perm))
+
+    if (!hasPermission) {
+      el.parentNode?.removeChild(el)   // 移除 DOM
+      // 或者：el.style.display = 'none'
+    }
+  }
+}
+
+// directives/vDebounce.ts
+import type { Directive } from 'vue'
+
+export const vDebounce: Directive&lt;HTMLElement, () =&gt; void&gt; = {
+  mounted(el, binding) {
+    let timer: ReturnType&lt;typeof setTimeout&gt;
+    el.addEventListener('click', () =&gt; {
+      clearTimeout(timer)
+      timer = setTimeout(() =&gt; {
+        binding.value()
+      }, binding.arg ? parseInt(binding.arg) : 300)
+    })
+  }
+}
+
+// directives/vClickOutside.ts
+import type { Directive } from 'vue'
+
+export const vClickOutside: Directive&lt;HTMLElement, (e: MouseEvent) =&gt; void&gt; = {
+  mounted(el, binding) {
+    el.__clickOutsideHandler = (event: MouseEvent) =&gt; {
+      if (!el.contains(event.target as Node)) {
+        binding.value(event)
+      }
+    }
+    document.addEventListener('click', el.__clickOutsideHandler)
+  },
+  unmounted(el) {
+    document.removeEventListener('click', el.__clickOutsideHandler)
+  }
+}
+```
+
+---
+
+## 11. 插件与全局配置
+
+### 11.1 创建插件
+
+```typescript
+// plugins/analytics.ts
+import type { App, Plugin } from 'vue'
+
+interface AnalyticsOptions {
+  trackingId: string
+  debug?: boolean
+}
+
+export const AnalyticsPlugin: Plugin = {
+  install(app: App, options: AnalyticsOptions) {
+    // 全局属性
+    app.config.globalProperties.$analytics = {
+      track(event: string, data?: Record&lt;string, unknown&gt;) {
+        if (options.debug) {
+          console.log(`[Analytics] ${event}`, data)
+        }
+        // 发送到分析服务
+      }
+    }
+
+    // 全局指令
+    app.directive('track', {
+      mounted(el, binding) {
+        el.addEventListener('click', () =&gt; {
+          app.config.globalProperties.$analytics.track(binding.value)
+        })
+      }
+    })
+
+    // 全局组件
+    app.component('AnalyticsBanner', {
+      template: '&lt;div class='analytics-banner'&gt;Cookie Consent&lt;/div&gt;'
+    })
+
+    // provide 全局数据
+    app.provide('analyticsConfig', options)
+  }
+}
+```
+
+### 11.2 使用插件
+
+```typescript
+// main.ts
+import { createApp } from 'vue'
+import App from './App.vue'
+import { AnalyticsPlugin } from './plugins/analytics'
+
+const app = createApp(App)
+
+app.use(AnalyticsPlugin, {
+  trackingId: 'UA-XXXXX',
+  debug: import.meta.env.DEV
+})
+
+app.mount('#app')
+```
+
+```vue
+&lt;!-- 在组件中使用 --&gt;
+&lt;script setup lang='ts'&gt;
+import { inject } from 'vue'
+import { getCurrentInstance } from 'vue'
+
+// 使用全局属性
+const { proxy } = getCurrentInstance()!
+proxy?.$analytics.track('page_view', { page: '/home' })
+
+// 使用注入
+const config = inject&lt;{ trackingId: string }&gt;('analyticsConfig')
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;!-- 使用全局指令 --&gt;
+  &lt;button v-track=''button_click''&gt;跟踪点击&lt;/button&gt;
+
+  &lt;!-- 使用全局组件 --&gt;
+  &lt;AnalyticsBanner /&gt;
+&lt;/template&gt;
+```
+
+### 11.3 全局配置
+
+```typescript
+// main.ts
+const app = createApp(App)
+
+// 全局错误处理
+app.config.errorHandler = (err, instance, info) =&gt; {
+  console.error('Global error:', err, info)
+  // 发送到错误监控服务
+}
+
+// 全局警告处理（开发模式）
+app.config.warnHandler = (msg, instance, trace) =&gt; {
+  console.warn('Vue warning:', msg)
+}
+
+// 全局属性（不推荐过度使用，优先使用 provide/inject 或 Pinia）
+app.config.globalProperties.$formatDate = (date: Date) =&gt; {
+  return date.toLocaleDateString('zh-CN')
+}
+
+// 自定义元素（将 Vue 组件用作 Web Component）
+app.config.compilerOptions.isCustomElement = (tag) =&gt; {
+  return tag.startsWith('my-')
+}
+```
+
+---
+
+## 12. Vue Router 路由
+
+### 12.1 基础配置
+
+```typescript
+// router/index.ts
+import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+
+const routes: RouteRecordRaw[] = [
+  {
+    path: '/',
+    name: 'Home',
+    component: () =&gt; import('@/views/Home.vue')
+  },
+  {
+    path: '/about',
+    name: 'About',
+    component: () =&gt; import('@/views/About.vue')
+  },
+  {
+    path: '/users/:id',
+    name: 'UserDetail',
+    component: () =&gt; import('@/views/UserDetail.vue'),
+    props: true   // 将路由参数作为 props 传递给组件
+  },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: () =&gt; import('@/views/Dashboard.vue'),
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: '',
+        name: 'DashboardHome',
+        component: () =&gt; import('@/views/dashboard/Home.vue')
+      },
+      {
+        path: 'settings',
+        name: 'Settings',
+        component: () =&gt; import('@/views/dashboard/Settings.vue')
+      }
+    ]
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: () =&gt; import('@/views/NotFound.vue')
+  }
+]
+
+const router = createRouter({
+  history: createWebHistory(),     // HTML5 History 模式
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) return savedPosition
+    return { top: 0 }
+  }
+})
+
+export default router
+```
+
+### 12.2 在组件中使用路由
+
+```vue
+&lt;script setup lang='ts'&gt;
+import { useRouter, useRoute } from 'vue-router'
+import { computed } from 'vue'
+
+const router = useRouter()
+const route = useRoute()
+
+// 读取路由参数
+const userId = computed(() =&gt; route.params.id)
+const query = computed(() =&gt; route.query)
+
+// 导航
+function goToUser(id: number) {
+  router.push({ name: 'UserDetail', params: { id } })
+}
+
+function goToSearch() {
+  router.push({ path: '/search', query: { q: 'vue', page: '1' } })
+}
+
+function goBack() {
+  router.back()
+}
+
+function replace() {
+  // 不会在历史记录中留下痕迹
+  router.replace({ name: 'Home' })
+}
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;!-- 声明式导航 --&gt;
+  &lt;RouterLink to='/'&gt;首页&lt;/RouterLink&gt;
+  &lt;RouterLink :to='{ name: 'UserDetail', params: { id: 42 } }'&gt;用户 42&lt;/RouterLink&gt;
+  &lt;RouterLink to='/dashboard' active-class='active'&gt;仪表盘&lt;/RouterLink&gt;
+
+  &lt;!-- 精确匹配激活类 --&gt;
+  &lt;RouterLink to='/dashboard' exact-active-class='exact-active'&gt;仪表盘&lt;/RouterLink&gt;
+
+  &lt;!-- 编程式导航 --&gt;
+  &lt;button @click='goToUser(42)'&gt;去用户 42&lt;/button&gt;
+  &lt;button @click='goBack'&gt;返回&lt;/button&gt;
+
+  &lt;!-- 渲染匹配的组件 --&gt;
+  &lt;RouterView /&gt;
+&lt;/template&gt;
+```
+
+### 12.3 导航守卫
+
+```typescript
+// router/index.ts
+router.beforeEach((to, from, next) =&gt; {
+  // 全局前置守卫
+  const authStore = useAuthStore()
+
+  if (to.meta.requiresAuth &amp;&amp; !authStore.isLoggedIn) {
+    // 未登录，跳转到登录页
+    next({ name: 'Login', query: { redirect: to.fullPath } })
+  } else if (to.name === 'Login' &amp;&amp; authStore.isLoggedIn) {
+    // 已登录，跳转到首页
+    next({ name: 'Home' })
+  } else {
+    next()
+  }
+})
+
+router.afterEach((to, from) =&gt; {
+  // 全局后置钩子（适合设置页面标题、埋点等）
+  document.title = to.meta.title ? `${to.meta.title} - MyApp` : 'MyApp'
+})
+
+// 路由独享守卫
+{
+  path: '/admin',
+  component: AdminLayout,
+  beforeEnter: (to, from, next) =&gt; {
+    if (!isAdmin()) {
+      next('/403')
+    } else {
+      next()
+    }
+  }
+}
+```
+
+```vue
+&lt;!-- 组件内守卫 --&gt;
+&lt;script setup lang='ts'&gt;
+import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router'
+
+// 路由离开前（如表单未保存提醒）
+onBeforeRouteLeave((to, from) =&gt; {
+  if (hasUnsavedChanges.value) {
+    return window.confirm('有未保存的更改，确定离开？')
+  }
+})
+
+// 路由参数变化时（同一组件复用时）
+onBeforeRouteUpdate(async (to, from) =&gt; {
+  if (to.params.id !== from.params.id) {
+    await fetchUser(to.params.id as string)
+  }
+})
+&lt;/script&gt;
+```
+
+### 12.4 路由懒加载
+
+```typescript
+// ✅ 推荐：动态 import 实现懒加载
+const routes = [
+  {
+    path: '/dashboard',
+    component: () =&gt; import('@/views/Dashboard.vue')
+  },
+  {
+    path: '/admin',
+    component: () =&gt; import(/* webpackChunkName: 'admin' */ '@/views/Admin.vue')
+  }
+]
+
+// ✅ 配合 Suspense + defineAsyncComponent
+import { defineAsyncComponent } from 'vue'
+const HeavyView = defineAsyncComponent(() =&gt; import('@/views/HeavyView.vue'))
+```
+
+### 12.5 路由元信息与类型
+
+```typescript
+// 扩展 RouteMeta 类型
+declare module 'vue-router' {
+  interface RouteMeta {
+    title?: string
+    requiresAuth?: boolean
+    roles?: string[]
+    layout?: 'default' | 'admin' | 'blank'
+  }
+}
+```
+
+---
+
+## 13. Pinia 状态管理
+
+### 13.1 为什么用 Pinia
+
+Pinia 是 Vue 官方推荐的状态管理库（替代 Vuex）：
+
+- **更简单的 API**：没有 mutations，直接在 actions 中修改状态。</description><guid isPermaLink="true">https://helloblog.eik.cc/post/Vue-cong-ru-men-dao-jing-tong-%EF%BC%9AVue3-xian-dai-jie-kou-kai-fa-shi-jian-shou-ce-%28-di-er-bu-fen-%29.html</guid><pubDate>Wed, 30 Sep 2026 05:07:47 +0000</pubDate></item><item><title>Vue从入门到精通：Vue3现代前端开发完全实践手册</title><link>https://helloblog.eik.cc/post/Vue-cong-ru-men-dao-jing-tong-%EF%BC%9AVue3-xian-dai-qian-duan-kai-fa-wan-quan-shi-jian-shou-ce.html</link><description>&gt; **版本**：v1.0　|　**适用对象**：零基础到中高级前端工程师　|　**阅读方式**：线性阅读 + 按需查阅附录
 &gt;
 &gt; **阅读须知**：本文以 **Vue 3（3.4+）** 为主线，使用 **`&lt;script setup&gt;` 语法糖 + Composition API + TypeScript** 作为推荐范式。</description><guid isPermaLink="true">https://helloblog.eik.cc/post/Vue-cong-ru-men-dao-jing-tong-%EF%BC%9AVue3-xian-dai-qian-duan-kai-fa-wan-quan-shi-jian-shou-ce.html</guid><pubDate>Wed, 30 Sep 2026 05:06:28 +0000</pubDate></item><item><title>Vercel从入门到精通：现代前端部署与边缘计算完全实践手册</title><link>https://helloblog.eik.cc/post/Vercel-cong-ru-men-dao-jing-tong-%EF%BC%9A-xian-dai-qian-duan-bu-shu-yu-bian-yuan-ji-suan-wan-quan-shi-jian-shou-ce.html</link><description>&gt; **版本**：v1.0　|　**适用对象**：前端工程师、全栈开发者、DevOps 与平台工程人员　|　**阅读方式**：线性阅读 + 按需查阅附录
 &gt;

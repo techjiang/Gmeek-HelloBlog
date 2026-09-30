@@ -1,0 +1,3066 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <meta name='description' content='你好博客是一个专注于技术分享、编程笔记与生活感悟的个人博客，提供高质量原创内容。'><meta name='keywords' content='你好博客,技术博客,编程笔记,Gmeek,前端开发,个人网站'><meta name='author' content='你好博客'><meta name='robots' content='index,follow'><link rel='canonical' href='https://helloblog.eik.cc/'><script type='application/ld+json'>{"@context":"https://schema.org","@type":"WebSite","name":"你好博客","url":"https://helloblog.eik.cc/","description":"专注于技术分享、编程笔记与生活感悟的个人博客","author":{"@type":"Person","name":"你好博客","email":"official@tech.asoe.cn"},"potentialAction":{"@type":"SearchAction","target":"https://helloblog.eik.cc/?q={search_term_string}","query-input":"required name=search_term_string"}}</script><script src='https://blog.meekdai.com/Gmeek/plugins/GmeekBSZ.js'></script><script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script>
+    <link rel="icon" href="https://docs.asoe.cn/img/Hello-Logo.svg"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="## 10. 自定义指令
+
+### 10.1 基础自定义指令
+
+```typescript
+// directives/vFocus.ts
+import type { Directive, DirectiveBinding } from 'vue'
+
+export const vFocus: Directive<HTMLElement, boolean> = {
+  // 元素挂载后触发
+  mounted(el, binding) {
+    if (binding.value !== false) {
+      el.focus()
+    }
+  },
+
+  // 元素更新前
+  beforeUpdate(el, binding) {
+    console.log('before update')
+  },
+
+  // 元素更新后
+  updated(el, binding) {
+    console.log('updated')
+  },
+
+  // 元素卸载前
+  beforeUnmount(el) {
+    console.log('before unmount')
+  },
+
+  // 元素卸载后
+  unmounted(el) {
+    console.log('unmounted')
+  }
+}
+```
+
+### 10.2 使用自定义指令
+
+```vue
+<script setup lang='ts'>
+import { vFocus } from '@/directives/vFocus'
+import { vPermission } from '@/directives/vPermission'
+</script>
+
+<template>
+  <!-- 自动聚焦 -->
+  <input v-focus>
+
+  <!-- 条件聚焦 -->
+  <input v-focus='shouldFocus'>
+
+  <!-- 权限指令 -->
+  <button v-permission=''admin''>仅管理员可见</button>
+  <button v-permission='['admin', 'editor']'>管理员或编辑可见</button>
+</template>
+```
+
+### 10.3 实用指令示例
+
+```typescript
+// directives/vPermission.ts
+import type { Directive } from 'vue'
+import { useAuthStore } from '@/stores/auth'
+
+export const vPermission: Directive<HTMLElement, string | string[]> = {
+  mounted(el, binding) {
+    const auth = useAuthStore()
+    const required = Array.isArray(binding.value) ? binding.value : [binding.value]
+    const hasPermission = required.some((perm) => auth.permissions.includes(perm))
+
+    if (!hasPermission) {
+      el.parentNode?.removeChild(el)   // 移除 DOM
+      // 或者：el.style.display = 'none'
+    }
+  }
+}
+
+// directives/vDebounce.ts
+import type { Directive } from 'vue'
+
+export const vDebounce: Directive<HTMLElement, () => void> = {
+  mounted(el, binding) {
+    let timer: ReturnType<typeof setTimeout>
+    el.addEventListener('click', () => {
+      clearTimeout(timer)
+      timer = setTimeout(() => {
+        binding.value()
+      }, binding.arg ? parseInt(binding.arg) : 300)
+    })
+  }
+}
+
+// directives/vClickOutside.ts
+import type { Directive } from 'vue'
+
+export const vClickOutside: Directive<HTMLElement, (e: MouseEvent) => void> = {
+  mounted(el, binding) {
+    el.__clickOutsideHandler = (event: MouseEvent) => {
+      if (!el.contains(event.target as Node)) {
+        binding.value(event)
+      }
+    }
+    document.addEventListener('click', el.__clickOutsideHandler)
+  },
+  unmounted(el) {
+    document.removeEventListener('click', el.__clickOutsideHandler)
+  }
+}
+```
+
+---
+
+## 11. 插件与全局配置
+
+### 11.1 创建插件
+
+```typescript
+// plugins/analytics.ts
+import type { App, Plugin } from 'vue'
+
+interface AnalyticsOptions {
+  trackingId: string
+  debug?: boolean
+}
+
+export const AnalyticsPlugin: Plugin = {
+  install(app: App, options: AnalyticsOptions) {
+    // 全局属性
+    app.config.globalProperties.$analytics = {
+      track(event: string, data?: Record<string, unknown>) {
+        if (options.debug) {
+          console.log(`[Analytics] ${event}`, data)
+        }
+        // 发送到分析服务
+      }
+    }
+
+    // 全局指令
+    app.directive('track', {
+      mounted(el, binding) {
+        el.addEventListener('click', () => {
+          app.config.globalProperties.$analytics.track(binding.value)
+        })
+      }
+    })
+
+    // 全局组件
+    app.component('AnalyticsBanner', {
+      template: '<div class='analytics-banner'>Cookie Consent</div>'
+    })
+
+    // provide 全局数据
+    app.provide('analyticsConfig', options)
+  }
+}
+```
+
+### 11.2 使用插件
+
+```typescript
+// main.ts
+import { createApp } from 'vue'
+import App from './App.vue'
+import { AnalyticsPlugin } from './plugins/analytics'
+
+const app = createApp(App)
+
+app.use(AnalyticsPlugin, {
+  trackingId: 'UA-XXXXX',
+  debug: import.meta.env.DEV
+})
+
+app.mount('#app')
+```
+
+```vue
+<!-- 在组件中使用 -->
+<script setup lang='ts'>
+import { inject } from 'vue'
+import { getCurrentInstance } from 'vue'
+
+// 使用全局属性
+const { proxy } = getCurrentInstance()!
+proxy?.$analytics.track('page_view', { page: '/home' })
+
+// 使用注入
+const config = inject<{ trackingId: string }>('analyticsConfig')
+</script>
+
+<template>
+  <!-- 使用全局指令 -->
+  <button v-track=''button_click''>跟踪点击</button>
+
+  <!-- 使用全局组件 -->
+  <AnalyticsBanner />
+</template>
+```
+
+### 11.3 全局配置
+
+```typescript
+// main.ts
+const app = createApp(App)
+
+// 全局错误处理
+app.config.errorHandler = (err, instance, info) => {
+  console.error('Global error:', err, info)
+  // 发送到错误监控服务
+}
+
+// 全局警告处理（开发模式）
+app.config.warnHandler = (msg, instance, trace) => {
+  console.warn('Vue warning:', msg)
+}
+
+// 全局属性（不推荐过度使用，优先使用 provide/inject 或 Pinia）
+app.config.globalProperties.$formatDate = (date: Date) => {
+  return date.toLocaleDateString('zh-CN')
+}
+
+// 自定义元素（将 Vue 组件用作 Web Component）
+app.config.compilerOptions.isCustomElement = (tag) => {
+  return tag.startsWith('my-')
+}
+```
+
+---
+
+## 12. Vue Router 路由
+
+### 12.1 基础配置
+
+```typescript
+// router/index.ts
+import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+
+const routes: RouteRecordRaw[] = [
+  {
+    path: '/',
+    name: 'Home',
+    component: () => import('@/views/Home.vue')
+  },
+  {
+    path: '/about',
+    name: 'About',
+    component: () => import('@/views/About.vue')
+  },
+  {
+    path: '/users/:id',
+    name: 'UserDetail',
+    component: () => import('@/views/UserDetail.vue'),
+    props: true   // 将路由参数作为 props 传递给组件
+  },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: () => import('@/views/Dashboard.vue'),
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: '',
+        name: 'DashboardHome',
+        component: () => import('@/views/dashboard/Home.vue')
+      },
+      {
+        path: 'settings',
+        name: 'Settings',
+        component: () => import('@/views/dashboard/Settings.vue')
+      }
+    ]
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: () => import('@/views/NotFound.vue')
+  }
+]
+
+const router = createRouter({
+  history: createWebHistory(),     // HTML5 History 模式
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) return savedPosition
+    return { top: 0 }
+  }
+})
+
+export default router
+```
+
+### 12.2 在组件中使用路由
+
+```vue
+<script setup lang='ts'>
+import { useRouter, useRoute } from 'vue-router'
+import { computed } from 'vue'
+
+const router = useRouter()
+const route = useRoute()
+
+// 读取路由参数
+const userId = computed(() => route.params.id)
+const query = computed(() => route.query)
+
+// 导航
+function goToUser(id: number) {
+  router.push({ name: 'UserDetail', params: { id } })
+}
+
+function goToSearch() {
+  router.push({ path: '/search', query: { q: 'vue', page: '1' } })
+}
+
+function goBack() {
+  router.back()
+}
+
+function replace() {
+  // 不会在历史记录中留下痕迹
+  router.replace({ name: 'Home' })
+}
+</script>
+
+<template>
+  <!-- 声明式导航 -->
+  <RouterLink to='/'>首页</RouterLink>
+  <RouterLink :to='{ name: 'UserDetail', params: { id: 42 } }'>用户 42</RouterLink>
+  <RouterLink to='/dashboard' active-class='active'>仪表盘</RouterLink>
+
+  <!-- 精确匹配激活类 -->
+  <RouterLink to='/dashboard' exact-active-class='exact-active'>仪表盘</RouterLink>
+
+  <!-- 编程式导航 -->
+  <button @click='goToUser(42)'>去用户 42</button>
+  <button @click='goBack'>返回</button>
+
+  <!-- 渲染匹配的组件 -->
+  <RouterView />
+</template>
+```
+
+### 12.3 导航守卫
+
+```typescript
+// router/index.ts
+router.beforeEach((to, from, next) => {
+  // 全局前置守卫
+  const authStore = useAuthStore()
+
+  if (to.meta.requiresAuth && !authStore.isLoggedIn) {
+    // 未登录，跳转到登录页
+    next({ name: 'Login', query: { redirect: to.fullPath } })
+  } else if (to.name === 'Login' && authStore.isLoggedIn) {
+    // 已登录，跳转到首页
+    next({ name: 'Home' })
+  } else {
+    next()
+  }
+})
+
+router.afterEach((to, from) => {
+  // 全局后置钩子（适合设置页面标题、埋点等）
+  document.title = to.meta.title ? `${to.meta.title} - MyApp` : 'MyApp'
+})
+
+// 路由独享守卫
+{
+  path: '/admin',
+  component: AdminLayout,
+  beforeEnter: (to, from, next) => {
+    if (!isAdmin()) {
+      next('/403')
+    } else {
+      next()
+    }
+  }
+}
+```
+
+```vue
+<!-- 组件内守卫 -->
+<script setup lang='ts'>
+import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router'
+
+// 路由离开前（如表单未保存提醒）
+onBeforeRouteLeave((to, from) => {
+  if (hasUnsavedChanges.value) {
+    return window.confirm('有未保存的更改，确定离开？')
+  }
+})
+
+// 路由参数变化时（同一组件复用时）
+onBeforeRouteUpdate(async (to, from) => {
+  if (to.params.id !== from.params.id) {
+    await fetchUser(to.params.id as string)
+  }
+})
+</script>
+```
+
+### 12.4 路由懒加载
+
+```typescript
+// ✅ 推荐：动态 import 实现懒加载
+const routes = [
+  {
+    path: '/dashboard',
+    component: () => import('@/views/Dashboard.vue')
+  },
+  {
+    path: '/admin',
+    component: () => import(/* webpackChunkName: 'admin' */ '@/views/Admin.vue')
+  }
+]
+
+// ✅ 配合 Suspense + defineAsyncComponent
+import { defineAsyncComponent } from 'vue'
+const HeavyView = defineAsyncComponent(() => import('@/views/HeavyView.vue'))
+```
+
+### 12.5 路由元信息与类型
+
+```typescript
+// 扩展 RouteMeta 类型
+declare module 'vue-router' {
+  interface RouteMeta {
+    title?: string
+    requiresAuth?: boolean
+    roles?: string[]
+    layout?: 'default' | 'admin' | 'blank'
+  }
+}
+```
+
+---
+
+## 13. Pinia 状态管理
+
+### 13.1 为什么用 Pinia
+
+Pinia 是 Vue 官方推荐的状态管理库（替代 Vuex）：
+
+- **更简单的 API**：没有 mutations，直接在 actions 中修改状态。">
+<meta property="og:title" content="Vue从入门到精通：Vue3现代接口开发实践手册(第二部分)">
+<meta property="og:description" content="## 10. 自定义指令
+
+### 10.1 基础自定义指令
+
+```typescript
+// directives/vFocus.ts
+import type { Directive, DirectiveBinding } from 'vue'
+
+export const vFocus: Directive<HTMLElement, boolean> = {
+  // 元素挂载后触发
+  mounted(el, binding) {
+    if (binding.value !== false) {
+      el.focus()
+    }
+  },
+
+  // 元素更新前
+  beforeUpdate(el, binding) {
+    console.log('before update')
+  },
+
+  // 元素更新后
+  updated(el, binding) {
+    console.log('updated')
+  },
+
+  // 元素卸载前
+  beforeUnmount(el) {
+    console.log('before unmount')
+  },
+
+  // 元素卸载后
+  unmounted(el) {
+    console.log('unmounted')
+  }
+}
+```
+
+### 10.2 使用自定义指令
+
+```vue
+<script setup lang='ts'>
+import { vFocus } from '@/directives/vFocus'
+import { vPermission } from '@/directives/vPermission'
+</script>
+
+<template>
+  <!-- 自动聚焦 -->
+  <input v-focus>
+
+  <!-- 条件聚焦 -->
+  <input v-focus='shouldFocus'>
+
+  <!-- 权限指令 -->
+  <button v-permission=''admin''>仅管理员可见</button>
+  <button v-permission='['admin', 'editor']'>管理员或编辑可见</button>
+</template>
+```
+
+### 10.3 实用指令示例
+
+```typescript
+// directives/vPermission.ts
+import type { Directive } from 'vue'
+import { useAuthStore } from '@/stores/auth'
+
+export const vPermission: Directive<HTMLElement, string | string[]> = {
+  mounted(el, binding) {
+    const auth = useAuthStore()
+    const required = Array.isArray(binding.value) ? binding.value : [binding.value]
+    const hasPermission = required.some((perm) => auth.permissions.includes(perm))
+
+    if (!hasPermission) {
+      el.parentNode?.removeChild(el)   // 移除 DOM
+      // 或者：el.style.display = 'none'
+    }
+  }
+}
+
+// directives/vDebounce.ts
+import type { Directive } from 'vue'
+
+export const vDebounce: Directive<HTMLElement, () => void> = {
+  mounted(el, binding) {
+    let timer: ReturnType<typeof setTimeout>
+    el.addEventListener('click', () => {
+      clearTimeout(timer)
+      timer = setTimeout(() => {
+        binding.value()
+      }, binding.arg ? parseInt(binding.arg) : 300)
+    })
+  }
+}
+
+// directives/vClickOutside.ts
+import type { Directive } from 'vue'
+
+export const vClickOutside: Directive<HTMLElement, (e: MouseEvent) => void> = {
+  mounted(el, binding) {
+    el.__clickOutsideHandler = (event: MouseEvent) => {
+      if (!el.contains(event.target as Node)) {
+        binding.value(event)
+      }
+    }
+    document.addEventListener('click', el.__clickOutsideHandler)
+  },
+  unmounted(el) {
+    document.removeEventListener('click', el.__clickOutsideHandler)
+  }
+}
+```
+
+---
+
+## 11. 插件与全局配置
+
+### 11.1 创建插件
+
+```typescript
+// plugins/analytics.ts
+import type { App, Plugin } from 'vue'
+
+interface AnalyticsOptions {
+  trackingId: string
+  debug?: boolean
+}
+
+export const AnalyticsPlugin: Plugin = {
+  install(app: App, options: AnalyticsOptions) {
+    // 全局属性
+    app.config.globalProperties.$analytics = {
+      track(event: string, data?: Record<string, unknown>) {
+        if (options.debug) {
+          console.log(`[Analytics] ${event}`, data)
+        }
+        // 发送到分析服务
+      }
+    }
+
+    // 全局指令
+    app.directive('track', {
+      mounted(el, binding) {
+        el.addEventListener('click', () => {
+          app.config.globalProperties.$analytics.track(binding.value)
+        })
+      }
+    })
+
+    // 全局组件
+    app.component('AnalyticsBanner', {
+      template: '<div class='analytics-banner'>Cookie Consent</div>'
+    })
+
+    // provide 全局数据
+    app.provide('analyticsConfig', options)
+  }
+}
+```
+
+### 11.2 使用插件
+
+```typescript
+// main.ts
+import { createApp } from 'vue'
+import App from './App.vue'
+import { AnalyticsPlugin } from './plugins/analytics'
+
+const app = createApp(App)
+
+app.use(AnalyticsPlugin, {
+  trackingId: 'UA-XXXXX',
+  debug: import.meta.env.DEV
+})
+
+app.mount('#app')
+```
+
+```vue
+<!-- 在组件中使用 -->
+<script setup lang='ts'>
+import { inject } from 'vue'
+import { getCurrentInstance } from 'vue'
+
+// 使用全局属性
+const { proxy } = getCurrentInstance()!
+proxy?.$analytics.track('page_view', { page: '/home' })
+
+// 使用注入
+const config = inject<{ trackingId: string }>('analyticsConfig')
+</script>
+
+<template>
+  <!-- 使用全局指令 -->
+  <button v-track=''button_click''>跟踪点击</button>
+
+  <!-- 使用全局组件 -->
+  <AnalyticsBanner />
+</template>
+```
+
+### 11.3 全局配置
+
+```typescript
+// main.ts
+const app = createApp(App)
+
+// 全局错误处理
+app.config.errorHandler = (err, instance, info) => {
+  console.error('Global error:', err, info)
+  // 发送到错误监控服务
+}
+
+// 全局警告处理（开发模式）
+app.config.warnHandler = (msg, instance, trace) => {
+  console.warn('Vue warning:', msg)
+}
+
+// 全局属性（不推荐过度使用，优先使用 provide/inject 或 Pinia）
+app.config.globalProperties.$formatDate = (date: Date) => {
+  return date.toLocaleDateString('zh-CN')
+}
+
+// 自定义元素（将 Vue 组件用作 Web Component）
+app.config.compilerOptions.isCustomElement = (tag) => {
+  return tag.startsWith('my-')
+}
+```
+
+---
+
+## 12. Vue Router 路由
+
+### 12.1 基础配置
+
+```typescript
+// router/index.ts
+import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+
+const routes: RouteRecordRaw[] = [
+  {
+    path: '/',
+    name: 'Home',
+    component: () => import('@/views/Home.vue')
+  },
+  {
+    path: '/about',
+    name: 'About',
+    component: () => import('@/views/About.vue')
+  },
+  {
+    path: '/users/:id',
+    name: 'UserDetail',
+    component: () => import('@/views/UserDetail.vue'),
+    props: true   // 将路由参数作为 props 传递给组件
+  },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: () => import('@/views/Dashboard.vue'),
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: '',
+        name: 'DashboardHome',
+        component: () => import('@/views/dashboard/Home.vue')
+      },
+      {
+        path: 'settings',
+        name: 'Settings',
+        component: () => import('@/views/dashboard/Settings.vue')
+      }
+    ]
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: () => import('@/views/NotFound.vue')
+  }
+]
+
+const router = createRouter({
+  history: createWebHistory(),     // HTML5 History 模式
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) return savedPosition
+    return { top: 0 }
+  }
+})
+
+export default router
+```
+
+### 12.2 在组件中使用路由
+
+```vue
+<script setup lang='ts'>
+import { useRouter, useRoute } from 'vue-router'
+import { computed } from 'vue'
+
+const router = useRouter()
+const route = useRoute()
+
+// 读取路由参数
+const userId = computed(() => route.params.id)
+const query = computed(() => route.query)
+
+// 导航
+function goToUser(id: number) {
+  router.push({ name: 'UserDetail', params: { id } })
+}
+
+function goToSearch() {
+  router.push({ path: '/search', query: { q: 'vue', page: '1' } })
+}
+
+function goBack() {
+  router.back()
+}
+
+function replace() {
+  // 不会在历史记录中留下痕迹
+  router.replace({ name: 'Home' })
+}
+</script>
+
+<template>
+  <!-- 声明式导航 -->
+  <RouterLink to='/'>首页</RouterLink>
+  <RouterLink :to='{ name: 'UserDetail', params: { id: 42 } }'>用户 42</RouterLink>
+  <RouterLink to='/dashboard' active-class='active'>仪表盘</RouterLink>
+
+  <!-- 精确匹配激活类 -->
+  <RouterLink to='/dashboard' exact-active-class='exact-active'>仪表盘</RouterLink>
+
+  <!-- 编程式导航 -->
+  <button @click='goToUser(42)'>去用户 42</button>
+  <button @click='goBack'>返回</button>
+
+  <!-- 渲染匹配的组件 -->
+  <RouterView />
+</template>
+```
+
+### 12.3 导航守卫
+
+```typescript
+// router/index.ts
+router.beforeEach((to, from, next) => {
+  // 全局前置守卫
+  const authStore = useAuthStore()
+
+  if (to.meta.requiresAuth && !authStore.isLoggedIn) {
+    // 未登录，跳转到登录页
+    next({ name: 'Login', query: { redirect: to.fullPath } })
+  } else if (to.name === 'Login' && authStore.isLoggedIn) {
+    // 已登录，跳转到首页
+    next({ name: 'Home' })
+  } else {
+    next()
+  }
+})
+
+router.afterEach((to, from) => {
+  // 全局后置钩子（适合设置页面标题、埋点等）
+  document.title = to.meta.title ? `${to.meta.title} - MyApp` : 'MyApp'
+})
+
+// 路由独享守卫
+{
+  path: '/admin',
+  component: AdminLayout,
+  beforeEnter: (to, from, next) => {
+    if (!isAdmin()) {
+      next('/403')
+    } else {
+      next()
+    }
+  }
+}
+```
+
+```vue
+<!-- 组件内守卫 -->
+<script setup lang='ts'>
+import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router'
+
+// 路由离开前（如表单未保存提醒）
+onBeforeRouteLeave((to, from) => {
+  if (hasUnsavedChanges.value) {
+    return window.confirm('有未保存的更改，确定离开？')
+  }
+})
+
+// 路由参数变化时（同一组件复用时）
+onBeforeRouteUpdate(async (to, from) => {
+  if (to.params.id !== from.params.id) {
+    await fetchUser(to.params.id as string)
+  }
+})
+</script>
+```
+
+### 12.4 路由懒加载
+
+```typescript
+// ✅ 推荐：动态 import 实现懒加载
+const routes = [
+  {
+    path: '/dashboard',
+    component: () => import('@/views/Dashboard.vue')
+  },
+  {
+    path: '/admin',
+    component: () => import(/* webpackChunkName: 'admin' */ '@/views/Admin.vue')
+  }
+]
+
+// ✅ 配合 Suspense + defineAsyncComponent
+import { defineAsyncComponent } from 'vue'
+const HeavyView = defineAsyncComponent(() => import('@/views/HeavyView.vue'))
+```
+
+### 12.5 路由元信息与类型
+
+```typescript
+// 扩展 RouteMeta 类型
+declare module 'vue-router' {
+  interface RouteMeta {
+    title?: string
+    requiresAuth?: boolean
+    roles?: string[]
+    layout?: 'default' | 'admin' | 'blank'
+  }
+}
+```
+
+---
+
+## 13. Pinia 状态管理
+
+### 13.1 为什么用 Pinia
+
+Pinia 是 Vue 官方推荐的状态管理库（替代 Vuex）：
+
+- **更简单的 API**：没有 mutations，直接在 actions 中修改状态。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://helloblog.eik.cc/post/Vue-cong-ru-men-dao-jing-tong-%EF%BC%9AVue3-xian-dai-jie-kou-kai-fa-shi-jian-shou-ce-%28-di-er-bu-fen-%29.html">
+<meta property="og:image" content="https://docs.asoe.cn/img/Hello-Logo.svg">
+<title>Vue从入门到精通：Vue3现代接口开发实践手册(第二部分)</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">Vue从入门到精通：Vue3现代接口开发实践手册(第二部分)</h1>
+<div class="title-right">
+    <a href="https://helloblog.eik.cc" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/techjiang/Gmeek-HelloBlog/issues/27" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h2>10. 自定义指令</h2>
+<h3>10.1 基础自定义指令</h3>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// directives/vFocus.ts</span>
+<span class="pl-k">import</span> <span class="pl-k">type</span> <span class="pl-kos">{</span> <span class="pl-v">Directive</span><span class="pl-kos">,</span> <span class="pl-v">DirectiveBinding</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'vue'</span>
+
+<span class="pl-k">export</span> <span class="pl-k">const</span> <span class="pl-s1">vFocus</span>: <span class="pl-smi">Directive</span><span class="pl-c1">&lt;</span><span class="pl-smi">HTMLElement</span><span class="pl-kos">,</span> <span class="pl-smi">boolean</span><span class="pl-c1">&gt;</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>
+  <span class="pl-c">// 元素挂载后触发</span>
+  <span class="pl-en">mounted</span><span class="pl-kos">(</span><span class="pl-s1">el</span><span class="pl-kos">,</span> <span class="pl-s1">binding</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">binding</span><span class="pl-kos">.</span><span class="pl-c1">value</span> <span class="pl-c1">!==</span> <span class="pl-c1">false</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+      <span class="pl-s1">el</span><span class="pl-kos">.</span><span class="pl-en">focus</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-kos">}</span>
+  <span class="pl-kos">}</span><span class="pl-kos">,</span>
+
+  <span class="pl-c">// 元素更新前</span>
+  <span class="pl-en">beforeUpdate</span><span class="pl-kos">(</span><span class="pl-s1">el</span><span class="pl-kos">,</span> <span class="pl-s1">binding</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">log</span><span class="pl-kos">(</span><span class="pl-s">'before update'</span><span class="pl-kos">)</span>
+  <span class="pl-kos">}</span><span class="pl-kos">,</span>
+
+  <span class="pl-c">// 元素更新后</span>
+  <span class="pl-en">updated</span><span class="pl-kos">(</span><span class="pl-s1">el</span><span class="pl-kos">,</span> <span class="pl-s1">binding</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">log</span><span class="pl-kos">(</span><span class="pl-s">'updated'</span><span class="pl-kos">)</span>
+  <span class="pl-kos">}</span><span class="pl-kos">,</span>
+
+  <span class="pl-c">// 元素卸载前</span>
+  <span class="pl-en">beforeUnmount</span><span class="pl-kos">(</span><span class="pl-s1">el</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">log</span><span class="pl-kos">(</span><span class="pl-s">'before unmount'</span><span class="pl-kos">)</span>
+  <span class="pl-kos">}</span><span class="pl-kos">,</span>
+
+  <span class="pl-c">// 元素卸载后</span>
+  <span class="pl-en">unmounted</span><span class="pl-kos">(</span><span class="pl-s1">el</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">log</span><span class="pl-kos">(</span><span class="pl-s">'unmounted'</span><span class="pl-kos">)</span>
+  <span class="pl-kos">}</span>
+<span class="pl-kos">}</span></pre></div>
+<h3>10.2 使用自定义指令</h3>
+<div class="highlight highlight-text-html-vue"><pre class="notranslate">&lt;<span class="pl-ent">script</span> setup lang="ts"&gt;<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">import</span> { <span class="pl-smi">vFocus</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>@/directives/vFocus<span class="pl-pds">'</span></span></span>
+<span class="pl-s1"><span class="pl-k">import</span> { <span class="pl-smi">vPermission</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>@/directives/vPermission<span class="pl-pds">'</span></span></span>
+<span class="pl-s1"></span>&lt;/<span class="pl-ent">script</span>&gt;
+
+&lt;<span class="pl-ent">template</span>&gt;
+  <span class="pl-c"><span class="pl-c">&lt;!--</span> 自动聚焦 <span class="pl-c">--&gt;</span></span>
+  &lt;<span class="pl-ent">input</span> <span class="pl-e">v-focus</span>&gt;
+
+  <span class="pl-c"><span class="pl-c">&lt;!--</span> 条件聚焦 <span class="pl-c">--&gt;</span></span>
+  &lt;<span class="pl-ent">input</span> <span class="pl-e">v-focus</span>=<span class="pl-s"><span class="pl-pds">"</span>shouldFocus<span class="pl-pds">"</span></span>&gt;
+
+  <span class="pl-c"><span class="pl-c">&lt;!--</span> 权限指令 <span class="pl-c">--&gt;</span></span>
+  &lt;<span class="pl-ent">button</span> <span class="pl-e">v-permission</span>=<span class="pl-s"><span class="pl-pds">"</span>'admin'<span class="pl-pds">"</span></span>&gt;仅管理员可见&lt;/<span class="pl-ent">button</span>&gt;
+  &lt;<span class="pl-ent">button</span> <span class="pl-e">v-permission</span>=<span class="pl-s"><span class="pl-pds">"</span>['admin', 'editor']<span class="pl-pds">"</span></span>&gt;管理员或编辑可见&lt;/<span class="pl-ent">button</span>&gt;
+&lt;/<span class="pl-ent">template</span>&gt;</pre></div>
+<h3>10.3 实用指令示例</h3>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// directives/vPermission.ts</span>
+<span class="pl-k">import</span> <span class="pl-k">type</span> <span class="pl-kos">{</span> <span class="pl-v">Directive</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'vue'</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-s1">useAuthStore</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@/stores/auth'</span>
+
+<span class="pl-k">export</span> <span class="pl-k">const</span> <span class="pl-s1">vPermission</span>: <span class="pl-smi">Directive</span><span class="pl-c1">&lt;</span><span class="pl-smi">HTMLElement</span><span class="pl-kos">,</span> <span class="pl-smi">string</span> <span class="pl-c1">|</span> <span class="pl-smi">string</span><span class="pl-kos">[</span><span class="pl-kos">]</span><span class="pl-c1">&gt;</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>
+  <span class="pl-en">mounted</span><span class="pl-kos">(</span><span class="pl-s1">el</span><span class="pl-kos">,</span> <span class="pl-s1">binding</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-k">const</span> <span class="pl-s1">auth</span> <span class="pl-c1">=</span> <span class="pl-en">useAuthStore</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-k">const</span> <span class="pl-s1">required</span> <span class="pl-c1">=</span> <span class="pl-v">Array</span><span class="pl-kos">.</span><span class="pl-en">isArray</span><span class="pl-kos">(</span><span class="pl-s1">binding</span><span class="pl-kos">.</span><span class="pl-c1">value</span><span class="pl-kos">)</span> ? <span class="pl-s1">binding</span><span class="pl-kos">.</span><span class="pl-c1">value</span> : <span class="pl-kos">[</span><span class="pl-s1">binding</span><span class="pl-kos">.</span><span class="pl-c1">value</span><span class="pl-kos">]</span>
+    <span class="pl-k">const</span> <span class="pl-s1">hasPermission</span> <span class="pl-c1">=</span> <span class="pl-s1">required</span><span class="pl-kos">.</span><span class="pl-en">some</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-s1">perm</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">auth</span><span class="pl-kos">.</span><span class="pl-c1">permissions</span><span class="pl-kos">.</span><span class="pl-en">includes</span><span class="pl-kos">(</span><span class="pl-s1">perm</span><span class="pl-kos">)</span><span class="pl-kos">)</span>
+
+    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-s1">hasPermission</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+      <span class="pl-s1">el</span><span class="pl-kos">.</span><span class="pl-c1">parentNode</span><span class="pl-kos">?.</span><span class="pl-en">removeChild</span><span class="pl-kos">(</span><span class="pl-s1">el</span><span class="pl-kos">)</span>   <span class="pl-c">// 移除 DOM</span>
+      <span class="pl-c">// 或者：el.style.display = 'none'</span>
+    <span class="pl-kos">}</span>
+  <span class="pl-kos">}</span>
+<span class="pl-kos">}</span>
+
+<span class="pl-c">// directives/vDebounce.ts</span>
+<span class="pl-k">import</span> <span class="pl-k">type</span> <span class="pl-kos">{</span> <span class="pl-v">Directive</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'vue'</span>
+
+<span class="pl-k">export</span> <span class="pl-k">const</span> <span class="pl-s1">vDebounce</span>: <span class="pl-smi">Directive</span><span class="pl-c1">&lt;</span><span class="pl-smi">HTMLElement</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-smi"><span class="pl-k">void</span></span><span class="pl-c1">&gt;</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>
+  <span class="pl-en">mounted</span><span class="pl-kos">(</span><span class="pl-s1">el</span><span class="pl-kos">,</span> <span class="pl-s1">binding</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-k">let</span> <span class="pl-s1">timer</span>: <span class="pl-smi">ReturnType</span><span class="pl-c1">&lt;</span><span class="pl-k">typeof</span> <span class="pl-s1">setTimeout</span><span class="pl-c1">&gt;</span>
+    <span class="pl-s1">el</span><span class="pl-kos">.</span><span class="pl-en">addEventListener</span><span class="pl-kos">(</span><span class="pl-s">'click'</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+      <span class="pl-en">clearTimeout</span><span class="pl-kos">(</span><span class="pl-s1">timer</span><span class="pl-kos">)</span>
+      <span class="pl-s1">timer</span> <span class="pl-c1">=</span> <span class="pl-en">setTimeout</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+        <span class="pl-s1">binding</span><span class="pl-kos">.</span><span class="pl-en">value</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+      <span class="pl-kos">}</span><span class="pl-kos">,</span> <span class="pl-s1">binding</span><span class="pl-kos">.</span><span class="pl-c1">arg</span> ? <span class="pl-en">parseInt</span><span class="pl-kos">(</span><span class="pl-s1">binding</span><span class="pl-kos">.</span><span class="pl-c1">arg</span><span class="pl-kos">)</span> : <span class="pl-c1">300</span><span class="pl-kos">)</span>
+    <span class="pl-kos">}</span><span class="pl-kos">)</span>
+  <span class="pl-kos">}</span>
+<span class="pl-kos">}</span>
+
+<span class="pl-c">// directives/vClickOutside.ts</span>
+<span class="pl-k">import</span> <span class="pl-k">type</span> <span class="pl-kos">{</span> <span class="pl-v">Directive</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'vue'</span>
+
+<span class="pl-k">export</span> <span class="pl-k">const</span> <span class="pl-s1">vClickOutside</span>: <span class="pl-smi">Directive</span><span class="pl-c1">&lt;</span><span class="pl-smi">HTMLElement</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-s1">e</span>: <span class="pl-smi">MouseEvent</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-smi"><span class="pl-k">void</span></span><span class="pl-c1">&gt;</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>
+  <span class="pl-en">mounted</span><span class="pl-kos">(</span><span class="pl-s1">el</span><span class="pl-kos">,</span> <span class="pl-s1">binding</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-s1">el</span><span class="pl-kos">.</span><span class="pl-en">__clickOutsideHandler</span> <span class="pl-c1">=</span> <span class="pl-kos">(</span><span class="pl-s1">event</span>: <span class="pl-smi">MouseEvent</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+      <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-s1">el</span><span class="pl-kos">.</span><span class="pl-en">contains</span><span class="pl-kos">(</span><span class="pl-s1">event</span><span class="pl-kos">.</span><span class="pl-c1">target</span> <span class="pl-k">as</span> <span class="pl-smi">Node</span><span class="pl-kos">)</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-s1">binding</span><span class="pl-kos">.</span><span class="pl-en">value</span><span class="pl-kos">(</span><span class="pl-s1">event</span><span class="pl-kos">)</span>
+      <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
+    <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-en">addEventListener</span><span class="pl-kos">(</span><span class="pl-s">'click'</span><span class="pl-kos">,</span> <span class="pl-s1">el</span><span class="pl-kos">.</span><span class="pl-c1">__clickOutsideHandler</span><span class="pl-kos">)</span>
+  <span class="pl-kos">}</span><span class="pl-kos">,</span>
+  <span class="pl-en">unmounted</span><span class="pl-kos">(</span><span class="pl-s1">el</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-en">removeEventListener</span><span class="pl-kos">(</span><span class="pl-s">'click'</span><span class="pl-kos">,</span> <span class="pl-s1">el</span><span class="pl-kos">.</span><span class="pl-c1">__clickOutsideHandler</span><span class="pl-kos">)</span>
+  <span class="pl-kos">}</span>
+<span class="pl-kos">}</span></pre></div>
+<hr>
+<h2>11. 插件与全局配置</h2>
+<h3>11.1 创建插件</h3>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// plugins/analytics.ts</span>
+<span class="pl-k">import</span> <span class="pl-k">type</span> <span class="pl-kos">{</span> <span class="pl-v">App</span><span class="pl-kos">,</span> <span class="pl-v">Plugin</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'vue'</span>
+
+<span class="pl-k">interface</span> <span class="pl-smi">AnalyticsOptions</span> <span class="pl-kos">{</span>
+  <span class="pl-c1">trackingId</span>: <span class="pl-smi">string</span>
+  <span class="pl-c1">debug</span>?: <span class="pl-smi">boolean</span>
+<span class="pl-kos">}</span>
+
+<span class="pl-k">export</span> <span class="pl-k">const</span> <span class="pl-v">AnalyticsPlugin</span>: <span class="pl-smi">Plugin</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>
+  <span class="pl-en">install</span><span class="pl-kos">(</span><span class="pl-s1">app</span>: <span class="pl-smi">App</span><span class="pl-kos">,</span> <span class="pl-s1">options</span>: <span class="pl-smi">AnalyticsOptions</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-c">// 全局属性</span>
+    <span class="pl-s1">app</span><span class="pl-kos">.</span><span class="pl-c1">config</span><span class="pl-kos">.</span><span class="pl-c1">globalProperties</span><span class="pl-kos">.</span><span class="pl-c1">$analytics</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>
+      <span class="pl-en">track</span><span class="pl-kos">(</span><span class="pl-s1">event</span>: <span class="pl-smi">string</span><span class="pl-kos">,</span> <span class="pl-s1">data</span>?: <span class="pl-smi">Record</span><span class="pl-c1">&lt;</span><span class="pl-smi">string</span><span class="pl-kos">,</span> <span class="pl-smi">unknown</span><span class="pl-c1">&gt;</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">options</span><span class="pl-kos">.</span><span class="pl-c1">debug</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+          <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">log</span><span class="pl-kos">(</span><span class="pl-s">`[Analytics] <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">event</span><span class="pl-kos">}</span></span>`</span><span class="pl-kos">,</span> <span class="pl-s1">data</span><span class="pl-kos">)</span>
+        <span class="pl-kos">}</span>
+        <span class="pl-c">// 发送到分析服务</span>
+      <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-c">// 全局指令</span>
+    <span class="pl-s1">app</span><span class="pl-kos">.</span><span class="pl-en">directive</span><span class="pl-kos">(</span><span class="pl-s">'track'</span><span class="pl-kos">,</span> <span class="pl-kos">{</span>
+      <span class="pl-en">mounted</span><span class="pl-kos">(</span><span class="pl-s1">el</span><span class="pl-kos">,</span> <span class="pl-s1">binding</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-s1">el</span><span class="pl-kos">.</span><span class="pl-en">addEventListener</span><span class="pl-kos">(</span><span class="pl-s">'click'</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+          <span class="pl-s1">app</span><span class="pl-kos">.</span><span class="pl-c1">config</span><span class="pl-kos">.</span><span class="pl-c1">globalProperties</span><span class="pl-kos">.</span><span class="pl-c1">$analytics</span><span class="pl-kos">.</span><span class="pl-en">track</span><span class="pl-kos">(</span><span class="pl-s1">binding</span><span class="pl-kos">.</span><span class="pl-c1">value</span><span class="pl-kos">)</span>
+        <span class="pl-kos">}</span><span class="pl-kos">)</span>
+      <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span><span class="pl-kos">)</span>
+
+    <span class="pl-c">// 全局组件</span>
+    <span class="pl-s1">app</span><span class="pl-kos">.</span><span class="pl-en">component</span><span class="pl-kos">(</span><span class="pl-s">'AnalyticsBanner'</span><span class="pl-kos">,</span> <span class="pl-kos">{</span>
+      <span class="pl-c1">template</span>: <span class="pl-s">'&lt;div class="analytics-banner"&gt;Cookie Consent&lt;/div&gt;'</span>
+    <span class="pl-kos">}</span><span class="pl-kos">)</span>
+
+    <span class="pl-c">// provide 全局数据</span>
+    <span class="pl-s1">app</span><span class="pl-kos">.</span><span class="pl-en">provide</span><span class="pl-kos">(</span><span class="pl-s">'analyticsConfig'</span><span class="pl-kos">,</span> <span class="pl-s1">options</span><span class="pl-kos">)</span>
+  <span class="pl-kos">}</span>
+<span class="pl-kos">}</span></pre></div>
+<h3>11.2 使用插件</h3>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// main.ts</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-s1">createApp</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'vue'</span>
+<span class="pl-k">import</span> <span class="pl-v">App</span> <span class="pl-k">from</span> <span class="pl-s">'./App.vue'</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">AnalyticsPlugin</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./plugins/analytics'</span>
+
+<span class="pl-k">const</span> <span class="pl-s1">app</span> <span class="pl-c1">=</span> <span class="pl-en">createApp</span><span class="pl-kos">(</span><span class="pl-v">App</span><span class="pl-kos">)</span>
+
+<span class="pl-s1">app</span><span class="pl-kos">.</span><span class="pl-en">use</span><span class="pl-kos">(</span><span class="pl-v">AnalyticsPlugin</span><span class="pl-kos">,</span> <span class="pl-kos">{</span>
+  <span class="pl-c1">trackingId</span>: <span class="pl-s">'UA-XXXXX'</span><span class="pl-kos">,</span>
+  <span class="pl-c1">debug</span>: <span class="pl-k">import</span><span class="pl-kos">.</span>meta<span class="pl-kos">.</span><span class="pl-c1">env</span><span class="pl-kos">.</span><span class="pl-c1">DEV</span>
+<span class="pl-kos">}</span><span class="pl-kos">)</span>
+
+<span class="pl-s1">app</span><span class="pl-kos">.</span><span class="pl-en">mount</span><span class="pl-kos">(</span><span class="pl-s">'#app'</span><span class="pl-kos">)</span></pre></div>
+<div class="highlight highlight-text-html-vue"><pre class="notranslate"><span class="pl-c"><span class="pl-c">&lt;!--</span> 在组件中使用 <span class="pl-c">--&gt;</span></span>
+&lt;<span class="pl-ent">script</span> setup lang="ts"&gt;<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">import</span> { <span class="pl-smi">inject</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>vue<span class="pl-pds">'</span></span></span>
+<span class="pl-s1"><span class="pl-k">import</span> { <span class="pl-smi">getCurrentInstance</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>vue<span class="pl-pds">'</span></span></span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> 使用全局属性</span></span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> { proxy } <span class="pl-k">=</span> <span class="pl-en">getCurrentInstance</span>()<span class="pl-k">!</span></span>
+<span class="pl-s1"><span class="pl-smi">proxy</span>?.<span class="pl-smi">$analytics</span>.<span class="pl-en">track</span>(<span class="pl-s"><span class="pl-pds">'</span>page_view<span class="pl-pds">'</span></span>, { page: <span class="pl-s"><span class="pl-pds">'</span>/home<span class="pl-pds">'</span></span> })</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> 使用注入</span></span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> config <span class="pl-k">=</span> <span class="pl-en">inject</span>&lt;{ trackingId<span class="pl-k">:</span> <span class="pl-c1">string</span> }&gt;(<span class="pl-s"><span class="pl-pds">'</span>analyticsConfig<span class="pl-pds">'</span></span>)</span>
+<span class="pl-s1"></span>&lt;/<span class="pl-ent">script</span>&gt;
+
+&lt;<span class="pl-ent">template</span>&gt;
+  <span class="pl-c"><span class="pl-c">&lt;!--</span> 使用全局指令 <span class="pl-c">--&gt;</span></span>
+  &lt;<span class="pl-ent">button</span> <span class="pl-e">v-track</span>=<span class="pl-s"><span class="pl-pds">"</span>'button_click'<span class="pl-pds">"</span></span>&gt;跟踪点击&lt;/<span class="pl-ent">button</span>&gt;
+
+  <span class="pl-c"><span class="pl-c">&lt;!--</span> 使用全局组件 <span class="pl-c">--&gt;</span></span>
+  &lt;<span class="pl-ent">AnalyticsBanner</span> /&gt;
+&lt;/<span class="pl-ent">template</span>&gt;</pre></div>
+<h3>11.3 全局配置</h3>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// main.ts</span>
+<span class="pl-k">const</span> <span class="pl-s1">app</span> <span class="pl-c1">=</span> <span class="pl-en">createApp</span><span class="pl-kos">(</span><span class="pl-v">App</span><span class="pl-kos">)</span>
+
+<span class="pl-c">// 全局错误处理</span>
+<span class="pl-s1">app</span><span class="pl-kos">.</span><span class="pl-c1">config</span><span class="pl-kos">.</span><span class="pl-en">errorHandler</span> <span class="pl-c1">=</span> <span class="pl-kos">(</span><span class="pl-s1">err</span><span class="pl-kos">,</span> <span class="pl-s1">instance</span><span class="pl-kos">,</span> <span class="pl-s1">info</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+  <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">error</span><span class="pl-kos">(</span><span class="pl-s">'Global error:'</span><span class="pl-kos">,</span> <span class="pl-s1">err</span><span class="pl-kos">,</span> <span class="pl-s1">info</span><span class="pl-kos">)</span>
+  <span class="pl-c">// 发送到错误监控服务</span>
+<span class="pl-kos">}</span>
+
+<span class="pl-c">// 全局警告处理（开发模式）</span>
+<span class="pl-s1">app</span><span class="pl-kos">.</span><span class="pl-c1">config</span><span class="pl-kos">.</span><span class="pl-en">warnHandler</span> <span class="pl-c1">=</span> <span class="pl-kos">(</span><span class="pl-s1">msg</span><span class="pl-kos">,</span> <span class="pl-s1">instance</span><span class="pl-kos">,</span> <span class="pl-s1">trace</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+  <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">warn</span><span class="pl-kos">(</span><span class="pl-s">'Vue warning:'</span><span class="pl-kos">,</span> <span class="pl-s1">msg</span><span class="pl-kos">)</span>
+<span class="pl-kos">}</span>
+
+<span class="pl-c">// 全局属性（不推荐过度使用，优先使用 provide/inject 或 Pinia）</span>
+<span class="pl-s1">app</span><span class="pl-kos">.</span><span class="pl-c1">config</span><span class="pl-kos">.</span><span class="pl-c1">globalProperties</span><span class="pl-kos">.</span><span class="pl-en">$formatDate</span> <span class="pl-c1">=</span> <span class="pl-kos">(</span><span class="pl-s1">date</span>: <span class="pl-smi">Date</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+  <span class="pl-k">return</span> <span class="pl-s1">date</span><span class="pl-kos">.</span><span class="pl-en">toLocaleDateString</span><span class="pl-kos">(</span><span class="pl-s">'zh-CN'</span><span class="pl-kos">)</span>
+<span class="pl-kos">}</span>
+
+<span class="pl-c">// 自定义元素（将 Vue 组件用作 Web Component）</span>
+<span class="pl-s1">app</span><span class="pl-kos">.</span><span class="pl-c1">config</span><span class="pl-kos">.</span><span class="pl-c1">compilerOptions</span><span class="pl-kos">.</span><span class="pl-en">isCustomElement</span> <span class="pl-c1">=</span> <span class="pl-kos">(</span><span class="pl-s1">tag</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+  <span class="pl-k">return</span> <span class="pl-s1">tag</span><span class="pl-kos">.</span><span class="pl-en">startsWith</span><span class="pl-kos">(</span><span class="pl-s">'my-'</span><span class="pl-kos">)</span>
+<span class="pl-kos">}</span></pre></div>
+<hr>
+<h2>12. Vue Router 路由</h2>
+<h3>12.1 基础配置</h3>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// router/index.ts</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-s1">createRouter</span><span class="pl-kos">,</span> <span class="pl-s1">createWebHistory</span><span class="pl-kos">,</span> <span class="pl-k">type</span> <span class="pl-v">RouteRecordRaw</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'vue-router'</span>
+
+<span class="pl-k">const</span> <span class="pl-s1">routes</span>: <span class="pl-smi">RouteRecordRaw</span><span class="pl-kos">[</span><span class="pl-kos">]</span> <span class="pl-c1">=</span> <span class="pl-kos">[</span>
+  <span class="pl-kos">{</span>
+    <span class="pl-c1">path</span>: <span class="pl-s">'/'</span><span class="pl-kos">,</span>
+    <span class="pl-c1">name</span>: <span class="pl-s">'Home'</span><span class="pl-kos">,</span>
+    <span class="pl-en">component</span>: <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-k">import</span><span class="pl-kos">(</span><span class="pl-s">'@/views/Home.vue'</span><span class="pl-kos">)</span>
+  <span class="pl-kos">}</span><span class="pl-kos">,</span>
+  <span class="pl-kos">{</span>
+    <span class="pl-c1">path</span>: <span class="pl-s">'/about'</span><span class="pl-kos">,</span>
+    <span class="pl-c1">name</span>: <span class="pl-s">'About'</span><span class="pl-kos">,</span>
+    <span class="pl-en">component</span>: <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-k">import</span><span class="pl-kos">(</span><span class="pl-s">'@/views/About.vue'</span><span class="pl-kos">)</span>
+  <span class="pl-kos">}</span><span class="pl-kos">,</span>
+  <span class="pl-kos">{</span>
+    <span class="pl-c1">path</span>: <span class="pl-s">'/users/:id'</span><span class="pl-kos">,</span>
+    <span class="pl-c1">name</span>: <span class="pl-s">'UserDetail'</span><span class="pl-kos">,</span>
+    <span class="pl-en">component</span>: <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-k">import</span><span class="pl-kos">(</span><span class="pl-s">'@/views/UserDetail.vue'</span><span class="pl-kos">)</span><span class="pl-kos">,</span>
+    <span class="pl-c1">props</span>: <span class="pl-c1">true</span>   <span class="pl-c">// 将路由参数作为 props 传递给组件</span>
+  <span class="pl-kos">}</span><span class="pl-kos">,</span>
+  <span class="pl-kos">{</span>
+    <span class="pl-c1">path</span>: <span class="pl-s">'/dashboard'</span><span class="pl-kos">,</span>
+    <span class="pl-c1">name</span>: <span class="pl-s">'Dashboard'</span><span class="pl-kos">,</span>
+    <span class="pl-en">component</span>: <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-k">import</span><span class="pl-kos">(</span><span class="pl-s">'@/views/Dashboard.vue'</span><span class="pl-kos">)</span><span class="pl-kos">,</span>
+    <span class="pl-c1">meta</span>: <span class="pl-kos">{</span> <span class="pl-c1">requiresAuth</span>: <span class="pl-c1">true</span> <span class="pl-kos">}</span><span class="pl-kos">,</span>
+    <span class="pl-c1">children</span>: <span class="pl-kos">[</span>
+      <span class="pl-kos">{</span>
+        <span class="pl-c1">path</span>: <span class="pl-s">''</span><span class="pl-kos">,</span>
+        <span class="pl-c1">name</span>: <span class="pl-s">'DashboardHome'</span><span class="pl-kos">,</span>
+        <span class="pl-en">component</span>: <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-k">import</span><span class="pl-kos">(</span><span class="pl-s">'@/views/dashboard/Home.vue'</span><span class="pl-kos">)</span>
+      <span class="pl-kos">}</span><span class="pl-kos">,</span>
+      <span class="pl-kos">{</span>
+        <span class="pl-c1">path</span>: <span class="pl-s">'settings'</span><span class="pl-kos">,</span>
+        <span class="pl-c1">name</span>: <span class="pl-s">'Settings'</span><span class="pl-kos">,</span>
+        <span class="pl-en">component</span>: <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-k">import</span><span class="pl-kos">(</span><span class="pl-s">'@/views/dashboard/Settings.vue'</span><span class="pl-kos">)</span>
+      <span class="pl-kos">}</span>
+    <span class="pl-kos">]</span>
+  <span class="pl-kos">}</span><span class="pl-kos">,</span>
+  <span class="pl-kos">{</span>
+    <span class="pl-c1">path</span>: <span class="pl-s">'/:pathMatch(.*)*'</span><span class="pl-kos">,</span>
+    <span class="pl-c1">name</span>: <span class="pl-s">'NotFound'</span><span class="pl-kos">,</span>
+    <span class="pl-en">component</span>: <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-k">import</span><span class="pl-kos">(</span><span class="pl-s">'@/views/NotFound.vue'</span><span class="pl-kos">)</span>
+  <span class="pl-kos">}</span>
+<span class="pl-kos">]</span>
+
+<span class="pl-k">const</span> <span class="pl-s1">router</span> <span class="pl-c1">=</span> <span class="pl-en">createRouter</span><span class="pl-kos">(</span><span class="pl-kos">{</span>
+  <span class="pl-c1">history</span>: <span class="pl-en">createWebHistory</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">,</span>     <span class="pl-c">// HTML5 History 模式</span>
+  routes<span class="pl-kos">,</span>
+  <span class="pl-en">scrollBehavior</span><span class="pl-kos">(</span><span class="pl-s1">to</span><span class="pl-kos">,</span> <span class="pl-s1">from</span><span class="pl-kos">,</span> <span class="pl-s1">savedPosition</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">savedPosition</span><span class="pl-kos">)</span> <span class="pl-k">return</span> <span class="pl-s1">savedPosition</span>
+    <span class="pl-k">return</span> <span class="pl-kos">{</span> <span class="pl-c1">top</span>: <span class="pl-c1">0</span> <span class="pl-kos">}</span>
+  <span class="pl-kos">}</span>
+<span class="pl-kos">}</span><span class="pl-kos">)</span>
+
+<span class="pl-k">export</span> <span class="pl-k">default</span> <span class="pl-s1">router</span></pre></div>
+<h3>12.2 在组件中使用路由</h3>
+<div class="highlight highlight-text-html-vue"><pre class="notranslate">&lt;<span class="pl-ent">script</span> setup lang="ts"&gt;<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">import</span> { <span class="pl-smi">useRouter</span>, <span class="pl-smi">useRoute</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>vue-router<span class="pl-pds">'</span></span></span>
+<span class="pl-s1"><span class="pl-k">import</span> { <span class="pl-smi">computed</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>vue<span class="pl-pds">'</span></span></span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> router <span class="pl-k">=</span> <span class="pl-en">useRouter</span>()</span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> route <span class="pl-k">=</span> <span class="pl-en">useRoute</span>()</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> 读取路由参数</span></span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> userId <span class="pl-k">=</span> <span class="pl-en">computed</span>(() <span class="pl-k">=&gt;</span> <span class="pl-smi">route</span>.<span class="pl-smi">params</span>.<span class="pl-c1">id</span>)</span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> query <span class="pl-k">=</span> <span class="pl-en">computed</span>(() <span class="pl-k">=&gt;</span> <span class="pl-smi">route</span>.<span class="pl-smi">query</span>)</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> 导航</span></span>
+<span class="pl-s1"><span class="pl-k">function</span> goToUser(<span class="pl-v">id</span><span class="pl-k">:</span> <span class="pl-c1">number</span>) {</span>
+<span class="pl-s1">  <span class="pl-smi">router</span>.<span class="pl-c1">push</span>({ name: <span class="pl-s"><span class="pl-pds">'</span>UserDetail<span class="pl-pds">'</span></span>, params: { <span class="pl-smi">id</span> } })</span>
+<span class="pl-s1">}</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">function</span> goToSearch() {</span>
+<span class="pl-s1">  <span class="pl-smi">router</span>.<span class="pl-c1">push</span>({ path: <span class="pl-s"><span class="pl-pds">'</span>/search<span class="pl-pds">'</span></span>, query: { q: <span class="pl-s"><span class="pl-pds">'</span>vue<span class="pl-pds">'</span></span>, page: <span class="pl-s"><span class="pl-pds">'</span>1<span class="pl-pds">'</span></span> } })</span>
+<span class="pl-s1">}</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">function</span> goBack() {</span>
+<span class="pl-s1">  <span class="pl-smi">router</span>.<span class="pl-c1">back</span>()</span>
+<span class="pl-s1">}</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">function</span> replace() {</span>
+<span class="pl-s1">  <span class="pl-c"><span class="pl-c">//</span> 不会在历史记录中留下痕迹</span></span>
+<span class="pl-s1">  <span class="pl-smi">router</span>.<span class="pl-c1">replace</span>({ name: <span class="pl-s"><span class="pl-pds">'</span>Home<span class="pl-pds">'</span></span> })</span>
+<span class="pl-s1">}</span>
+<span class="pl-s1"></span>&lt;/<span class="pl-ent">script</span>&gt;
+
+&lt;<span class="pl-ent">template</span>&gt;
+  <span class="pl-c"><span class="pl-c">&lt;!--</span> 声明式导航 <span class="pl-c">--&gt;</span></span>
+  &lt;<span class="pl-ent">RouterLink</span> to="/"&gt;首页&lt;/<span class="pl-ent">RouterLink</span>&gt;
+  &lt;<span class="pl-ent">RouterLink</span> :<span class="pl-e">to</span>=<span class="pl-pds">"</span><span class="pl-s1">{ name: <span class="pl-s"><span class="pl-pds">'</span>UserDetail<span class="pl-pds">'</span></span>, params: { id: <span class="pl-c1">42</span> } }</span><span class="pl-pds">"</span>&gt;用户 42&lt;/<span class="pl-ent">RouterLink</span>&gt;
+  &lt;<span class="pl-ent">RouterLink</span> to="/dashboard" active-class="active"&gt;仪表盘&lt;/<span class="pl-ent">RouterLink</span>&gt;
+
+  <span class="pl-c"><span class="pl-c">&lt;!--</span> 精确匹配激活类 <span class="pl-c">--&gt;</span></span>
+  &lt;<span class="pl-ent">RouterLink</span> to="/dashboard" exact-active-class="exact-active"&gt;仪表盘&lt;/<span class="pl-ent">RouterLink</span>&gt;
+
+  <span class="pl-c"><span class="pl-c">&lt;!--</span> 编程式导航 <span class="pl-c">--&gt;</span></span>
+  &lt;<span class="pl-ent">button</span> <span class="pl-e">@click</span>=<span class="pl-s"><span class="pl-pds">"</span>goToUser(42)<span class="pl-pds">"</span></span>&gt;去用户 42&lt;/<span class="pl-ent">button</span>&gt;
+  &lt;<span class="pl-ent">button</span> <span class="pl-e">@click</span>=<span class="pl-s"><span class="pl-pds">"</span>goBack<span class="pl-pds">"</span></span>&gt;返回&lt;/<span class="pl-ent">button</span>&gt;
+
+  <span class="pl-c"><span class="pl-c">&lt;!--</span> 渲染匹配的组件 <span class="pl-c">--&gt;</span></span>
+  &lt;<span class="pl-ent">RouterView</span> /&gt;
+&lt;/<span class="pl-ent">template</span>&gt;</pre></div>
+<h3>12.3 导航守卫</h3>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// router/index.ts</span>
+<span class="pl-s1">router</span><span class="pl-kos">.</span><span class="pl-en">beforeEach</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-s1">to</span><span class="pl-kos">,</span> <span class="pl-s1">from</span><span class="pl-kos">,</span> <span class="pl-s1">next</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+  <span class="pl-c">// 全局前置守卫</span>
+  <span class="pl-k">const</span> <span class="pl-s1">authStore</span> <span class="pl-c1">=</span> <span class="pl-en">useAuthStore</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+
+  <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">to</span><span class="pl-kos">.</span><span class="pl-c1">meta</span><span class="pl-kos">.</span><span class="pl-c1">requiresAuth</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-c1">!</span><span class="pl-s1">authStore</span><span class="pl-kos">.</span><span class="pl-c1">isLoggedIn</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-c">// 未登录，跳转到登录页</span>
+    <span class="pl-en">next</span><span class="pl-kos">(</span><span class="pl-kos">{</span> <span class="pl-c1">name</span>: <span class="pl-s">'Login'</span><span class="pl-kos">,</span> <span class="pl-c1">query</span>: <span class="pl-kos">{</span> <span class="pl-c1">redirect</span>: <span class="pl-s1">to</span><span class="pl-kos">.</span><span class="pl-c1">fullPath</span> <span class="pl-kos">}</span> <span class="pl-kos">}</span><span class="pl-kos">)</span>
+  <span class="pl-kos">}</span> <span class="pl-k">else</span> <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">to</span><span class="pl-kos">.</span><span class="pl-c1">name</span> <span class="pl-c1">===</span> <span class="pl-s">'Login'</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-s1">authStore</span><span class="pl-kos">.</span><span class="pl-c1">isLoggedIn</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-c">// 已登录，跳转到首页</span>
+    <span class="pl-en">next</span><span class="pl-kos">(</span><span class="pl-kos">{</span> <span class="pl-c1">name</span>: <span class="pl-s">'Home'</span> <span class="pl-kos">}</span><span class="pl-kos">)</span>
+  <span class="pl-kos">}</span> <span class="pl-k">else</span> <span class="pl-kos">{</span>
+    <span class="pl-en">next</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+  <span class="pl-kos">}</span>
+<span class="pl-kos">}</span><span class="pl-kos">)</span>
+
+<span class="pl-s1">router</span><span class="pl-kos">.</span><span class="pl-en">afterEach</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-s1">to</span><span class="pl-kos">,</span> <span class="pl-s1">from</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+  <span class="pl-c">// 全局后置钩子（适合设置页面标题、埋点等）</span>
+  <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-c1">title</span> <span class="pl-c1">=</span> <span class="pl-s1">to</span><span class="pl-kos">.</span><span class="pl-c1">meta</span><span class="pl-kos">.</span><span class="pl-c1">title</span> ? <span class="pl-s">`<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">to</span><span class="pl-kos">.</span><span class="pl-c1">meta</span><span class="pl-kos">.</span><span class="pl-c1">title</span><span class="pl-kos">}</span></span> - MyApp`</span> : <span class="pl-s">'MyApp'</span>
+<span class="pl-kos">}</span><span class="pl-kos">)</span>
+
+<span class="pl-c">// 路由独享守卫</span>
+<span class="pl-kos">{</span>
+  <span class="pl-c1">path</span>: <span class="pl-s">'/admin'</span><span class="pl-kos">,</span>
+  <span class="pl-c1">component</span>: <span class="pl-v">AdminLayout</span><span class="pl-kos">,</span>
+  <span class="pl-en">beforeEnter</span>: <span class="pl-kos">(</span><span class="pl-s1">to</span><span class="pl-kos">,</span> <span class="pl-s1">from</span><span class="pl-kos">,</span> <span class="pl-s1">next</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-en">isAdmin</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+      <span class="pl-en">next</span><span class="pl-kos">(</span><span class="pl-s">'/403'</span><span class="pl-kos">)</span>
+    <span class="pl-kos">}</span> <span class="pl-k">else</span> <span class="pl-kos">{</span>
+      <span class="pl-en">next</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-kos">}</span>
+  <span class="pl-kos">}</span>
+<span class="pl-kos">}</span></pre></div>
+<div class="highlight highlight-text-html-vue"><pre class="notranslate"><span class="pl-c"><span class="pl-c">&lt;!--</span> 组件内守卫 <span class="pl-c">--&gt;</span></span>
+&lt;<span class="pl-ent">script</span> setup lang="ts"&gt;<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">import</span> { <span class="pl-smi">onBeforeRouteLeave</span>, <span class="pl-smi">onBeforeRouteUpdate</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>vue-router<span class="pl-pds">'</span></span></span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> 路由离开前（如表单未保存提醒）</span></span>
+<span class="pl-s1"><span class="pl-en">onBeforeRouteLeave</span>((<span class="pl-v">to</span>, <span class="pl-v">from</span>) <span class="pl-k">=&gt;</span> {</span>
+<span class="pl-s1">  <span class="pl-k">if</span> (<span class="pl-smi">hasUnsavedChanges</span>.<span class="pl-c1">value</span>) {</span>
+<span class="pl-s1">    <span class="pl-k">return</span> <span class="pl-c1">window</span>.<span class="pl-c1">confirm</span>(<span class="pl-s"><span class="pl-pds">'</span>有未保存的更改，确定离开？<span class="pl-pds">'</span></span>)</span>
+<span class="pl-s1">  }</span>
+<span class="pl-s1">})</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> 路由参数变化时（同一组件复用时）</span></span>
+<span class="pl-s1"><span class="pl-en">onBeforeRouteUpdate</span>(<span class="pl-k">async</span> (<span class="pl-v">to</span>, <span class="pl-v">from</span>) <span class="pl-k">=&gt;</span> {</span>
+<span class="pl-s1">  <span class="pl-k">if</span> (<span class="pl-smi">to</span>.<span class="pl-smi">params</span>.<span class="pl-c1">id</span> <span class="pl-k">!==</span> <span class="pl-smi">from</span>.<span class="pl-smi">params</span>.<span class="pl-c1">id</span>) {</span>
+<span class="pl-s1">    <span class="pl-k">await</span> <span class="pl-en">fetchUser</span>(<span class="pl-smi">to</span>.<span class="pl-smi">params</span>.<span class="pl-c1">id</span> <span class="pl-k">as</span> <span class="pl-c1">string</span>)</span>
+<span class="pl-s1">  }</span>
+<span class="pl-s1">})</span>
+<span class="pl-s1"></span>&lt;/<span class="pl-ent">script</span>&gt;</pre></div>
+<h3>12.4 路由懒加载</h3>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// ✅ 推荐：动态 import 实现懒加载</span>
+<span class="pl-k">const</span> <span class="pl-s1">routes</span> <span class="pl-c1">=</span> <span class="pl-kos">[</span>
+  <span class="pl-kos">{</span>
+    <span class="pl-c1">path</span>: <span class="pl-s">'/dashboard'</span><span class="pl-kos">,</span>
+    <span class="pl-en">component</span>: <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-k">import</span><span class="pl-kos">(</span><span class="pl-s">'@/views/Dashboard.vue'</span><span class="pl-kos">)</span>
+  <span class="pl-kos">}</span><span class="pl-kos">,</span>
+  <span class="pl-kos">{</span>
+    <span class="pl-c1">path</span>: <span class="pl-s">'/admin'</span><span class="pl-kos">,</span>
+    <span class="pl-en">component</span>: <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-k">import</span><span class="pl-kos">(</span><span class="pl-c">/* webpackChunkName: "admin" */</span> <span class="pl-s">'@/views/Admin.vue'</span><span class="pl-kos">)</span>
+  <span class="pl-kos">}</span>
+<span class="pl-kos">]</span>
+
+<span class="pl-c">// ✅ 配合 Suspense + defineAsyncComponent</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-s1">defineAsyncComponent</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'vue'</span>
+<span class="pl-k">const</span> <span class="pl-v">HeavyView</span> <span class="pl-c1">=</span> <span class="pl-en">defineAsyncComponent</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-k">import</span><span class="pl-kos">(</span><span class="pl-s">'@/views/HeavyView.vue'</span><span class="pl-kos">)</span><span class="pl-kos">)</span></pre></div>
+<h3>12.5 路由元信息与类型</h3>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// 扩展 RouteMeta 类型</span>
+<span class="pl-k">declare</span> module <span class="pl-s">'vue-router'</span> <span class="pl-kos">{</span>
+  <span class="pl-k">interface</span> <span class="pl-smi">RouteMeta</span> <span class="pl-kos">{</span>
+    <span class="pl-c1">title</span>?: <span class="pl-smi">string</span>
+    <span class="pl-c1">requiresAuth</span>?: <span class="pl-smi">boolean</span>
+    <span class="pl-c1">roles</span>?: <span class="pl-smi">string</span><span class="pl-kos">[</span><span class="pl-kos">]</span>
+    <span class="pl-c1">layout</span>?: <span class="pl-s">'default'</span> <span class="pl-c1">|</span> <span class="pl-s">'admin'</span> <span class="pl-c1">|</span> <span class="pl-s">'blank'</span>
+  <span class="pl-kos">}</span>
+<span class="pl-kos">}</span></pre></div>
+<hr>
+<h2>13. Pinia 状态管理</h2>
+<h3>13.1 为什么用 Pinia</h3>
+<p>Pinia 是 Vue 官方推荐的状态管理库（替代 Vuex）：</p>
+<ul>
+<li><strong>更简单的 API</strong>：没有 mutations，直接在 actions 中修改状态。</li>
+<li><strong>完整的 TypeScript 支持</strong>：类型推断极佳。</li>
+<li><strong>轻量</strong>：约 1KB（gzip 后）。</li>
+<li><strong>模块化</strong>：每个 store 独立，无需嵌套模块。</li>
+<li><strong>支持组合式 API 风格</strong>：与 <code class="notranslate">&lt;script setup&gt;</code> 天然契合。</li>
+<li><strong>支持 SSR / 热更新 / Devtools</strong>。</li>
+</ul>
+<h3>13.2 定义 Store</h3>
+<p><strong>选项式风格（Options Store）</strong>：</p>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// stores/counter.ts</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-s1">defineStore</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'pinia'</span>
+
+<span class="pl-k">export</span> <span class="pl-k">const</span> <span class="pl-s1">useCounterStore</span> <span class="pl-c1">=</span> <span class="pl-en">defineStore</span><span class="pl-kos">(</span><span class="pl-s">'counter'</span><span class="pl-kos">,</span> <span class="pl-kos">{</span>
+  <span class="pl-en">state</span>: <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">(</span><span class="pl-kos">{</span>
+    <span class="pl-c1">count</span>: <span class="pl-c1">0</span><span class="pl-kos">,</span>
+    <span class="pl-c1">name</span>: <span class="pl-s">'Counter'</span>
+  <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">,</span>
+
+  <span class="pl-c1">getters</span>: <span class="pl-kos">{</span>
+    <span class="pl-en">double</span>: <span class="pl-kos">(</span><span class="pl-s1">state</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">state</span><span class="pl-kos">.</span><span class="pl-c1">count</span> <span class="pl-c1">*</span> <span class="pl-c1">2</span><span class="pl-kos">,</span>
+    <span class="pl-c">// 引用其他 getter</span>
+    <span class="pl-en">doublePlusOne</span><span class="pl-kos">(</span><span class="pl-kos">)</span>: <span class="pl-smi">number</span> <span class="pl-kos">{</span>
+      <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">double</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>
+    <span class="pl-kos">}</span>
+  <span class="pl-kos">}</span><span class="pl-kos">,</span>
+
+  <span class="pl-c1">actions</span>: <span class="pl-kos">{</span>
+    <span class="pl-en">increment</span><span class="pl-kos">(</span><span class="pl-s1">amount</span> <span class="pl-c1">=</span> <span class="pl-c1">1</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+      <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">count</span> <span class="pl-c1">+=</span> <span class="pl-s1">amount</span>
+    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+
+    <span class="pl-k">async</span> <span class="pl-en">fetchCount</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+      <span class="pl-k">const</span> <span class="pl-s1">response</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-en">fetch</span><span class="pl-kos">(</span><span class="pl-s">'/api/count'</span><span class="pl-kos">)</span>
+      <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">count</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-s1">response</span><span class="pl-kos">.</span><span class="pl-en">json</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-kos">}</span>
+  <span class="pl-kos">}</span>
+<span class="pl-kos">}</span><span class="pl-kos">)</span></pre></div>
+<p><strong>组合式风格（Setup Store，更推荐）</strong>：</p>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// stores/counter.ts</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-s1">defineStore</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'pinia'</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-s1">ref</span><span class="pl-kos">,</span> <span class="pl-s1">computed</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'vue'</span>
+
+<span class="pl-k">export</span> <span class="pl-k">const</span> <span class="pl-s1">useCounterStore</span> <span class="pl-c1">=</span> <span class="pl-en">defineStore</span><span class="pl-kos">(</span><span class="pl-s">'counter'</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+  <span class="pl-c">// state → ref</span>
+  <span class="pl-k">const</span> <span class="pl-s1">count</span> <span class="pl-c1">=</span> <span class="pl-en">ref</span><span class="pl-kos">(</span><span class="pl-c1">0</span><span class="pl-kos">)</span>
+  <span class="pl-k">const</span> <span class="pl-s1">name</span> <span class="pl-c1">=</span> <span class="pl-en">ref</span><span class="pl-kos">(</span><span class="pl-s">'Counter'</span><span class="pl-kos">)</span>
+
+  <span class="pl-c">// getters → computed</span>
+  <span class="pl-k">const</span> <span class="pl-s1">double</span> <span class="pl-c1">=</span> <span class="pl-en">computed</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">count</span><span class="pl-kos">.</span><span class="pl-c1">value</span> <span class="pl-c1">*</span> <span class="pl-c1">2</span><span class="pl-kos">)</span>
+  <span class="pl-k">const</span> <span class="pl-s1">doublePlusOne</span> <span class="pl-c1">=</span> <span class="pl-en">computed</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">double</span><span class="pl-kos">.</span><span class="pl-c1">value</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span><span class="pl-kos">)</span>
+
+  <span class="pl-c">// actions → functions</span>
+  <span class="pl-k">function</span> <span class="pl-en">increment</span><span class="pl-kos">(</span><span class="pl-s1">amount</span> <span class="pl-c1">=</span> <span class="pl-c1">1</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-s1">count</span><span class="pl-kos">.</span><span class="pl-c1">value</span> <span class="pl-c1">+=</span> <span class="pl-s1">amount</span>
+  <span class="pl-kos">}</span>
+
+  <span class="pl-k">async</span> <span class="pl-k">function</span> <span class="pl-en">fetchCount</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-k">const</span> <span class="pl-s1">response</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-en">fetch</span><span class="pl-kos">(</span><span class="pl-s">'/api/count'</span><span class="pl-kos">)</span>
+    <span class="pl-s1">count</span><span class="pl-kos">.</span><span class="pl-c1">value</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-s1">response</span><span class="pl-kos">.</span><span class="pl-en">json</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+  <span class="pl-kos">}</span>
+
+  <span class="pl-k">return</span> <span class="pl-kos">{</span> count<span class="pl-kos">,</span> name<span class="pl-kos">,</span> double<span class="pl-kos">,</span> doublePlusOne<span class="pl-kos">,</span> increment<span class="pl-kos">,</span> fetchCount <span class="pl-kos">}</span>
+<span class="pl-kos">}</span><span class="pl-kos">)</span></pre></div>
+<h3>13.3 在组件中使用</h3>
+<div class="highlight highlight-text-html-vue"><pre class="notranslate">&lt;<span class="pl-ent">script</span> setup lang="ts"&gt;<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">import</span> { <span class="pl-smi">storeToRefs</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>pinia<span class="pl-pds">'</span></span></span>
+<span class="pl-s1"><span class="pl-k">import</span> { <span class="pl-smi">useCounterStore</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>@/stores/counter<span class="pl-pds">'</span></span></span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> counterStore <span class="pl-k">=</span> <span class="pl-en">useCounterStore</span>()</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> ✅ 使用 storeToRefs 保持响应性（解构 state 和 getters）</span></span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> { count, double, doublePlusOne } <span class="pl-k">=</span> <span class="pl-en">storeToRefs</span>(<span class="pl-smi">counterStore</span>)</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> ✅ actions 直接解构即可（不需要响应性）</span></span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> { increment, fetchCount } <span class="pl-k">=</span> <span class="pl-smi">counterStore</span></span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> ❌ 错误：直接解构 state 会丢失响应性</span></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> const { count } = counterStore  // count 是普通值！</span></span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">function</span> handleClick() {</span>
+<span class="pl-s1">  <span class="pl-en">increment</span>(<span class="pl-c1">5</span>)</span>
+<span class="pl-s1">}</span>
+<span class="pl-s1"></span>&lt;/<span class="pl-ent">script</span>&gt;
+
+&lt;<span class="pl-ent">template</span>&gt;
+  &lt;<span class="pl-ent">p</span>&gt;Count: {{ count }}&lt;/<span class="pl-ent">p</span>&gt;
+  &lt;<span class="pl-ent">p</span>&gt;Double: {{ double }}&lt;/<span class="pl-ent">p</span>&gt;
+  &lt;<span class="pl-ent">button</span> <span class="pl-e">@click</span>=<span class="pl-s"><span class="pl-pds">"</span>handleClick<span class="pl-pds">"</span></span>&gt;+5&lt;/<span class="pl-ent">button</span>&gt;
+  &lt;<span class="pl-ent">button</span> <span class="pl-e">@click</span>=<span class="pl-s"><span class="pl-pds">"</span>fetchCount<span class="pl-pds">"</span></span>&gt;Fetch&lt;/<span class="pl-ent">button</span>&gt;
+&lt;/<span class="pl-ent">template</span>&gt;</pre></div>
+<h3>13.4 Store 之间的组合</h3>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// stores/cart.ts</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-s1">defineStore</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'pinia'</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-s1">useUserStore</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./user'</span>
+
+<span class="pl-k">export</span> <span class="pl-k">const</span> <span class="pl-s1">useCartStore</span> <span class="pl-c1">=</span> <span class="pl-en">defineStore</span><span class="pl-kos">(</span><span class="pl-s">'cart'</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+  <span class="pl-k">const</span> <span class="pl-s1">userStore</span> <span class="pl-c1">=</span> <span class="pl-en">useUserStore</span><span class="pl-kos">(</span><span class="pl-kos">)</span>  <span class="pl-c">// 在 setup store 中可以直接引用其他 store</span>
+
+  <span class="pl-k">const</span> <span class="pl-s1">items</span> <span class="pl-c1">=</span> <span class="pl-en">ref</span><span class="pl-c1">&lt;</span><span class="pl-smi">CartItem</span><span class="pl-kos">[</span><span class="pl-kos">]</span><span class="pl-c1">&gt;</span><span class="pl-kos">(</span><span class="pl-kos">[</span><span class="pl-kos">]</span><span class="pl-kos">)</span>
+  <span class="pl-k">const</span> <span class="pl-s1">total</span> <span class="pl-c1">=</span> <span class="pl-en">computed</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">items</span><span class="pl-kos">.</span><span class="pl-c1">value</span><span class="pl-kos">.</span><span class="pl-en">reduce</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-s1">sum</span><span class="pl-kos">,</span> <span class="pl-s1">item</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">sum</span> <span class="pl-c1">+</span> <span class="pl-s1">item</span><span class="pl-kos">.</span><span class="pl-c1">price</span><span class="pl-kos">,</span> <span class="pl-c1">0</span><span class="pl-kos">)</span><span class="pl-kos">)</span>
+
+  <span class="pl-k">function</span> <span class="pl-en">addItem</span><span class="pl-kos">(</span><span class="pl-s1">item</span>: <span class="pl-smi">CartItem</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-s1">userStore</span><span class="pl-kos">.</span><span class="pl-c1">isLoggedIn</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+      <span class="pl-k">throw</span> <span class="pl-k">new</span> <span class="pl-v">Error</span><span class="pl-kos">(</span><span class="pl-s">'请先登录'</span><span class="pl-kos">)</span>
+    <span class="pl-kos">}</span>
+    <span class="pl-s1">items</span><span class="pl-kos">.</span><span class="pl-c1">value</span><span class="pl-kos">.</span><span class="pl-en">push</span><span class="pl-kos">(</span><span class="pl-s1">item</span><span class="pl-kos">)</span>
+  <span class="pl-kos">}</span>
+
+  <span class="pl-k">return</span> <span class="pl-kos">{</span> items<span class="pl-kos">,</span> total<span class="pl-kos">,</span> addItem <span class="pl-kos">}</span>
+<span class="pl-kos">}</span><span class="pl-kos">)</span></pre></div>
+<h3>13.5 持久化存储</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">pnpm add pinia-plugin-persistedstate</pre></div>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// main.ts</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-s1">createPinia</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'pinia'</span>
+<span class="pl-k">import</span> <span class="pl-s1">piniaPluginPersistedstate</span> <span class="pl-k">from</span> <span class="pl-s">'pinia-plugin-persistedstate'</span>
+
+<span class="pl-k">const</span> <span class="pl-s1">pinia</span> <span class="pl-c1">=</span> <span class="pl-en">createPinia</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+<span class="pl-s1">pinia</span><span class="pl-kos">.</span><span class="pl-en">use</span><span class="pl-kos">(</span><span class="pl-s1">piniaPluginPersistedstate</span><span class="pl-kos">)</span>
+<span class="pl-s1">app</span><span class="pl-kos">.</span><span class="pl-en">use</span><span class="pl-kos">(</span><span class="pl-s1">pinia</span><span class="pl-kos">)</span></pre></div>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// stores/user.ts</span>
+<span class="pl-k">export</span> <span class="pl-k">const</span> <span class="pl-s1">useUserStore</span> <span class="pl-c1">=</span> <span class="pl-en">defineStore</span><span class="pl-kos">(</span><span class="pl-s">'user'</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+  <span class="pl-k">const</span> <span class="pl-s1">token</span> <span class="pl-c1">=</span> <span class="pl-en">ref</span><span class="pl-kos">(</span><span class="pl-s">''</span><span class="pl-kos">)</span>
+  <span class="pl-k">const</span> <span class="pl-s1">user</span> <span class="pl-c1">=</span> <span class="pl-en">ref</span><span class="pl-c1">&lt;</span><span class="pl-smi">User</span> <span class="pl-c1">|</span> <span class="pl-c1">null</span><span class="pl-c1">&gt;</span><span class="pl-kos">(</span><span class="pl-c1">null</span><span class="pl-kos">)</span>
+
+  <span class="pl-k">return</span> <span class="pl-kos">{</span> token<span class="pl-kos">,</span> user <span class="pl-kos">}</span>
+<span class="pl-kos">}</span><span class="pl-kos">,</span> <span class="pl-kos">{</span>
+  <span class="pl-c1">persist</span>: <span class="pl-kos">{</span>
+    <span class="pl-c1">key</span>: <span class="pl-s">'user-store'</span><span class="pl-kos">,</span>
+    <span class="pl-c1">storage</span>: <span class="pl-s1">localStorage</span><span class="pl-kos">,</span>   <span class="pl-c">// 或 sessionStorage</span>
+    <span class="pl-c1">pick</span>: <span class="pl-kos">[</span><span class="pl-s">'token'</span><span class="pl-kos">]</span>          <span class="pl-c">// 仅持久化指定字段</span>
+  <span class="pl-kos">}</span>
+<span class="pl-kos">}</span><span class="pl-kos">)</span></pre></div>
+<h3>13.6 Devtools 集成</h3>
+<p>Pinia 完美集成 Vue Devtools：</p>
+<ul>
+<li>查看所有 store 的状态。</li>
+<li>实时编辑 state。</li>
+<li>追踪 action 调用。</li>
+<li>时间旅行调试。</li>
+</ul>
+<hr>
+<h2>14. TypeScript 集成</h2>
+<h3>14.1 基础类型标注</h3>
+<div class="highlight highlight-text-html-vue"><pre class="notranslate">&lt;<span class="pl-ent">script</span> setup lang="ts"&gt;<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">import</span> { <span class="pl-smi">ref</span>, <span class="pl-smi">reactive</span>, <span class="pl-smi">computed</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>vue<span class="pl-pds">'</span></span></span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> ref 显式标注</span></span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> count <span class="pl-k">=</span> <span class="pl-en">ref</span>&lt;<span class="pl-c1">number</span>&gt;(<span class="pl-c1">0</span>)</span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> message <span class="pl-k">=</span> <span class="pl-en">ref</span>&lt;<span class="pl-c1">string</span>&gt;(<span class="pl-s"><span class="pl-pds">'</span>Hello<span class="pl-pds">'</span></span>)</span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> user <span class="pl-k">=</span> <span class="pl-en">ref</span>&lt;<span class="pl-en">User</span> <span class="pl-k">|</span> <span class="pl-c1">null</span>&gt;(<span class="pl-c1">null</span>)</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> reactive 标注</span></span>
+<span class="pl-s1"><span class="pl-k">interface</span> <span class="pl-en">FormState</span> {</span>
+<span class="pl-s1">  name<span class="pl-k">:</span> <span class="pl-c1">string</span></span>
+<span class="pl-s1">  email<span class="pl-k">:</span> <span class="pl-c1">string</span></span>
+<span class="pl-s1">  age<span class="pl-k">:</span> <span class="pl-c1">number</span></span>
+<span class="pl-s1">  tags<span class="pl-k">:</span> <span class="pl-c1">string</span>[]</span>
+<span class="pl-s1">}</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> form <span class="pl-k">=</span> <span class="pl-en">reactive</span>&lt;<span class="pl-en">FormState</span>&gt;({</span>
+<span class="pl-s1">  name: <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">  email: <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">  age: <span class="pl-c1">18</span>,</span>
+<span class="pl-s1">  tags: []</span>
+<span class="pl-s1">})</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> computed 标注</span></span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> isValid <span class="pl-k">=</span> <span class="pl-en">computed</span>&lt;<span class="pl-c1">boolean</span>&gt;(() <span class="pl-k">=&gt;</span> <span class="pl-smi">form</span>.<span class="pl-c1">name</span>.<span class="pl-c1">length</span> <span class="pl-k">&gt;</span> <span class="pl-c1">0</span>)</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> 函数标注</span></span>
+<span class="pl-s1"><span class="pl-k">function</span> greet(<span class="pl-v">name</span><span class="pl-k">:</span> <span class="pl-c1">string</span>)<span class="pl-k">:</span> <span class="pl-c1">string</span> {</span>
+<span class="pl-s1">  <span class="pl-k">return</span> <span class="pl-s">`</span><span class="pl-s">Hello, ${<span class="pl-smi">name</span>}!</span><span class="pl-s">`</span></span>
+<span class="pl-s1">}</span>
+<span class="pl-s1"></span>&lt;/<span class="pl-ent">script</span>&gt;</pre></div>
+<h3>14.2 组件 Props 类型</h3>
+<div class="highlight highlight-text-html-vue"><pre class="notranslate">&lt;<span class="pl-ent">script</span> setup lang="ts"&gt;<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> 接口定义</span></span>
+<span class="pl-s1"><span class="pl-k">interface</span> <span class="pl-en">Props</span> {</span>
+<span class="pl-s1">  title<span class="pl-k">:</span> <span class="pl-c1">string</span></span>
+<span class="pl-s1">  items<span class="pl-k">:</span> <span class="pl-en">User</span>[]</span>
+<span class="pl-s1">  config<span class="pl-k">?</span><span class="pl-k">:</span> {</span>
+<span class="pl-s1">    theme<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>light<span class="pl-pds">'</span></span> <span class="pl-k">|</span> <span class="pl-s"><span class="pl-pds">'</span>dark<span class="pl-pds">'</span></span></span>
+<span class="pl-s1">    size<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>sm<span class="pl-pds">'</span></span> <span class="pl-k">|</span> <span class="pl-s"><span class="pl-pds">'</span>md<span class="pl-pds">'</span></span> <span class="pl-k">|</span> <span class="pl-s"><span class="pl-pds">'</span>lg<span class="pl-pds">'</span></span></span>
+<span class="pl-s1">  }</span>
+<span class="pl-s1">  onUpdate<span class="pl-k">?</span><span class="pl-k">:</span> (<span class="pl-v">id</span><span class="pl-k">:</span> <span class="pl-c1">number</span>, <span class="pl-v">data</span><span class="pl-k">:</span> <span class="pl-en">Partial</span>&lt;<span class="pl-en">User</span>&gt;) <span class="pl-k">=&gt;</span> <span class="pl-c1">void</span></span>
+<span class="pl-s1">}</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> withDefaults 设置默认值</span></span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> props <span class="pl-k">=</span> <span class="pl-en">withDefaults</span>(<span class="pl-en">defineProps</span>&lt;<span class="pl-en">Props</span>&gt;(), {</span>
+<span class="pl-s1">  <span class="pl-en">config</span>: () <span class="pl-k">=&gt;</span> ({ theme: <span class="pl-s"><span class="pl-pds">'</span>light<span class="pl-pds">'</span></span>, size: <span class="pl-s"><span class="pl-pds">'</span>md<span class="pl-pds">'</span></span> }),</span>
+<span class="pl-s1">  onUpdate: <span class="pl-c1">undefined</span></span>
+<span class="pl-s1">})</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> Emits 类型</span></span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> emit <span class="pl-k">=</span> <span class="pl-en">defineEmits</span>&lt;{</span>
+<span class="pl-s1">  (<span class="pl-v">e</span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>update<span class="pl-pds">'</span></span>, <span class="pl-v">id</span><span class="pl-k">:</span> <span class="pl-c1">number</span>, <span class="pl-v">data</span><span class="pl-k">:</span> <span class="pl-en">Partial</span>&lt;<span class="pl-en">User</span>&gt;)<span class="pl-k">:</span> <span class="pl-c1">void</span></span>
+<span class="pl-s1">  (<span class="pl-v">e</span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>delete<span class="pl-pds">'</span></span>, <span class="pl-v">id</span><span class="pl-k">:</span> <span class="pl-c1">number</span>)<span class="pl-k">:</span> <span class="pl-c1">void</span></span>
+<span class="pl-s1">  (<span class="pl-v">e</span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>close<span class="pl-pds">'</span></span>)<span class="pl-k">:</span> <span class="pl-c1">void</span></span>
+<span class="pl-s1">}&gt;()</span>
+<span class="pl-s1"></span>&lt;/<span class="pl-ent">script</span>&gt;</pre></div>
+<h3>14.3 模板引用类型</h3>
+<div class="highlight highlight-text-html-vue"><pre class="notranslate">&lt;<span class="pl-ent">script</span> setup lang="ts"&gt;<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">import</span> { <span class="pl-smi">ref</span>, <span class="pl-smi">onMounted</span>, <span class="pl-k">type</span> <span class="pl-smi">ComponentPublicInstance</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>vue<span class="pl-pds">'</span></span></span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> DOM 元素引用</span></span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> inputRef <span class="pl-k">=</span> <span class="pl-en">ref</span>&lt;<span class="pl-en">HTMLInputElement</span> <span class="pl-k">|</span> <span class="pl-c1">null</span>&gt;(<span class="pl-c1">null</span>)</span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> divRef <span class="pl-k">=</span> <span class="pl-en">ref</span>&lt;<span class="pl-en">HTMLDivElement</span> <span class="pl-k">|</span> <span class="pl-c1">null</span>&gt;(<span class="pl-c1">null</span>)</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> 组件引用</span></span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> childRef <span class="pl-k">=</span> <span class="pl-en">ref</span>&lt;<span class="pl-en">InstanceType</span>&lt;<span class="pl-k">typeof</span> <span class="pl-smi">ChildComponent</span>&gt; <span class="pl-k">|</span> <span class="pl-c1">null</span>&gt;(<span class="pl-c1">null</span>)</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-en">onMounted</span>(() <span class="pl-k">=&gt;</span> {</span>
+<span class="pl-s1">  <span class="pl-smi">inputRef</span>.<span class="pl-c1">value</span>?.<span class="pl-c1">focus</span>()</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">  <span class="pl-c"><span class="pl-c">//</span> 调用子组件暴露的方法</span></span>
+<span class="pl-s1">  <span class="pl-smi">childRef</span>.<span class="pl-c1">value</span>?.<span class="pl-en">validate</span>()</span>
+<span class="pl-s1">})</span>
+<span class="pl-s1"></span>&lt;/<span class="pl-ent">script</span>&gt;
+
+&lt;<span class="pl-ent">template</span>&gt;
+  &lt;<span class="pl-ent">input</span> <span class="pl-e">ref</span>=<span class="pl-s"><span class="pl-pds">"</span>inputRef<span class="pl-pds">"</span></span>&gt;
+  &lt;<span class="pl-ent">div</span> <span class="pl-e">ref</span>=<span class="pl-s"><span class="pl-pds">"</span>divRef<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">div</span>&gt;
+  &lt;<span class="pl-ent">ChildComponent</span> ref="childRef" /&gt;
+&lt;/<span class="pl-ent">template</span>&gt;</pre></div>
+<h3>14.4 类型工具</h3>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-k">type</span> <span class="pl-kos">{</span>
+  <span class="pl-c">// Props / Emits 类型</span>
+  <span class="pl-v">PropType</span><span class="pl-kos">,</span>
+  <span class="pl-c">// 组件实例</span>
+  <span class="pl-v">ComponentPublicInstance</span><span class="pl-kos">,</span>
+  <span class="pl-c">// Setup 上下文</span>
+  <span class="pl-v">SetupContext</span><span class="pl-kos">,</span>
+  <span class="pl-c">// VNode</span>
+  <span class="pl-v">VNode</span><span class="pl-kos">,</span>
+  <span class="pl-c">// 指令</span>
+  <span class="pl-v">Directive</span><span class="pl-kos">,</span>
+  <span class="pl-c">// 插件</span>
+  <span class="pl-v">Plugin</span>
+<span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'vue'</span>
+
+<span class="pl-c">// 推断 defineProps 的类型</span>
+<span class="pl-k">type</span> <span class="pl-smi">Props</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>
+  <span class="pl-kos">[</span><span class="pl-smi">K</span> <span class="pl-k">in</span> <span class="pl-k">keyof</span> <span class="pl-smi">InstanceType</span><span class="pl-c1">&lt;</span><span class="pl-k">typeof</span> <span class="pl-v">MyComponent</span><span class="pl-c1">&gt;</span><span class="pl-kos">[</span><span class="pl-s">'$props'</span><span class="pl-kos">]</span><span class="pl-kos">]</span>: <span class="pl-smi">InstanceType</span><span class="pl-c1">&lt;</span><span class="pl-k">typeof</span> <span class="pl-v">MyComponent</span><span class="pl-c1">&gt;</span><span class="pl-kos">[</span><span class="pl-s">'$props'</span><span class="pl-kos">]</span><span class="pl-kos">[</span><span class="pl-smi">K</span><span class="pl-kos">]</span>
+<span class="pl-kos">}</span>
+
+<span class="pl-c">// 获取 emits 的参数类型</span>
+<span class="pl-k">type</span> <span class="pl-smi">EmitParams</span> <span class="pl-c1">=</span> <span class="pl-smi">Parameters</span><span class="pl-c1">&lt;</span><span class="pl-smi">InstanceType</span><span class="pl-c1">&lt;</span><span class="pl-k">typeof</span> <span class="pl-v">MyComponent</span><span class="pl-c1">&gt;</span><span class="pl-kos">[</span><span class="pl-s">'$emit'</span><span class="pl-kos">]</span><span class="pl-c1">&gt;</span></pre></div>
+<h3>14.5 VueUse — 实用工具集合</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">pnpm add @vueuse/core</pre></div>
+<div class="highlight highlight-text-html-vue"><pre class="notranslate">&lt;<span class="pl-ent">script</span> setup lang="ts"&gt;<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">import</span> {</span>
+<span class="pl-s1">  <span class="pl-smi">useMouse</span>,          <span class="pl-c"><span class="pl-c">//</span> 鼠标位置</span></span>
+<span class="pl-s1">  <span class="pl-smi">useWindowSize</span>,     <span class="pl-c"><span class="pl-c">//</span> 窗口尺寸</span></span>
+<span class="pl-s1">  <span class="pl-smi">useLocalStorage</span>,   <span class="pl-c"><span class="pl-c">//</span> localStorage 响应式</span></span>
+<span class="pl-s1">  <span class="pl-smi">useDark</span>,           <span class="pl-c"><span class="pl-c">//</span> 深色模式</span></span>
+<span class="pl-s1">  <span class="pl-smi">useEventListener</span>,  <span class="pl-c"><span class="pl-c">//</span> 事件监听</span></span>
+<span class="pl-s1">  <span class="pl-smi">useFetch</span>,          <span class="pl-c"><span class="pl-c">//</span> 请求</span></span>
+<span class="pl-s1">  <span class="pl-smi">useIntersectionObserver</span>,  <span class="pl-c"><span class="pl-c">//</span> 可见性检测</span></span>
+<span class="pl-s1">  <span class="pl-smi">useClipboard</span>,      <span class="pl-c"><span class="pl-c">//</span> 剪贴板</span></span>
+<span class="pl-s1">  <span class="pl-smi">useDebounceFn</span>,     <span class="pl-c"><span class="pl-c">//</span> 防抖</span></span>
+<span class="pl-s1">  <span class="pl-smi">useThrottleFn</span>      <span class="pl-c"><span class="pl-c">//</span> 节流</span></span>
+<span class="pl-s1">} <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>@vueuse/core<span class="pl-pds">'</span></span></span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> { x, y } <span class="pl-k">=</span> <span class="pl-en">useMouse</span>()</span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> { width, height } <span class="pl-k">=</span> <span class="pl-en">useWindowSize</span>()</span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> isDark <span class="pl-k">=</span> <span class="pl-en">useDark</span>()</span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> { copy, copied } <span class="pl-k">=</span> <span class="pl-en">useClipboard</span>()</span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> { data, error, isFetching } <span class="pl-k">=</span> <span class="pl-en">useFetch</span>(<span class="pl-s"><span class="pl-pds">'</span>/api/data<span class="pl-pds">'</span></span>)</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> search <span class="pl-k">=</span> <span class="pl-en">ref</span>(<span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>)</span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> debouncedSearch <span class="pl-k">=</span> <span class="pl-en">useDebounceFn</span>((<span class="pl-v">query</span><span class="pl-k">:</span> <span class="pl-c1">string</span>) <span class="pl-k">=&gt;</span> {</span>
+<span class="pl-s1">  <span class="pl-c1">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">'</span>搜索:<span class="pl-pds">'</span></span>, <span class="pl-smi">query</span>)</span>
+<span class="pl-s1">}, <span class="pl-c1">300</span>)</span>
+<span class="pl-s1"></span>&lt;/<span class="pl-ent">script</span>&gt;</pre></div>
+<hr>
+<h2>15. 性能优化</h2>
+<h3>15.1 编译期优化</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>特性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">v-once</code></td>
+<td>静态内容只渲染一次</td>
+</tr>
+<tr>
+<td><code class="notranslate">v-memo</code></td>
+<td>按条件缓存渲染结果</td>
+</tr>
+<tr>
+<td><code class="notranslate">v-show</code> vs <code class="notranslate">v-if</code></td>
+<td>频繁切换用 <code class="notranslate">v-show</code>，条件渲染用 <code class="notranslate">v-if</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">shallowRef</code> / <code class="notranslate">shallowReactive</code></td>
+<td>大数据减少深度追踪</td>
+</tr>
+<tr>
+<td><code class="notranslate">reactive</code> 对象优化</td>
+<td>避免深层嵌套对象的不必要响应式</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>15.2 组件级优化</h3>
+<div class="highlight highlight-text-html-vue"><pre class="notranslate">&lt;<span class="pl-ent">script</span> setup lang="ts"&gt;<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">import</span> { <span class="pl-smi">defineAsyncComponent</span>, <span class="pl-smi">shallowRef</span>, <span class="pl-smi">markRaw</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>vue<span class="pl-pds">'</span></span></span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> 1. 异步组件（代码分割）</span></span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> HeavyChart <span class="pl-k">=</span> <span class="pl-en">defineAsyncComponent</span>(() <span class="pl-k">=&gt;</span> <span class="pl-k">import</span>(<span class="pl-s"><span class="pl-pds">'</span>./HeavyChart.vue<span class="pl-pds">'</span></span>))</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> 2. markRaw：标记对象为非响应式（避免大型对象的 Proxy 开销）</span></span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> chartInstance <span class="pl-k">=</span> <span class="pl-en">markRaw</span>(<span class="pl-k">new</span> <span class="pl-en">ChartLibrary</span>())</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> 3. v-memo：缓存列表项渲染</span></span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> items <span class="pl-k">=</span> <span class="pl-en">ref</span>(<span class="pl-c1">Array</span>.<span class="pl-en">from</span>({ length: <span class="pl-c1">1000</span> }, (<span class="pl-v">_</span>, <span class="pl-v">i</span>) <span class="pl-k">=&gt;</span> ({ id: <span class="pl-smi">i</span>, name: <span class="pl-s">`</span><span class="pl-s">Item ${<span class="pl-smi">i</span>}</span><span class="pl-s">`</span> })))</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> 4. 合理使用 computed 缓存</span></span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> filteredItems <span class="pl-k">=</span> <span class="pl-en">computed</span>(() <span class="pl-k">=&gt;</span> {</span>
+<span class="pl-s1">  <span class="pl-k">return</span> <span class="pl-smi">items</span>.<span class="pl-c1">value</span>.<span class="pl-en">filter</span>(<span class="pl-v">item</span> <span class="pl-k">=&gt;</span> <span class="pl-smi">item</span>.<span class="pl-c1">name</span>.<span class="pl-en">includes</span>(<span class="pl-smi">search</span>.<span class="pl-c1">value</span>))</span>
+<span class="pl-s1">})</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> 5. 事件处理优化（避免内联函数创建）</span></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> ❌ 差：&lt;div @click="() =&gt; doSomething(item)"&gt;</span></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> ✅ 好：&lt;div @click="handleClick(item)"&gt;</span></span>
+<span class="pl-s1"></span>&lt;/<span class="pl-ent">script</span>&gt;
+
+&lt;<span class="pl-ent">template</span>&gt;
+  <span class="pl-c"><span class="pl-c">&lt;!--</span> 6. v-memo 缓存列表渲染 <span class="pl-c">--&gt;</span></span>
+  &lt;<span class="pl-ent">div</span> <span class="pl-e">v-for</span>=<span class="pl-s"><span class="pl-pds">"</span>item in filteredItems<span class="pl-pds">"</span></span> <span class="pl-e">:key</span>=<span class="pl-s"><span class="pl-pds">"</span>item.id<span class="pl-pds">"</span></span> <span class="pl-e">v-memo</span>=<span class="pl-s"><span class="pl-pds">"</span>[item.name, selectedId === item.id]<span class="pl-pds">"</span></span>&gt;
+    {{ item.name }}
+  &lt;/<span class="pl-ent">div</span>&gt;
+&lt;/<span class="pl-ent">template</span>&gt;</pre></div>
+<h3>15.3 虚拟滚动</h3>
+<p>对于长列表（1000+ 项），使用虚拟滚动库：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">pnpm add @tanstack/vue-virtual</pre></div>
+<div class="highlight highlight-text-html-vue"><pre class="notranslate">&lt;<span class="pl-ent">script</span> setup lang="ts"&gt;<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">import</span> { <span class="pl-smi">useVirtualizer</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>@tanstack/vue-virtual<span class="pl-pds">'</span></span></span>
+<span class="pl-s1"><span class="pl-k">import</span> { <span class="pl-smi">ref</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>vue<span class="pl-pds">'</span></span></span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> parentRef <span class="pl-k">=</span> <span class="pl-en">ref</span>&lt;<span class="pl-en">HTMLElement</span> <span class="pl-k">|</span> <span class="pl-c1">null</span>&gt;(<span class="pl-c1">null</span>)</span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> items <span class="pl-k">=</span> <span class="pl-en">ref</span>(<span class="pl-c1">Array</span>.<span class="pl-en">from</span>({ length: <span class="pl-c1">10000</span> }, (<span class="pl-v">_</span>, <span class="pl-v">i</span>) <span class="pl-k">=&gt;</span> ({ id: <span class="pl-smi">i</span>, name: <span class="pl-s">`</span><span class="pl-s">Item ${<span class="pl-smi">i</span>}</span><span class="pl-s">`</span> })))</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> virtualizer <span class="pl-k">=</span> <span class="pl-en">useVirtualizer</span>({</span>
+<span class="pl-s1">  count: <span class="pl-smi">items</span>.<span class="pl-c1">value</span>.<span class="pl-c1">length</span>,</span>
+<span class="pl-s1">  <span class="pl-en">getScrollElement</span>: () <span class="pl-k">=&gt;</span> <span class="pl-smi">parentRef</span>.<span class="pl-c1">value</span>,</span>
+<span class="pl-s1">  <span class="pl-en">estimateSize</span>: () <span class="pl-k">=&gt;</span> <span class="pl-c1">50</span>,</span>
+<span class="pl-s1">  overscan: <span class="pl-c1">5</span></span>
+<span class="pl-s1">})</span>
+<span class="pl-s1"></span>&lt;/<span class="pl-ent">script</span>&gt;
+
+&lt;<span class="pl-ent">template</span>&gt;
+  &lt;<span class="pl-ent">div</span> <span class="pl-e">ref</span>=<span class="pl-s"><span class="pl-pds">"</span>parentRef<span class="pl-pds">"</span></span> <span class="pl-e">style</span>=<span class="pl-s"><span class="pl-pds">"</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">height</span></span>: <span class="pl-c1">400<span class="pl-k">px</span></span>; <span class="pl-c1"><span class="pl-c1">overflow</span></span>: <span class="pl-c1">auto</span>;</span><span class="pl-pds">"</span></span>&gt;
+    &lt;<span class="pl-ent">div</span> <span class="pl-e">:style</span>=<span class="pl-s"><span class="pl-pds">"</span>{ height: `${virtualizer.getTotalSize()}px`, position: 'relative' }<span class="pl-pds">"</span></span>&gt;
+      &lt;<span class="pl-ent">div</span>
+        <span class="pl-e">v-for</span>=<span class="pl-s"><span class="pl-pds">"</span>virtualRow in virtualizer.getVirtualItems()<span class="pl-pds">"</span></span>
+        <span class="pl-e">:key</span>=<span class="pl-s"><span class="pl-pds">"</span>virtualRow.key<span class="pl-pds">"</span></span>
+        <span class="pl-e">:style</span>=<span class="pl-s"><span class="pl-pds">"</span>{</span>
+<span class="pl-s">          position: 'absolute',</span>
+<span class="pl-s">          top: 0,</span>
+<span class="pl-s">          left: 0,</span>
+<span class="pl-s">          width: '100%',</span>
+<span class="pl-s">          height: `${virtualRow.size}px`,</span>
+<span class="pl-s">          transform: `translateY(${virtualRow.start}px)`</span>
+<span class="pl-s">        }<span class="pl-pds">"</span></span>
+      &gt;
+        {{ items[virtualRow.index].name }}
+      &lt;/<span class="pl-ent">div</span>&gt;
+    &lt;/<span class="pl-ent">div</span>&gt;
+  &lt;/<span class="pl-ent">div</span>&gt;
+&lt;/<span class="pl-ent">template</span>&gt;</pre></div>
+<h3>15.4 构建优化</h3>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// vite.config.ts</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-s1">defineConfig</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'vite'</span>
+<span class="pl-k">import</span> <span class="pl-s1">vue</span> <span class="pl-k">from</span> <span class="pl-s">'@vitejs/plugin-vue'</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-s1">visualizer</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'rollup-plugin-visualizer'</span>
+
+<span class="pl-k">export</span> <span class="pl-k">default</span> <span class="pl-en">defineConfig</span><span class="pl-kos">(</span><span class="pl-kos">{</span>
+  <span class="pl-c1">plugins</span>: <span class="pl-kos">[</span>
+    <span class="pl-en">vue</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">,</span>
+    <span class="pl-en">visualizer</span><span class="pl-kos">(</span><span class="pl-kos">{</span> <span class="pl-c1">open</span>: <span class="pl-c1">true</span> <span class="pl-kos">}</span><span class="pl-kos">)</span>   <span class="pl-c">// 分析 bundle 体积</span>
+  <span class="pl-kos">]</span><span class="pl-kos">,</span>
+
+  <span class="pl-c1">build</span>: <span class="pl-kos">{</span>
+    <span class="pl-c">// 手动分包</span>
+    <span class="pl-c1">rollupOptions</span>: <span class="pl-kos">{</span>
+      <span class="pl-c1">output</span>: <span class="pl-kos">{</span>
+        <span class="pl-c1">manualChunks</span>: <span class="pl-kos">{</span>
+          <span class="pl-c1">vue</span>: <span class="pl-kos">[</span><span class="pl-s">'vue'</span><span class="pl-kos">,</span> <span class="pl-s">'vue-router'</span><span class="pl-kos">,</span> <span class="pl-s">'pinia'</span><span class="pl-kos">]</span><span class="pl-kos">,</span>
+          <span class="pl-c1">ui</span>: <span class="pl-kos">[</span><span class="pl-s">'element-plus'</span><span class="pl-kos">]</span><span class="pl-kos">,</span>
+          <span class="pl-c1">utils</span>: <span class="pl-kos">[</span><span class="pl-s">'lodash-es'</span><span class="pl-kos">,</span> <span class="pl-s">'dayjs'</span><span class="pl-kos">]</span>
+        <span class="pl-kos">}</span>
+      <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+
+    <span class="pl-c">// 压缩</span>
+    <span class="pl-c1">minify</span>: <span class="pl-s">'terser'</span><span class="pl-kos">,</span>
+    <span class="pl-c1">terserOptions</span>: <span class="pl-kos">{</span>
+      <span class="pl-c1">compress</span>: <span class="pl-kos">{</span>
+        <span class="pl-c1">drop_console</span>: <span class="pl-c1">true</span><span class="pl-kos">,</span>    <span class="pl-c">// 移除 console</span>
+        <span class="pl-c1">drop_debugger</span>: <span class="pl-c1">true</span>    <span class="pl-c">// 移除 debugger</span>
+      <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+
+    <span class="pl-c">// 产物大小警告</span>
+    <span class="pl-c1">chunkSizeWarningLimit</span>: <span class="pl-c1">500</span>
+  <span class="pl-kos">}</span>
+<span class="pl-kos">}</span><span class="pl-kos">)</span></pre></div>
+<h3>15.5 运行时性能清单</h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 使用 <code class="notranslate">v-once</code> 渲染静态内容</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 长列表使用虚拟滚动</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 大对象用 <code class="notranslate">markRaw</code> 或 <code class="notranslate">shallowRef</code></li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 避免深层嵌套的响应式数据</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 事件处理函数不使用内联箭头函数</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 合理使用 <code class="notranslate">computed</code> 缓存（vs <code class="notranslate">methods</code>）</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 使用 <code class="notranslate">defineAsyncComponent</code> 做代码分割</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 优化图片（WebP、懒加载）</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 路由懒加载</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 开发环境避免使用 <code class="notranslate">watch</code> 的 <code class="notranslate">deep: true</code>（改用 <code class="notranslate">watchEffect</code> 或精确路径）</li>
+</ul>
+<hr>
+<h2>16. 测试</h2>
+<h3>16.1 测试工具链</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>工具</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Vitest</strong></td>
+<td>单元测试 / 集成测试（Vite 原生，速度快）</td>
+</tr>
+<tr>
+<td><strong>Vue Test Utils</strong></td>
+<td>Vue 组件测试工具库</td>
+</tr>
+<tr>
+<td><strong>Playwright</strong></td>
+<td>E2E 端到端测试</td>
+</tr>
+<tr>
+<td><strong>MSW (Mock Service Worker)</strong></td>
+<td>API Mock</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<div class="highlight highlight-source-shell"><pre class="notranslate">pnpm add -D vitest @vue/test-utils jsdom happy-dom @playwright/test msw</pre></div>
+<h3>16.2 单元测试</h3>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// tests/unit/counter.spec.ts</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-s1">describe</span><span class="pl-kos">,</span> <span class="pl-s1">it</span><span class="pl-kos">,</span> <span class="pl-s1">expect</span><span class="pl-kos">,</span> <span class="pl-s1">beforeEach</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'vitest'</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-s1">setActivePinia</span><span class="pl-kos">,</span> <span class="pl-s1">createPinia</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'pinia'</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-s1">useCounterStore</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@/stores/counter'</span>
+
+<span class="pl-en">describe</span><span class="pl-kos">(</span><span class="pl-s">'Counter Store'</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+  <span class="pl-en">beforeEach</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+    <span class="pl-en">setActivePinia</span><span class="pl-kos">(</span><span class="pl-en">createPinia</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">)</span>
+  <span class="pl-kos">}</span><span class="pl-kos">)</span>
+
+  <span class="pl-en">it</span><span class="pl-kos">(</span><span class="pl-s">'初始状态正确'</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+    <span class="pl-k">const</span> <span class="pl-s1">store</span> <span class="pl-c1">=</span> <span class="pl-en">useCounterStore</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-en">expect</span><span class="pl-kos">(</span><span class="pl-s1">store</span><span class="pl-kos">.</span><span class="pl-c1">count</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">toBe</span><span class="pl-kos">(</span><span class="pl-c1">0</span><span class="pl-kos">)</span>
+    <span class="pl-en">expect</span><span class="pl-kos">(</span><span class="pl-s1">store</span><span class="pl-kos">.</span><span class="pl-c1">double</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">toBe</span><span class="pl-kos">(</span><span class="pl-c1">0</span><span class="pl-kos">)</span>
+  <span class="pl-kos">}</span><span class="pl-kos">)</span>
+
+  <span class="pl-en">it</span><span class="pl-kos">(</span><span class="pl-s">'increment 正确递增'</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+    <span class="pl-k">const</span> <span class="pl-s1">store</span> <span class="pl-c1">=</span> <span class="pl-en">useCounterStore</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-s1">store</span><span class="pl-kos">.</span><span class="pl-en">increment</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-en">expect</span><span class="pl-kos">(</span><span class="pl-s1">store</span><span class="pl-kos">.</span><span class="pl-c1">count</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">toBe</span><span class="pl-kos">(</span><span class="pl-c1">1</span><span class="pl-kos">)</span>
+    <span class="pl-en">expect</span><span class="pl-kos">(</span><span class="pl-s1">store</span><span class="pl-kos">.</span><span class="pl-c1">double</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">toBe</span><span class="pl-kos">(</span><span class="pl-c1">2</span><span class="pl-kos">)</span>
+  <span class="pl-kos">}</span><span class="pl-kos">)</span>
+
+  <span class="pl-en">it</span><span class="pl-kos">(</span><span class="pl-s">'increment 支持参数'</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+    <span class="pl-k">const</span> <span class="pl-s1">store</span> <span class="pl-c1">=</span> <span class="pl-en">useCounterStore</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-s1">store</span><span class="pl-kos">.</span><span class="pl-en">increment</span><span class="pl-kos">(</span><span class="pl-c1">5</span><span class="pl-kos">)</span>
+    <span class="pl-en">expect</span><span class="pl-kos">(</span><span class="pl-s1">store</span><span class="pl-kos">.</span><span class="pl-c1">count</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">toBe</span><span class="pl-kos">(</span><span class="pl-c1">5</span><span class="pl-kos">)</span>
+  <span class="pl-kos">}</span><span class="pl-kos">)</span>
+<span class="pl-kos">}</span><span class="pl-kos">)</span></pre></div>
+<h3>16.3 组件测试</h3>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// tests/unit/HelloWorld.spec.ts</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-s1">describe</span><span class="pl-kos">,</span> <span class="pl-s1">it</span><span class="pl-kos">,</span> <span class="pl-s1">expect</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'vitest'</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-s1">mount</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@vue/test-utils'</span>
+<span class="pl-k">import</span> <span class="pl-v">HelloWorld</span> <span class="pl-k">from</span> <span class="pl-s">'@/components/HelloWorld.vue'</span>
+
+<span class="pl-en">describe</span><span class="pl-kos">(</span><span class="pl-s">'HelloWorld'</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+  <span class="pl-en">it</span><span class="pl-kos">(</span><span class="pl-s">'渲染 props.title'</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+    <span class="pl-k">const</span> <span class="pl-s1">wrapper</span> <span class="pl-c1">=</span> <span class="pl-en">mount</span><span class="pl-kos">(</span><span class="pl-v">HelloWorld</span><span class="pl-kos">,</span> <span class="pl-kos">{</span>
+      <span class="pl-c1">props</span>: <span class="pl-kos">{</span> <span class="pl-c1">title</span>: <span class="pl-s">'Hello Vitest'</span> <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span><span class="pl-kos">)</span>
+    <span class="pl-en">expect</span><span class="pl-kos">(</span><span class="pl-s1">wrapper</span><span class="pl-kos">.</span><span class="pl-en">text</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">toContain</span><span class="pl-kos">(</span><span class="pl-s">'Hello Vitest'</span><span class="pl-kos">)</span>
+  <span class="pl-kos">}</span><span class="pl-kos">)</span>
+
+  <span class="pl-en">it</span><span class="pl-kos">(</span><span class="pl-s">'点击按钮触发 emit'</span><span class="pl-kos">,</span> <span class="pl-k">async</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+    <span class="pl-k">const</span> <span class="pl-s1">wrapper</span> <span class="pl-c1">=</span> <span class="pl-en">mount</span><span class="pl-kos">(</span><span class="pl-v">HelloWorld</span><span class="pl-kos">,</span> <span class="pl-kos">{</span>
+      <span class="pl-c1">props</span>: <span class="pl-kos">{</span> <span class="pl-c1">title</span>: <span class="pl-s">'Test'</span> <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span><span class="pl-kos">)</span>
+    <span class="pl-k">await</span> <span class="pl-s1">wrapper</span><span class="pl-kos">.</span><span class="pl-en">find</span><span class="pl-kos">(</span><span class="pl-s">'button'</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">trigger</span><span class="pl-kos">(</span><span class="pl-s">'click'</span><span class="pl-kos">)</span>
+    <span class="pl-en">expect</span><span class="pl-kos">(</span><span class="pl-s1">wrapper</span><span class="pl-kos">.</span><span class="pl-en">emitted</span><span class="pl-kos">(</span><span class="pl-s">'update'</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">toBeTruthy</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-en">expect</span><span class="pl-kos">(</span><span class="pl-s1">wrapper</span><span class="pl-kos">.</span><span class="pl-en">emitted</span><span class="pl-kos">(</span><span class="pl-s">'update'</span><span class="pl-kos">)</span><span class="pl-c1">!</span><span class="pl-kos">[</span><span class="pl-c1">0</span><span class="pl-kos">]</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">toEqual</span><span class="pl-kos">(</span><span class="pl-kos">[</span><span class="pl-c1">1</span><span class="pl-kos">,</span> <span class="pl-s">'hello'</span><span class="pl-kos">]</span><span class="pl-kos">)</span>
+  <span class="pl-kos">}</span><span class="pl-kos">)</span>
+
+  <span class="pl-en">it</span><span class="pl-kos">(</span><span class="pl-s">'slot 内容正确渲染'</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+    <span class="pl-k">const</span> <span class="pl-s1">wrapper</span> <span class="pl-c1">=</span> <span class="pl-en">mount</span><span class="pl-kos">(</span><span class="pl-v">HelloWorld</span><span class="pl-kos">,</span> <span class="pl-kos">{</span>
+      <span class="pl-c1">props</span>: <span class="pl-kos">{</span> <span class="pl-c1">title</span>: <span class="pl-s">'Test'</span> <span class="pl-kos">}</span><span class="pl-kos">,</span>
+      <span class="pl-c1">slots</span>: <span class="pl-kos">{</span>
+        <span class="pl-c1">default</span>: <span class="pl-s">'&lt;p&gt;Slot content&lt;/p&gt;'</span><span class="pl-kos">,</span>
+        <span class="pl-c1">header</span>: <span class="pl-s">'&lt;h1&gt;Header&lt;/h1&gt;'</span>
+      <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span><span class="pl-kos">)</span>
+    <span class="pl-en">expect</span><span class="pl-kos">(</span><span class="pl-s1">wrapper</span><span class="pl-kos">.</span><span class="pl-en">find</span><span class="pl-kos">(</span><span class="pl-s">'p'</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">text</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">toBe</span><span class="pl-kos">(</span><span class="pl-s">'Slot content'</span><span class="pl-kos">)</span>
+    <span class="pl-en">expect</span><span class="pl-kos">(</span><span class="pl-s1">wrapper</span><span class="pl-kos">.</span><span class="pl-en">find</span><span class="pl-kos">(</span><span class="pl-s">'h1'</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">text</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">toBe</span><span class="pl-kos">(</span><span class="pl-s">'Header'</span><span class="pl-kos">)</span>
+  <span class="pl-kos">}</span><span class="pl-kos">)</span>
+
+  <span class="pl-en">it</span><span class="pl-kos">(</span><span class="pl-s">'v-model 双向绑定'</span><span class="pl-kos">,</span> <span class="pl-k">async</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+    <span class="pl-k">const</span> <span class="pl-s1">wrapper</span> <span class="pl-c1">=</span> <span class="pl-en">mount</span><span class="pl-kos">(</span><span class="pl-v">HelloWorld</span><span class="pl-kos">,</span> <span class="pl-kos">{</span>
+      <span class="pl-c1">props</span>: <span class="pl-kos">{</span>
+        <span class="pl-c1">modelValue</span>: <span class="pl-s">'initial'</span><span class="pl-kos">,</span>
+        <span class="pl-s">'onUpdate:modelValue'</span>: <span class="pl-kos">(</span><span class="pl-s1">val</span>: <span class="pl-smi">string</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">wrapper</span><span class="pl-kos">.</span><span class="pl-en">setProps</span><span class="pl-kos">(</span><span class="pl-kos">{</span> <span class="pl-c1">modelValue</span>: <span class="pl-s1">val</span> <span class="pl-kos">}</span><span class="pl-kos">)</span>
+      <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span><span class="pl-kos">)</span>
+    <span class="pl-k">const</span> <span class="pl-s1">input</span> <span class="pl-c1">=</span> <span class="pl-s1">wrapper</span><span class="pl-kos">.</span><span class="pl-en">find</span><span class="pl-kos">(</span><span class="pl-s">'input'</span><span class="pl-kos">)</span>
+    <span class="pl-k">await</span> <span class="pl-s1">input</span><span class="pl-kos">.</span><span class="pl-en">setValue</span><span class="pl-kos">(</span><span class="pl-s">'new value'</span><span class="pl-kos">)</span>
+    <span class="pl-en">expect</span><span class="pl-kos">(</span><span class="pl-s1">wrapper</span><span class="pl-kos">.</span><span class="pl-en">props</span><span class="pl-kos">(</span><span class="pl-s">'modelValue'</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">toBe</span><span class="pl-kos">(</span><span class="pl-s">'new value'</span><span class="pl-kos">)</span>
+  <span class="pl-kos">}</span><span class="pl-kos">)</span>
+<span class="pl-kos">}</span><span class="pl-kos">)</span></pre></div>
+<h3>16.4 E2E 测试</h3>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// tests/e2e/home.spec.ts</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-s1">test</span><span class="pl-kos">,</span> <span class="pl-s1">expect</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@playwright/test'</span>
+
+<span class="pl-s1">test</span><span class="pl-kos">.</span><span class="pl-en">describe</span><span class="pl-kos">(</span><span class="pl-s">'首页'</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+  <span class="pl-en">test</span><span class="pl-kos">(</span><span class="pl-s">'正确渲染标题'</span><span class="pl-kos">,</span> <span class="pl-k">async</span> <span class="pl-kos">(</span><span class="pl-kos">{</span> page <span class="pl-kos">}</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+    <span class="pl-k">await</span> <span class="pl-s1">page</span><span class="pl-kos">.</span><span class="pl-en">goto</span><span class="pl-kos">(</span><span class="pl-s">'/'</span><span class="pl-kos">)</span>
+    <span class="pl-k">await</span> <span class="pl-en">expect</span><span class="pl-kos">(</span><span class="pl-s1">page</span><span class="pl-kos">.</span><span class="pl-en">locator</span><span class="pl-kos">(</span><span class="pl-s">'h1'</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">toHaveText</span><span class="pl-kos">(</span><span class="pl-s">'Welcome to Vue App'</span><span class="pl-kos">)</span>
+  <span class="pl-kos">}</span><span class="pl-kos">)</span>
+
+  <span class="pl-en">test</span><span class="pl-kos">(</span><span class="pl-s">'导航到关于页面'</span><span class="pl-kos">,</span> <span class="pl-k">async</span> <span class="pl-kos">(</span><span class="pl-kos">{</span> page <span class="pl-kos">}</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+    <span class="pl-k">await</span> <span class="pl-s1">page</span><span class="pl-kos">.</span><span class="pl-en">goto</span><span class="pl-kos">(</span><span class="pl-s">'/'</span><span class="pl-kos">)</span>
+    <span class="pl-k">await</span> <span class="pl-s1">page</span><span class="pl-kos">.</span><span class="pl-en">click</span><span class="pl-kos">(</span><span class="pl-s">'a[href="/about"]'</span><span class="pl-kos">)</span>
+    <span class="pl-k">await</span> <span class="pl-en">expect</span><span class="pl-kos">(</span><span class="pl-s1">page</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">toHaveURL</span><span class="pl-kos">(</span><span class="pl-s">'/about'</span><span class="pl-kos">)</span>
+    <span class="pl-k">await</span> <span class="pl-en">expect</span><span class="pl-kos">(</span><span class="pl-s1">page</span><span class="pl-kos">.</span><span class="pl-en">locator</span><span class="pl-kos">(</span><span class="pl-s">'h1'</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">toHaveText</span><span class="pl-kos">(</span><span class="pl-s">'About'</span><span class="pl-kos">)</span>
+  <span class="pl-kos">}</span><span class="pl-kos">)</span>
+
+  <span class="pl-en">test</span><span class="pl-kos">(</span><span class="pl-s">'表单提交'</span><span class="pl-kos">,</span> <span class="pl-k">async</span> <span class="pl-kos">(</span><span class="pl-kos">{</span> page <span class="pl-kos">}</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+    <span class="pl-k">await</span> <span class="pl-s1">page</span><span class="pl-kos">.</span><span class="pl-en">goto</span><span class="pl-kos">(</span><span class="pl-s">'/contact'</span><span class="pl-kos">)</span>
+    <span class="pl-k">await</span> <span class="pl-s1">page</span><span class="pl-kos">.</span><span class="pl-en">fill</span><span class="pl-kos">(</span><span class="pl-s">'input[name="name"]'</span><span class="pl-kos">,</span> <span class="pl-s">'张三'</span><span class="pl-kos">)</span>
+    <span class="pl-k">await</span> <span class="pl-s1">page</span><span class="pl-kos">.</span><span class="pl-en">fill</span><span class="pl-kos">(</span><span class="pl-s">'input[name="email"]'</span><span class="pl-kos">,</span> <span class="pl-s">'zhangsan@example.com'</span><span class="pl-kos">)</span>
+    <span class="pl-k">await</span> <span class="pl-s1">page</span><span class="pl-kos">.</span><span class="pl-en">click</span><span class="pl-kos">(</span><span class="pl-s">'button[type="submit"]'</span><span class="pl-kos">)</span>
+    <span class="pl-k">await</span> <span class="pl-en">expect</span><span class="pl-kos">(</span><span class="pl-s1">page</span><span class="pl-kos">.</span><span class="pl-en">locator</span><span class="pl-kos">(</span><span class="pl-s">'.success-message'</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">toBeVisible</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+  <span class="pl-kos">}</span><span class="pl-kos">)</span>
+<span class="pl-kos">}</span><span class="pl-kos">)</span></pre></div>
+<h3>16.5 测试配置</h3>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// vitest.config.ts</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-s1">defineConfig</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'vitest/config'</span>
+<span class="pl-k">import</span> <span class="pl-s1">vue</span> <span class="pl-k">from</span> <span class="pl-s">'@vitejs/plugin-vue'</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-s1">fileURLToPath</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'node:url'</span>
+
+<span class="pl-k">export</span> <span class="pl-k">default</span> <span class="pl-en">defineConfig</span><span class="pl-kos">(</span><span class="pl-kos">{</span>
+  <span class="pl-c1">plugins</span>: <span class="pl-kos">[</span><span class="pl-en">vue</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">]</span><span class="pl-kos">,</span>
+  <span class="pl-c1">resolve</span>: <span class="pl-kos">{</span>
+    <span class="pl-c1">alias</span>: <span class="pl-kos">{</span>
+      <span class="pl-s">'@'</span>: <span class="pl-en">fileURLToPath</span><span class="pl-kos">(</span><span class="pl-k">new</span> <span class="pl-c1">URL</span><span class="pl-kos">(</span><span class="pl-s">'./src'</span><span class="pl-kos">,</span> <span class="pl-k">import</span><span class="pl-kos">.</span>meta<span class="pl-kos">.</span><span class="pl-c1">url</span><span class="pl-kos">)</span><span class="pl-kos">)</span>
+    <span class="pl-kos">}</span>
+  <span class="pl-kos">}</span><span class="pl-kos">,</span>
+  <span class="pl-c1">test</span>: <span class="pl-kos">{</span>
+    <span class="pl-c1">environment</span>: <span class="pl-s">'jsdom'</span><span class="pl-kos">,</span>
+    <span class="pl-c1">globals</span>: <span class="pl-c1">true</span><span class="pl-kos">,</span>
+    <span class="pl-c1">coverage</span>: <span class="pl-kos">{</span>
+      <span class="pl-c1">provider</span>: <span class="pl-s">'v8'</span><span class="pl-kos">,</span>
+      <span class="pl-c1">reporter</span>: <span class="pl-kos">[</span><span class="pl-s">'text'</span><span class="pl-kos">,</span> <span class="pl-s">'html'</span><span class="pl-kos">,</span> <span class="pl-s">'lcov'</span><span class="pl-kos">]</span><span class="pl-kos">,</span>
+      <span class="pl-c1">include</span>: <span class="pl-kos">[</span><span class="pl-s">'src/**/*.{ts,vue}'</span><span class="pl-kos">]</span><span class="pl-kos">,</span>
+      <span class="pl-c1">exclude</span>: <span class="pl-kos">[</span><span class="pl-s">'src/**/*.d.ts'</span><span class="pl-kos">,</span> <span class="pl-s">'src/main.ts'</span><span class="pl-kos">]</span>
+    <span class="pl-kos">}</span>
+  <span class="pl-kos">}</span>
+<span class="pl-kos">}</span><span class="pl-kos">)</span></pre></div>
+<hr>
+<h2>17. SSR 与 Nuxt</h2>
+<h3>17.1 为什么需要 SSR</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>维度</th>
+<th>CSR（客户端渲染）</th>
+<th>SSR（服务端渲染）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>首屏速度</td>
+<td>较慢（需下载 JS + 执行）</td>
+<td>快（直接输出 HTML）</td>
+</tr>
+<tr>
+<td>SEO</td>
+<td>差（搜索引擎爬虫难以解析 JS）</td>
+<td>好（完整 HTML）</td>
+</tr>
+<tr>
+<td>服务器负载</td>
+<td>低</td>
+<td>高</td>
+</tr>
+<tr>
+<td>交互体验</td>
+<td>好（Hydration 后）</td>
+<td>好（Hydration 后）</td>
+</tr>
+<tr>
+<td>部署复杂度</td>
+<td>低</td>
+<td>高</td>
+</tr>
+<tr>
+<td>适用场景</td>
+<td>后台管理、登录后页面</td>
+<td>营销页、内容站、电商</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>17.2 Nuxt 3 快速上手</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 创建 Nuxt 3 项目</span>
+pnpm dlx nuxi@latest init my-nuxt-app
+<span class="pl-c1">cd</span> my-nuxt-app
+pnpm install
+pnpm dev</pre></div>
+<div class="highlight highlight-text-html-vue"><pre class="notranslate"><span class="pl-c"><span class="pl-c">&lt;!--</span> app.vue <span class="pl-c">--&gt;</span></span>
+&lt;<span class="pl-ent">template</span>&gt;
+  &lt;<span class="pl-ent">NuxtPage</span> /&gt;
+&lt;/<span class="pl-ent">template</span>&gt;</pre></div>
+<div class="highlight highlight-text-html-vue"><pre class="notranslate"><span class="pl-c"><span class="pl-c">&lt;!--</span> pages/index.vue <span class="pl-c">--&gt;</span></span>
+&lt;<span class="pl-ent">script</span> setup lang="ts"&gt;<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> useFetch 是 Nuxt 3 的 SSR 友好请求工具</span></span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> { <span class="pl-v">data</span>: posts, pending, error } <span class="pl-k">=</span> <span class="pl-k">await</span> <span class="pl-en">useFetch</span>(<span class="pl-s"><span class="pl-pds">'</span>/api/posts<span class="pl-pds">'</span></span>)</span>
+<span class="pl-s1"></span>&lt;/<span class="pl-ent">script</span>&gt;
+
+&lt;<span class="pl-ent">template</span>&gt;
+  &lt;<span class="pl-ent">div</span>&gt;
+    &lt;<span class="pl-ent">h1</span>&gt;Blog&lt;/<span class="pl-ent">h1</span>&gt;
+    &lt;<span class="pl-ent">div</span> <span class="pl-e">v-if</span>=<span class="pl-s"><span class="pl-pds">"</span>pending<span class="pl-pds">"</span></span>&gt;Loading...&lt;/<span class="pl-ent">div</span>&gt;
+    &lt;<span class="pl-ent">div</span> <span class="pl-e">v-else-if</span>=<span class="pl-s"><span class="pl-pds">"</span>error<span class="pl-pds">"</span></span>&gt;Error&lt;/<span class="pl-ent">div</span>&gt;
+    &lt;<span class="pl-ent">ul</span> <span class="pl-e">v-else</span>&gt;
+      &lt;<span class="pl-ent">li</span> <span class="pl-e">v-for</span>=<span class="pl-s"><span class="pl-pds">"</span>post in posts<span class="pl-pds">"</span></span> <span class="pl-e">:key</span>=<span class="pl-s"><span class="pl-pds">"</span>post.id<span class="pl-pds">"</span></span>&gt;
+        &lt;<span class="pl-ent">NuxtLink</span> :<span class="pl-e">to</span>=<span class="pl-pds">"</span><span class="pl-s1"><span class="pl-s">`</span><span class="pl-s">/posts/${<span class="pl-smi">post</span>.<span class="pl-c1">id</span>}</span><span class="pl-s">`</span></span><span class="pl-pds">"</span>&gt;{{ post.title }}&lt;/<span class="pl-ent">NuxtLink</span>&gt;
+      &lt;/<span class="pl-ent">li</span>&gt;
+    &lt;/<span class="pl-ent">ul</span>&gt;
+  &lt;/<span class="pl-ent">div</span>&gt;
+&lt;/<span class="pl-ent">template</span>&gt;</pre></div>
+<h3>17.3 Nuxt 3 核心特性</h3>
+<div class="highlight highlight-text-html-vue"><pre class="notranslate"><span class="pl-c"><span class="pl-c">&lt;!--</span> 自动导入（无需手动 import） <span class="pl-c">--&gt;</span></span>
+&lt;<span class="pl-ent">script</span> setup lang="ts"&gt;<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> ref, computed, watch, useRoute, useRouter, useFetch 等全部自动导入</span></span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> SEO</span></span>
+<span class="pl-s1"><span class="pl-en">useHead</span>({</span>
+<span class="pl-s1">  title: <span class="pl-s"><span class="pl-pds">'</span>My Page<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">  meta: [</span>
+<span class="pl-s1">    { name: <span class="pl-s"><span class="pl-pds">'</span>description<span class="pl-pds">'</span></span>, content: <span class="pl-s"><span class="pl-pds">'</span>Page description<span class="pl-pds">'</span></span> }</span>
+<span class="pl-s1">  ]</span>
+<span class="pl-s1">})</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> SEO 友好的 URL 参数</span></span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> route <span class="pl-k">=</span> <span class="pl-en">useRoute</span>()</span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> { <span class="pl-v">data</span>: product } <span class="pl-k">=</span> <span class="pl-k">await</span> <span class="pl-en">useFetch</span>(<span class="pl-s">`</span><span class="pl-s">/api/products/${<span class="pl-smi">route</span>.<span class="pl-smi">params</span>.<span class="pl-c1">id</span>}</span><span class="pl-s">`</span>)</span>
+<span class="pl-s1"></span>&lt;/<span class="pl-ent">script</span>&gt;</pre></div>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// server/api/posts.ts（Nuxt 3 内建 Server API）</span>
+<span class="pl-k">export</span> <span class="pl-k">default</span> <span class="pl-en">defineEventHandler</span><span class="pl-kos">(</span><span class="pl-k">async</span> <span class="pl-kos">(</span><span class="pl-s1">event</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+  <span class="pl-k">const</span> <span class="pl-s1">posts</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-en">getPosts</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+  <span class="pl-k">return</span> <span class="pl-s1">posts</span>
+<span class="pl-kos">}</span><span class="pl-kos">)</span>
+
+<span class="pl-c">// server/api/posts/[id].ts</span>
+<span class="pl-k">export</span> <span class="pl-k">default</span> <span class="pl-en">defineEventHandler</span><span class="pl-kos">(</span><span class="pl-k">async</span> <span class="pl-kos">(</span><span class="pl-s1">event</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+  <span class="pl-k">const</span> <span class="pl-s1">id</span> <span class="pl-c1">=</span> <span class="pl-en">getRouterParam</span><span class="pl-kos">(</span><span class="pl-s1">event</span><span class="pl-kos">,</span> <span class="pl-s">'id'</span><span class="pl-kos">)</span>
+  <span class="pl-k">const</span> <span class="pl-s1">post</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-en">getPostById</span><span class="pl-kos">(</span><span class="pl-s1">id</span><span class="pl-kos">)</span>
+  <span class="pl-k">return</span> <span class="pl-s1">post</span>
+<span class="pl-kos">}</span><span class="pl-kos">)</span></pre></div>
+<h3>17.4 Nuxt 3 与 Vue 3 的关系</h3>
+<p>Nuxt 3 是建立在 Vue 3 之上的<strong>全栈框架</strong>：</p>
+<ul>
+<li>页面即路由（<code class="notranslate">pages/</code> 目录自动生成路由）。</li>
+<li>自动导入（<code class="notranslate">ref</code>、<code class="notranslate">computed</code> 等无需手动 import）。</li>
+<li>内建 SSR / SSG / ISR。</li>
+<li>Server API（<code class="notranslate">server/api/</code>）处理后端逻辑。</li>
+<li>自动代码分割。</li>
+</ul>
+<p>如果你的项目需要 SSR、SEO 或全栈能力，优先选择 Nuxt 3；如果是纯 CSR 的后台管理，直接用 Vue 3 + Vite 即可。</p>
+<hr>
+<h2>18. 工程化最佳实践</h2>
+<h3>18.1 项目结构规范</h3>
+<pre class="notranslate"><code class="notranslate">src/
+├── assets/                 # 静态资源（图片、字体、SVG）
+├── components/             # 可复用 UI 组件
+│   ├── base/               # 基础组件（Button、Input、Modal）
+│   ├── layout/             # 布局组件（Header、Sidebar）
+│   └── domain/             # 业务组件（UserCard、OrderTable）
+├── composables/            # 组合式函数（useXxx）
+├── constants/              # 常量定义
+├── directives/             # 自定义指令
+├── hooks/                  # 旧版 hooks（或归入 composables）
+├── layouts/                # 页面布局（Nuxt）
+├── middleware/             # 路由中间件（Nuxt）
+├── pages/                  # 页面组件（Nuxt 自动路由）
+├── plugins/                # 插件
+├── router/                 # 路由配置（Vue Router）
+├── services/               # API 请求封装
+├── stores/                 # Pinia 状态管理
+├── styles/                 # 全局样式、CSS 变量
+├── types/                  # TypeScript 类型定义
+├── utils/                  # 纯工具函数
+├── views/                  # 页面级组件（Vue Router）
+├── App.vue                 # 根组件
+└── main.ts                 # 入口文件
+</code></pre>
+<h3>18.2 命名规范</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>对象</th>
+<th>规范</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>组件文件</td>
+<td>PascalCase</td>
+<td><code class="notranslate">UserProfile.vue</code></td>
+</tr>
+<tr>
+<td>目录名</td>
+<td>kebab-case</td>
+<td><code class="notranslate">composables/</code></td>
+</tr>
+<tr>
+<td>组合式函数</td>
+<td><code class="notranslate">use</code> + PascalCase</td>
+<td><code class="notranslate">useAuth</code>、<code class="notranslate">useLocalStorage</code></td>
+</tr>
+<tr>
+<td>Pinia Store</td>
+<td><code class="notranslate">use</code> + 名称 + <code class="notranslate">Store</code></td>
+<td><code class="notranslate">useUserStore</code></td>
+</tr>
+<tr>
+<td>工具函数</td>
+<td>camelCase</td>
+<td><code class="notranslate">formatDate</code>、<code class="notranslate">debounce</code></td>
+</tr>
+<tr>
+<td>常量</td>
+<td>SCREAMING_SNAKE_CASE</td>
+<td><code class="notranslate">API_BASE_URL</code></td>
+</tr>
+<tr>
+<td>CSS 类名</td>
+<td>kebab-case</td>
+<td><code class="notranslate">user-profile</code></td>
+</tr>
+<tr>
+<td>事件名</td>
+<td>camelCase</td>
+<td><code class="notranslate">update:modelValue</code></td>
+</tr>
+<tr>
+<td>Props</td>
+<td>camelCase</td>
+<td><code class="notranslate">userName</code>（模板中 <code class="notranslate">user-name</code>）</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>18.3 代码组织建议</h3>
+<div class="highlight highlight-text-html-vue"><pre class="notranslate">&lt;<span class="pl-ent">script</span> setup lang="ts"&gt;<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> 1. 导入（按顺序：外部库 → 内部模块 → 组件 → 类型）</span></span>
+<span class="pl-s1"><span class="pl-k">import</span> { <span class="pl-smi">ref</span>, <span class="pl-smi">computed</span>, <span class="pl-smi">onMounted</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>vue<span class="pl-pds">'</span></span></span>
+<span class="pl-s1"><span class="pl-k">import</span> { <span class="pl-smi">useRouter</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>vue-router<span class="pl-pds">'</span></span></span>
+<span class="pl-s1"><span class="pl-k">import</span> { <span class="pl-smi">useUserStore</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>@/stores/user<span class="pl-pds">'</span></span></span>
+<span class="pl-s1"><span class="pl-k">import</span> { <span class="pl-smi">formatDate</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>@/utils/date<span class="pl-pds">'</span></span></span>
+<span class="pl-s1"><span class="pl-k">import</span> <span class="pl-smi">UserCard</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>@/components/domain/UserCard.vue<span class="pl-pds">'</span></span></span>
+<span class="pl-s1"><span class="pl-k">import</span> <span class="pl-k">type</span> { <span class="pl-smi">User</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>@/types/user<span class="pl-pds">'</span></span></span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> 2. 组件配置宏（defineProps / defineEmits / defineModel / defineExpose）</span></span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> props <span class="pl-k">=</span> <span class="pl-en">defineProps</span>&lt;{ userId<span class="pl-k">:</span> <span class="pl-c1">string</span> }&gt;()</span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> emit <span class="pl-k">=</span> <span class="pl-en">defineEmits</span>&lt;{ (<span class="pl-v">e</span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>close<span class="pl-pds">'</span></span>)<span class="pl-k">:</span> <span class="pl-c1">void</span> }&gt;()</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> 3. Store</span></span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> userStore <span class="pl-k">=</span> <span class="pl-en">useUserStore</span>()</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> 4. 响应式状态</span></span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> user <span class="pl-k">=</span> <span class="pl-en">ref</span>&lt;<span class="pl-en">User</span> <span class="pl-k">|</span> <span class="pl-c1">null</span>&gt;(<span class="pl-c1">null</span>)</span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> loading <span class="pl-k">=</span> <span class="pl-en">ref</span>(<span class="pl-c1">false</span>)</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> 5. 计算属性</span></span>
+<span class="pl-s1"><span class="pl-k"><span class="pl-k">const</span></span> displayName <span class="pl-k">=</span> <span class="pl-en">computed</span>(() <span class="pl-k">=&gt;</span> <span class="pl-smi">user</span>.<span class="pl-c1">value</span>?.<span class="pl-c1">name</span> <span class="pl-k">??</span> <span class="pl-s"><span class="pl-pds">'</span>Unknown<span class="pl-pds">'</span></span>)</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> 6. 方法</span></span>
+<span class="pl-s1"><span class="pl-k">async</span> <span class="pl-k">function</span> fetchUser() {</span>
+<span class="pl-s1">  <span class="pl-smi">loading</span>.<span class="pl-c1">value</span> <span class="pl-k">=</span> <span class="pl-c1">true</span></span>
+<span class="pl-s1">  <span class="pl-k">try</span> {</span>
+<span class="pl-s1">    <span class="pl-smi">user</span>.<span class="pl-c1">value</span> <span class="pl-k">=</span> <span class="pl-k">await</span> <span class="pl-smi">userStore</span>.<span class="pl-en">getUser</span>(<span class="pl-smi">props</span>.<span class="pl-smi">userId</span>)</span>
+<span class="pl-s1">  } <span class="pl-k">finally</span> {</span>
+<span class="pl-s1">    <span class="pl-smi">loading</span>.<span class="pl-c1">value</span> <span class="pl-k">=</span> <span class="pl-c1">false</span></span>
+<span class="pl-s1">  }</span>
+<span class="pl-s1">}</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> 7. 生命周期</span></span>
+<span class="pl-s1"><span class="pl-en">onMounted</span>(<span class="pl-smi">fetchUser</span>)</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> 8. Watch（如有）</span></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">//</span> watch(() =&gt; props.userId, fetchUser)</span></span>
+<span class="pl-s1"></span>&lt;/<span class="pl-ent">script</span>&gt;
+
+&lt;<span class="pl-ent">template</span>&gt;
+  <span class="pl-c"><span class="pl-c">&lt;!--</span> 模板结构清晰，避免过深嵌套 <span class="pl-c">--&gt;</span></span>
+&lt;/<span class="pl-ent">template</span>&gt;
+
+&lt;<span class="pl-ent">style</span> scoped&gt;<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c"><span class="pl-c">/*</span> 组件样式 <span class="pl-c">*/</span></span></span>
+<span class="pl-s1"></span>&lt;/<span class="pl-ent">style</span>&gt;</pre></div>
+<h3>18.4 API 请求封装</h3>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// services/http.ts</span>
+<span class="pl-k">import</span> <span class="pl-s1">axios</span><span class="pl-kos">,</span> <span class="pl-kos">{</span> <span class="pl-k">type</span> <span class="pl-v">AxiosInstance</span><span class="pl-kos">,</span> <span class="pl-k">type</span> <span class="pl-v">AxiosRequestConfig</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'axios'</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-s1">useAuthStore</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@/stores/auth'</span>
+
+<span class="pl-k">const</span> <span class="pl-s1">http</span>: <span class="pl-smi">AxiosInstance</span> <span class="pl-c1">=</span> <span class="pl-s1">axios</span><span class="pl-kos">.</span><span class="pl-en">create</span><span class="pl-kos">(</span><span class="pl-kos">{</span>
+  <span class="pl-c1">baseURL</span>: <span class="pl-k">import</span><span class="pl-kos">.</span>meta<span class="pl-kos">.</span><span class="pl-c1">env</span><span class="pl-kos">.</span><span class="pl-c1">VITE_API_BASE_URL</span><span class="pl-kos">,</span>
+  <span class="pl-c1">timeout</span>: <span class="pl-c1">10000</span><span class="pl-kos">,</span>
+  <span class="pl-c1">headers</span>: <span class="pl-kos">{</span>
+    <span class="pl-s">'Content-Type'</span>: <span class="pl-s">'application/json'</span>
+  <span class="pl-kos">}</span>
+<span class="pl-kos">}</span><span class="pl-kos">)</span>
+
+<span class="pl-c">// 请求拦截器</span>
+<span class="pl-s1">http</span><span class="pl-kos">.</span><span class="pl-c1">interceptors</span><span class="pl-kos">.</span><span class="pl-c1">request</span><span class="pl-kos">.</span><span class="pl-en">use</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-s1">config</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+  <span class="pl-k">const</span> <span class="pl-s1">authStore</span> <span class="pl-c1">=</span> <span class="pl-en">useAuthStore</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+  <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">authStore</span><span class="pl-kos">.</span><span class="pl-c1">token</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-s1">config</span><span class="pl-kos">.</span><span class="pl-c1">headers</span><span class="pl-kos">.</span><span class="pl-c1">Authorization</span> <span class="pl-c1">=</span> <span class="pl-s">`Bearer <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">authStore</span><span class="pl-kos">.</span><span class="pl-c1">token</span><span class="pl-kos">}</span></span>`</span>
+  <span class="pl-kos">}</span>
+  <span class="pl-k">return</span> <span class="pl-s1">config</span>
+<span class="pl-kos">}</span><span class="pl-kos">)</span>
+
+<span class="pl-c">// 响应拦截器</span>
+<span class="pl-s1">http</span><span class="pl-kos">.</span><span class="pl-c1">interceptors</span><span class="pl-kos">.</span><span class="pl-c1">response</span><span class="pl-kos">.</span><span class="pl-en">use</span><span class="pl-kos">(</span>
+  <span class="pl-kos">(</span><span class="pl-s1">response</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">response</span><span class="pl-kos">.</span><span class="pl-c1">data</span><span class="pl-kos">,</span>
+  <span class="pl-kos">(</span><span class="pl-s1">error</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">error</span><span class="pl-kos">.</span><span class="pl-c1">response</span><span class="pl-kos">?.</span><span class="pl-c1">status</span> <span class="pl-c1">===</span> <span class="pl-c1">401</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+      <span class="pl-c">// Token 过期，跳转登录</span>
+      <span class="pl-smi">window</span><span class="pl-kos">.</span><span class="pl-c1">location</span><span class="pl-kos">.</span><span class="pl-c1">href</span> <span class="pl-c1">=</span> <span class="pl-s">'/login'</span>
+    <span class="pl-kos">}</span>
+    <span class="pl-k">return</span> <span class="pl-v">Promise</span><span class="pl-kos">.</span><span class="pl-en">reject</span><span class="pl-kos">(</span><span class="pl-s1">error</span><span class="pl-kos">)</span>
+  <span class="pl-kos">}</span>
+<span class="pl-kos">)</span>
+
+<span class="pl-k">export</span> <span class="pl-k">default</span> <span class="pl-s1">http</span>
+
+<span class="pl-c">// services/user.ts</span>
+<span class="pl-k">import</span> <span class="pl-s1">http</span> <span class="pl-k">from</span> <span class="pl-s">'./http'</span>
+<span class="pl-k">import</span> <span class="pl-k">type</span> <span class="pl-kos">{</span> <span class="pl-v">User</span><span class="pl-kos">,</span> <span class="pl-v">CreateUserDTO</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@/types/user'</span>
+
+<span class="pl-k">export</span> <span class="pl-k">const</span> <span class="pl-s1">userService</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>
+  <span class="pl-en">getAll</span>: <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">http</span><span class="pl-kos">.</span><span class="pl-en">get</span><span class="pl-c1">&lt;</span><span class="pl-smi">never</span><span class="pl-kos">,</span> <span class="pl-smi">User</span><span class="pl-kos">[</span><span class="pl-kos">]</span><span class="pl-c1">&gt;</span><span class="pl-kos">(</span><span class="pl-s">'/users'</span><span class="pl-kos">)</span><span class="pl-kos">,</span>
+  <span class="pl-en">getById</span>: <span class="pl-kos">(</span><span class="pl-s1">id</span>: <span class="pl-smi">string</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">http</span><span class="pl-kos">.</span><span class="pl-en">get</span><span class="pl-c1">&lt;</span><span class="pl-smi">never</span><span class="pl-kos">,</span> <span class="pl-smi">User</span><span class="pl-c1">&gt;</span><span class="pl-kos">(</span><span class="pl-s">`/users/<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">id</span><span class="pl-kos">}</span></span>`</span><span class="pl-kos">)</span><span class="pl-kos">,</span>
+  <span class="pl-en">create</span>: <span class="pl-kos">(</span><span class="pl-s1">data</span>: <span class="pl-smi">CreateUserDTO</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">http</span><span class="pl-kos">.</span><span class="pl-en">post</span><span class="pl-c1">&lt;</span><span class="pl-smi">never</span><span class="pl-kos">,</span> <span class="pl-smi">User</span><span class="pl-c1">&gt;</span><span class="pl-kos">(</span><span class="pl-s">'/users'</span><span class="pl-kos">,</span> <span class="pl-s1">data</span><span class="pl-kos">)</span><span class="pl-kos">,</span>
+  <span class="pl-en">update</span>: <span class="pl-kos">(</span><span class="pl-s1">id</span>: <span class="pl-smi">string</span><span class="pl-kos">,</span> <span class="pl-s1">data</span>: <span class="pl-smi">Partial</span><span class="pl-c1">&lt;</span><span class="pl-smi">CreateUserDTO</span><span class="pl-c1">&gt;</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">http</span><span class="pl-kos">.</span><span class="pl-en">put</span><span class="pl-c1">&lt;</span><span class="pl-smi">never</span><span class="pl-kos">,</span> <span class="pl-smi">User</span><span class="pl-c1">&gt;</span><span class="pl-kos">(</span><span class="pl-s">`/users/<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">id</span><span class="pl-kos">}</span></span>`</span><span class="pl-kos">,</span> <span class="pl-s1">data</span><span class="pl-kos">)</span><span class="pl-kos">,</span>
+  <span class="pl-en">delete</span>: <span class="pl-kos">(</span><span class="pl-s1">id</span>: <span class="pl-smi">string</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">http</span><span class="pl-kos">.</span><span class="pl-en">delete</span><span class="pl-kos">(</span><span class="pl-s">`/users/<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">id</span><span class="pl-kos">}</span></span>`</span><span class="pl-kos">)</span>
+<span class="pl-kos">}</span></pre></div>
+<h3>18.5 ESLint + Prettier 配置</h3>
+<div class="highlight highlight-source-json"><pre class="notranslate"><span class="pl-ii">// .eslintrc.cjs</span>
+<span class="pl-ii">module.exports = {</span>
+  <span class="pl-ii">root: true,</span>
+  <span class="pl-ii">env: {</span>
+    <span class="pl-ii">browser: true,</span>
+    <span class="pl-ii">es2021: true,</span>
+    <span class="pl-ii">node: true</span>
+  <span class="pl-ii">},</span>
+  <span class="pl-ii">extends: [</span>
+    <span class="pl-ii">'eslint:recommended',</span>
+    <span class="pl-ii">'plugin:vue/vue3-recommended',</span>
+    <span class="pl-ii">'plugin:@typescript-eslint/recommended',</span>
+    <span class="pl-ii">'@vue/eslint-config-prettier'</span>
+  <span class="pl-ii">],</span>
+  <span class="pl-ii">parser: 'vue-eslint-parser',</span>
+  <span class="pl-ii">parserOptions: {</span>
+    <span class="pl-ii">parser: '@typescript-eslint/parser',</span>
+    <span class="pl-ii">ecmaVersion: 'latest',</span>
+    <span class="pl-ii">sourceType: 'module'</span>
+  <span class="pl-ii">},</span>
+  <span class="pl-ii">rules: {</span>
+    <span class="pl-ii">'vue/multi-word-component-names': 'off',</span>
+    <span class="pl-ii">'@typescript-eslint/no-unused-vars': 'warn',</span>
+    <span class="pl-ii">'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off'</span>
+  <span class="pl-ii">}</span>
+<span class="pl-ii">}</span></pre></div>
+<div class="highlight highlight-source-json"><pre class="notranslate"><span class="pl-ii">// .prettierrc</span>
+{
+  <span class="pl-ent">"semi"</span>: <span class="pl-c1">false</span>,
+  <span class="pl-ent">"singleQuote"</span>: <span class="pl-c1">true</span>,
+  <span class="pl-ent">"trailingComma"</span>: <span class="pl-s"><span class="pl-pds">"</span>none<span class="pl-pds">"</span></span>,
+  <span class="pl-ent">"printWidth"</span>: <span class="pl-c1">100</span>,
+  <span class="pl-ent">"tabWidth"</span>: <span class="pl-c1">2</span>,
+  <span class="pl-ent">"vueIndentScriptAndStyle"</span>: <span class="pl-c1">true</span>
+}</pre></div>
+<hr>
+<h2>19. 疑难排错手册</h2>
+<h3>19.1 响应式失效</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>症状</th>
+<th>原因</th>
+<th>解决</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>解构后视图不更新</td>
+<td><code class="notranslate">reactive</code> 解构丢失响应性</td>
+<td>用 <code class="notranslate">toRefs</code> 或改用 <code class="notranslate">ref</code></td>
+</tr>
+<tr>
+<td>数组索引赋值不触发</td>
+<td>Vue 2 限制</td>
+<td>Vue 3 用 Proxy 已修复；如在 Vue 2 中用 <code class="notranslate">Vue.set</code></td>
+</tr>
+<tr>
+<td>对象新增属性不触发</td>
+<td>Vue 2 限制</td>
+<td>Vue 3 已修复；如在 Vue 2 中用 <code class="notranslate">Vue.set</code></td>
+</tr>
+<tr>
+<td>整体替换 <code class="notranslate">reactive</code> 对象丢失响应性</td>
+<td><code class="notranslate">reactive</code> 不支持整体替换</td>
+<td>用 <code class="notranslate">ref</code> 或 <code class="notranslate">Object.assign(state, newObj)</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">ref</code> 在模板中不更新</td>
+<td>忘记 <code class="notranslate">.value</code></td>
+<td>在 <code class="notranslate">&lt;script setup&gt;</code> 中修改需 <code class="notranslate">.value</code>；模板中自动解包</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>19.2 组件不渲染</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>症状</th>
+<th>原因</th>
+<th>解决</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>组件标签被当作 HTML</td>
+<td>未注册组件</td>
+<td>使用 <code class="notranslate">&lt;script setup&gt;</code> 自动注册，或 <code class="notranslate">components: {}</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">v-for</code> 无输出</td>
+<td>数据为空</td>
+<td>检查数据源</td>
+</tr>
+<tr>
+<td><code class="notranslate">v-if</code> 条件永远为假</td>
+<td>条件表达式错误</td>
+<td>检查条件</td>
+</tr>
+<tr>
+<td>路由不渲染</td>
+<td><code class="notranslate">&lt;RouterView /&gt;</code> 缺失</td>
+<td>在布局组件中添加</td>
+</tr>
+<tr>
+<td>Suspense 卡住</td>
+<td>异步 setup 未 resolve</td>
+<td>检查 <code class="notranslate">await</code> 的 Promise 是否正确返回</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>19.3 性能问题</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>症状</th>
+<th>原因</th>
+<th>解决</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>列表卡顿</td>
+<td>长列表未虚拟化</td>
+<td>使用虚拟滚动</td>
+</tr>
+<tr>
+<td>不必要的重新渲染</td>
+<td>内联函数 / 无 key 的 v-for</td>
+<td>提取方法、添加 <code class="notranslate">:key</code></td>
+</tr>
+<tr>
+<td>内存泄漏</td>
+<td>未清理定时器 / 事件监听</td>
+<td>在 <code class="notranslate">onUnmounted</code> 中清理</td>
+</tr>
+<tr>
+<td>深层对象频繁更新</td>
+<td>过度使用 <code class="notranslate">deep: true</code></td>
+<td>用精确路径侦听</td>
+</tr>
+<tr>
+<td>打包体积大</td>
+<td>未代码分割</td>
+<td>路由懒加载、异步组件、手动分包</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>19.4 TypeScript 错误</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>症状</th>
+<th>原因</th>
+<th>解决</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">defineProps</code> 类型报错</td>
+<td>TS 版本不兼容</td>
+<td>升级 TS 至 5.x，确保使用 <code class="notranslate">vue-tsc</code></td>
+</tr>
+<tr>
+<td>模板中类型不推断</td>
+<td>缺少 Volar / Vue - Official 插件</td>
+<td>安装插件</td>
+</tr>
+<tr>
+<td><code class="notranslate">ref</code> 类型丢失</td>
+<td>未显式标注</td>
+<td><code class="notranslate">ref&lt;Type&gt;(value)</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">emit</code> 参数类型报错</td>
+<td>Emits 未正确声明</td>
+<td>使用类型声明方式</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>19.5 构建问题</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>症状</th>
+<th>原因</th>
+<th>解决</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">Module not found</code></td>
+<td>路径别名未配置</td>
+<td>在 <code class="notranslate">vite.config.ts</code> 和 <code class="notranslate">tsconfig.json</code> 中配置 <code class="notranslate">alias</code></td>
+</tr>
+<tr>
+<td>构建产物缺失</td>
+<td><code class="notranslate">build.outDir</code> 配置错误</td>
+<td>检查 Vite 配置</td>
+</tr>
+<tr>
+<td>环境变量未生效</td>
+<td>变量名缺少 <code class="notranslate">VITE_</code> 前缀</td>
+<td>客户端变量必须以 <code class="notranslate">VITE_</code> 开头</td>
+</tr>
+<tr>
+<td>热更新不生效</td>
+<td>文件监听问题</td>
+<td>重启 dev server，检查文件系统</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>19.6 常见错误速查</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>错误信息</th>
+<th>原因</th>
+<th>解决</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">Maximum recursive updates exceeded</code></td>
+<td>在 <code class="notranslate">watch</code> / <code class="notranslate">computed</code> 中修改了被侦听的数据</td>
+<td>修正逻辑，避免循环更新</td>
+</tr>
+<tr>
+<td><code class="notranslate">Avoid mutating a prop directly</code></td>
+<td>子组件直接修改了 props</td>
+<td>用 <code class="notranslate">emit</code> 或 <code class="notranslate">v-model</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">Property 'xxx' does not exist</code></td>
+<td>模板中使用了未定义的变量</td>
+<td>检查 <code class="notranslate">&lt;script setup&gt;</code> 中是否定义</td>
+</tr>
+<tr>
+<td><code class="notranslate">Invalid handler for event 'xxx'</code></td>
+<td><code class="notranslate">emit</code> 声明与使用不一致</td>
+<td>检查 Emits 类型</td>
+</tr>
+<tr>
+<td><code class="notranslate">Hydration mismatch</code>（SSR）</td>
+<td>服务端与客户端渲染结果不同</td>
+<td>避免 <code class="notranslate">Date.now()</code>、<code class="notranslate">Math.random()</code> 等非确定性内容</td>
+</tr>
+<tr>
+<td><code class="notranslate">Cannot read properties of null</code></td>
+<td>DOM 引用为空</td>
+<td>使用 <code class="notranslate">?.</code> 或在 <code class="notranslate">onMounted</code> 后访问</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<h2>附录 A. API 速查表</h2>
+<h3>A.1 响应式 API</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>API</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">ref(value)</code></td>
+<td>创建响应式引用（基本类型 + 对象）</td>
+</tr>
+<tr>
+<td><code class="notranslate">reactive(obj)</code></td>
+<td>创建响应式代理（对象/数组/Map/Set）</td>
+</tr>
+<tr>
+<td><code class="notranslate">computed(get)</code></td>
+<td>计算属性（缓存）</td>
+</tr>
+<tr>
+<td><code class="notranslate">watch(source, cb)</code></td>
+<td>侦听器（显式依赖）</td>
+</tr>
+<tr>
+<td><code class="notranslate">watchEffect(fn)</code></td>
+<td>自动追踪依赖的侦听器</td>
+</tr>
+<tr>
+<td><code class="notranslate">toRef(obj, key)</code></td>
+<td>将对象属性转为 ref</td>
+</tr>
+<tr>
+<td><code class="notranslate">toRefs(obj)</code></td>
+<td>将对象所有属性转为 ref</td>
+</tr>
+<tr>
+<td><code class="notranslate">toValue(source)</code></td>
+<td>将 ref / getter / 普通值统一取值</td>
+</tr>
+<tr>
+<td><code class="notranslate">shallowRef(value)</code></td>
+<td>浅层 ref</td>
+</tr>
+<tr>
+<td><code class="notranslate">shallowReactive(obj)</code></td>
+<td>浅层 reactive</td>
+</tr>
+<tr>
+<td><code class="notranslate">readonly(obj)</code></td>
+<td>只读代理</td>
+</tr>
+<tr>
+<td><code class="notranslate">isRef(val)</code> / <code class="notranslate">isReactive(val)</code> / <code class="notranslate">isProxy(val)</code></td>
+<td>类型检查</td>
+</tr>
+<tr>
+<td><code class="notranslate">markRaw(obj)</code></td>
+<td>标记为非响应式</td>
+</tr>
+<tr>
+<td><code class="notranslate">triggerRef(ref)</code></td>
+<td>手动触发 ref 更新</td>
+</tr>
+<tr>
+<td><code class="notranslate">customRef(factory)</code></td>
+<td>自定义 ref</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>A.2 组件 API</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>API</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">defineProps&lt;&gt;()</code></td>
+<td>声明 Props</td>
+</tr>
+<tr>
+<td><code class="notranslate">defineEmits&lt;&gt;()</code></td>
+<td>声明 Emits</td>
+</tr>
+<tr>
+<td><code class="notranslate">defineModel()</code></td>
+<td>v-model 双向绑定语法糖（3.4+）</td>
+</tr>
+<tr>
+<td><code class="notranslate">defineExpose()</code></td>
+<td>暴露组件实例方法/属性</td>
+</tr>
+<tr>
+<td><code class="notranslate">defineOptions()</code></td>
+<td>设置组件选项（如 name）</td>
+</tr>
+<tr>
+<td><code class="notranslate">defineSlots()</code></td>
+<td>声明插槽类型（3.3+）</td>
+</tr>
+<tr>
+<td><code class="notranslate">useSlots()</code> / <code class="notranslate">useAttrs()</code></td>
+<td>获取插槽/属性</td>
+</tr>
+<tr>
+<td><code class="notranslate">useTemplateRef()</code></td>
+<td>模板引用（3.5+）</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>A.3 生命周期钩子</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>钩子</th>
+<th>时机</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">onBeforeMount</code></td>
+<td>DOM 挂载前</td>
+</tr>
+<tr>
+<td><code class="notranslate">onMounted</code></td>
+<td>DOM 挂载后</td>
+</tr>
+<tr>
+<td><code class="notranslate">onBeforeUpdate</code></td>
+<td>DOM 更新前</td>
+</tr>
+<tr>
+<td><code class="notranslate">onUpdated</code></td>
+<td>DOM 更新后</td>
+</tr>
+<tr>
+<td><code class="notranslate">onBeforeUnmount</code></td>
+<td>卸载前</td>
+</tr>
+<tr>
+<td><code class="notranslate">onUnmounted</code></td>
+<td>卸载后</td>
+</tr>
+<tr>
+<td><code class="notranslate">onActivated</code></td>
+<td>KeepAlive 激活</td>
+</tr>
+<tr>
+<td><code class="notranslate">onDeactivated</code></td>
+<td>KeepAlive 停用</td>
+</tr>
+<tr>
+<td><code class="notranslate">onErrorCaptured</code></td>
+<td>捕获后代组件错误</td>
+</tr>
+<tr>
+<td><code class="notranslate">onRenderTracked</code></td>
+<td>调试：追踪依赖</td>
+</tr>
+<tr>
+<td><code class="notranslate">onRenderTriggered</code></td>
+<td>调试：触发更新</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>A.4 Vue Router 核心</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>API</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">createRouter()</code></td>
+<td>创建路由实例</td>
+</tr>
+<tr>
+<td><code class="notranslate">createWebHistory()</code></td>
+<td>HTML5 History 模式</td>
+</tr>
+<tr>
+<td><code class="notranslate">createWebHashHistory()</code></td>
+<td>Hash 模式</td>
+</tr>
+<tr>
+<td><code class="notranslate">useRouter()</code></td>
+<td>获取路由实例</td>
+</tr>
+<tr>
+<td><code class="notranslate">useRoute()</code></td>
+<td>获取当前路由</td>
+</tr>
+<tr>
+<td><code class="notranslate">router.push()</code> / <code class="notranslate">router.replace()</code></td>
+<td>编程式导航</td>
+</tr>
+<tr>
+<td><code class="notranslate">router.back()</code> / <code class="notranslate">router.forward()</code></td>
+<td>历史导航</td>
+</tr>
+<tr>
+<td><code class="notranslate">&lt;RouterLink&gt;</code></td>
+<td>声明式导航</td>
+</tr>
+<tr>
+<td><code class="notranslate">&lt;RouterView&gt;</code></td>
+<td>渲染匹配组件</td>
+</tr>
+<tr>
+<td><code class="notranslate">router.beforeEach()</code></td>
+<td>全局前置守卫</td>
+</tr>
+<tr>
+<td><code class="notranslate">router.afterEach()</code></td>
+<td>全局后置钩子</td>
+</tr>
+<tr>
+<td><code class="notranslate">onBeforeRouteLeave</code> / <code class="notranslate">onBeforeRouteUpdate</code></td>
+<td>组件内守卫</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>A.5 Pinia 核心</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>API</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">defineStore()</code></td>
+<td>定义 Store</td>
+</tr>
+<tr>
+<td><code class="notranslate">storeToRefs()</code></td>
+<td>将 Store 的 state/getters 转为 ref（保持响应性）</td>
+</tr>
+<tr>
+<td><code class="notranslate">mapState()</code> / <code class="notranslate">mapActions()</code></td>
+<td>Options API 映射辅助</td>
+</tr>
+<tr>
+<td><code class="notranslate">setActivePinia()</code></td>
+<td>设置活跃 Pinia（测试用）</td>
+</tr>
+<tr>
+<td><code class="notranslate">createPinia()</code></td>
+<td>创建 Pinia 实例</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<h2>附录 B. 术语表</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>术语</th>
+<th>释义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SFC（Single File Component）</td>
+<td>单文件组件（<code class="notranslate">.vue</code> 文件）</td>
+</tr>
+<tr>
+<td>Composition API</td>
+<td>Vue 3 的组合式 API</td>
+</tr>
+<tr>
+<td>Options API</td>
+<td>Vue 2 / Vue 3 兼容的选项式 API</td>
+</tr>
+<tr>
+<td>Reactive</td>
+<td>响应式数据（自动追踪变化并更新视图）</td>
+</tr>
+<tr>
+<td>Ref</td>
+<td>响应式引用（包装基本类型/对象）</td>
+</tr>
+<tr>
+<td>Computed</td>
+<td>计算属性（缓存的派生状态）</td>
+</tr>
+<tr>
+<td>Watch / WatchEffect</td>
+<td>侦听器</td>
+</tr>
+<tr>
+<td>Props</td>
+<td>父传子的属性</td>
+</tr>
+<tr>
+<td>Emits</td>
+<td>子传父的事件</td>
+</tr>
+<tr>
+<td>Slots</td>
+<td>插槽（内容分发）</td>
+</tr>
+<tr>
+<td>Teleport</td>
+<td>将组件渲染到 DOM 任意位置</td>
+</tr>
+<tr>
+<td>Suspense</td>
+<td>异步组件加载状态管理</td>
+</tr>
+<tr>
+<td>KeepAlive</td>
+<td>组件缓存（保留状态）</td>
+</tr>
+<tr>
+<td>Directive</td>
+<td>自定义指令（<code class="notranslate">v-</code> 前缀）</td>
+</tr>
+<tr>
+<td>Composable</td>
+<td>组合式函数（<code class="notranslate">use</code> 前缀，复用逻辑）</td>
+</tr>
+<tr>
+<td>Pinia</td>
+<td>Vue 官方状态管理库</td>
+</tr>
+<tr>
+<td>Vue Router</td>
+<td>Vue 官方路由库</td>
+</tr>
+<tr>
+<td>Vite</td>
+<td>Vue 官方推荐构建工具</td>
+</tr>
+<tr>
+<td>HMR（Hot Module Replacement）</td>
+<td>热模块替换</td>
+</tr>
+<tr>
+<td>Hydration</td>
+<td>服务端渲染后客户端激活（SSR）</td>
+</tr>
+<tr>
+<td>Virtual DOM</td>
+<td>虚拟 DOM</td>
+</tr>
+<tr>
+<td>SSR / SSG / ISR</td>
+<td>服务端渲染 / 静态生成 / 增量静态再生</td>
+</tr>
+<tr>
+<td>Tree Shaking</td>
+<td>移除未使用的代码</td>
+</tr>
+<tr>
+<td>Code Splitting</td>
+<td>代码分割</td>
+</tr>
+<tr>
+<td>Lazy Loading</td>
+<td>懒加载</td>
+</tr>
+<tr>
+<td>TypeScript</td>
+<td>类型化 JavaScript</td>
+</tr>
+<tr>
+<td>E2E</td>
+<td>端到端测试</td>
+</tr>
+<tr>
+<td>Volar</td>
+<td>Vue 官方 VS Code 插件（现为 Vue - Official）</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<h2>附录 C. 延伸学习资源</h2>
+<ol>
+<li><strong>Vue 3 官方文档（中文）</strong> — <a href="https://cn.vuejs.org" rel="nofollow">cn.vuejs.org</a><br>
+<strong>最权威的学习资料</strong>。API 参考、指南、教程一应俱全。建议通读「指南」部分。</li>
+<li><strong>Vue Router 官方文档</strong> — <a href="https://router.vuejs.org/zh" rel="nofollow">router.vuejs.org/zh</a><br>
+路由配置、导航守卫、路由懒加载的权威指南。</li>
+<li><strong>Pinia 官方文档</strong> — <a href="https://pinia.vuejs.org/zh" rel="nofollow">pinia.vuejs.org/zh</a><br>
+状态管理的最佳实践与 API 参考。</li>
+<li><strong>Vite 官方文档</strong> — <a href="https://cn.vitejs.dev" rel="nofollow">cn.vitejs.dev</a><br>
+构建工具配置、插件系统、优化指南。</li>
+<li><strong>Nuxt 3 官方文档</strong> — <a href="https://nuxt.com/docs" rel="nofollow">nuxt.com/docs</a><br>
+全栈框架指南，SSR / SSG / Server API 的权威参考。</li>
+<li><strong>VueUse</strong> — <a href="https://vueuse.org" rel="nofollow">vueuse.org</a><br>
+大量实用的组合式函数（鼠标追踪、窗口尺寸、本地存储、剪贴板等）。</li>
+<li><strong>Vue Mastery</strong> — <a href="https://www.vuemastery.com" rel="nofollow">vueMastery.com</a><br>
+高质量视频课程（部分免费）。</li>
+<li><strong>Vue.js Mastery（YouTube）</strong> — 搜索 <code class="notranslate">Vue.js Mastery</code><br>
+免费视频教程。</li>
+<li><strong>TypeScript 官方文档</strong> — <a href="https://www.typescriptlang.org" rel="nofollow">typescriptlang.org</a><br>
+TypeScript 语言参考（与 Vue 深度集成）。</li>
+<li><strong>Vue Test Utils</strong> — <a href="https://test-utils.vuejs.org" rel="nofollow">test-utils.vuejs.org</a><br>
+组件测试工具库的官方文档。</li>
+<li><strong>Vue RFCs</strong> — <a href="https://github.com/vuejs/rfcs">github.com/vuejs/rfcs</a><br>
+Vue 功能决策的公开讨论，了解框架演进方向。</li>
+</ol>
+<hr>
+<blockquote>
+<p><strong>结语</strong>：Vue 的核心哲学是「渐进式」——从最简单的模板渲染起步，逐步引入组件化、响应式、状态管理、路由，最终构建完整的前端应用。请把核心心法记住：<strong>响应式驱动、组合式复用、组件化封装、类型安全优先</strong>。工具会迭代、语法会进化、生态会变迁，但「声明式描述 UI、数据变化视图自动更新、逻辑按关注点组织」这三条原则，会在任何规模、任何场景的 Vue 项目中持续生效。</p>
+</blockquote></div>
+<div style="font-size:small;margin-top:8px;float:right;">转载请注明出处</div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://helloblog.eik.cc">你好博客</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if("09/25/2026"!=""){
+    var startSite=new Date("09/25/2026");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行 "+diffDay+" 天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","techjiang/Gmeek-HelloBlog");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script><script src='https://blog.meekdai.com/Gmeek/plugins/lightbox.js'></script>
+
+</html>
