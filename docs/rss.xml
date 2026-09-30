@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>你好博客</title><link>https://helloblog.eik.cc</link><description>你好博客，你好世界！</description><copyright>你好博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://docs.asoe.cn/img/Hello-Logo.svg</url><title>avatar</title><link>https://helloblog.eik.cc</link></image><lastBuildDate>Wed, 30 Sep 2026 05:08:00 +0000</lastBuildDate><managingEditor>你好博客</managingEditor><ttl>60</ttl><webMaster>你好博客</webMaster><item><title>Vue从入门到精通：Vue3现代前端开发完全实践手册</title><link>https://helloblog.eik.cc/post/Vue-cong-ru-men-dao-jing-tong-%EF%BC%9AVue3-xian-dai-qian-duan-kai-fa-wan-quan-shi-jian-shou-ce.html</link><description>&gt; **版本**：v1.0　|　**适用对象**：零基础到中高级前端工程师　|　**阅读方式**：线性阅读 + 按需查阅附录
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>你好博客</title><link>https://helloblog.eik.cc</link><description>你好博客，你好世界！</description><copyright>你好博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://docs.asoe.cn/img/Hello-Logo.svg</url><title>avatar</title><link>https://helloblog.eik.cc</link></image><lastBuildDate>Wed, 30 Sep 2026 11:16:31 +0000</lastBuildDate><managingEditor>你好博客</managingEditor><ttl>60</ttl><webMaster>你好博客</webMaster><item><title>Vue从入门到精通：Vue3现代前端开发完全实践手册</title><link>https://helloblog.eik.cc/post/Vue-cong-ru-men-dao-jing-tong-%EF%BC%9AVue3-xian-dai-qian-duan-kai-fa-wan-quan-shi-jian-shou-ce.html</link><description>&gt; **版本**：v1.0　|　**适用对象**：零基础到中高级前端工程师　|　**阅读方式**：线性阅读 + 按需查阅附录
 &gt;
 &gt; **阅读须知**：本文以 **Vue 3（3.4+）** 为主线，使用 **`&lt;script setup&gt;` 语法糖 + Composition API + TypeScript** 作为推荐范式。</description><guid isPermaLink="true">https://helloblog.eik.cc/post/Vue-cong-ru-men-dao-jing-tong-%EF%BC%9AVue3-xian-dai-qian-duan-kai-fa-wan-quan-shi-jian-shou-ce.html</guid><pubDate>Wed, 30 Sep 2026 05:06:28 +0000</pubDate></item><item><title>Vercel从入门到精通：现代前端部署与边缘计算完全实践手册</title><link>https://helloblog.eik.cc/post/Vercel-cong-ru-men-dao-jing-tong-%EF%BC%9A-xian-dai-qian-duan-bu-shu-yu-bian-yuan-ji-suan-wan-quan-shi-jian-shou-ce.html</link><description>&gt; **版本**：v1.0　|　**适用对象**：前端工程师、全栈开发者、DevOps 与平台工程人员　|　**阅读方式**：线性阅读 + 按需查阅附录
 &gt;
@@ -2166,6 +2166,12 @@ add_action('init', 'my_register_meta');
 - [科技酱](https://docs.asoe.cn) 同一个世界，同一个互联网！
 
 **朋友们**
+
+- [玲珑](https://forums.asoe.cn) 如意玲珑，得天独厚！
+
+- [好网站](https://hao.asoe.cn) 好站涵星汉，清音入画屏！
+
+- [酷小呵资源笔记](https://notes.kuhehe.top/) 
 
 **博客组织**
 
