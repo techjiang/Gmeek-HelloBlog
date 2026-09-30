@@ -1,0 +1,2655 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <meta name='description' content='你好博客是一个专注于技术分享、编程笔记与生活感悟的个人博客，提供高质量原创内容。'><meta name='keywords' content='你好博客,技术博客,编程笔记,Gmeek,前端开发,个人网站'><meta name='author' content='你好博客'><meta name='robots' content='index,follow'><link rel='canonical' href='https://helloblog.eik.cc/'><script type='application/ld+json'>{"@context":"https://schema.org","@type":"WebSite","name":"你好博客","url":"https://helloblog.eik.cc/","description":"专注于技术分享、编程笔记与生活感悟的个人博客","author":{"@type":"Person","name":"你好博客","email":"official@tech.asoe.cn"},"potentialAction":{"@type":"SearchAction","target":"https://helloblog.eik.cc/?q={search_term_string}","query-input":"required name=search_term_string"}}</script><script src='https://blog.meekdai.com/Gmeek/plugins/GmeekBSZ.js'></script><script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script>
+    <link rel="icon" href="https://docs.asoe.cn/img/Hello-Logo.svg"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="> **版本**：v1.0　|　**适用对象**：前端工程师、全栈开发者、DevOps 与平台工程人员　|　**阅读方式**：线性阅读 + 按需查阅附录
+>
+> **阅读须知**：Vercel 平台迭代速度极快（几乎每日部署新特性），本文命令、配置项与 CLI 行为以编写时的稳定版本为准；涉及**计费模型、套餐限额、界面布局**等可能变化的领域，请以 [Vercel 官方文档](https://vercel.com/docs) 为最终依据。">
+<meta property="og:title" content="Vercel从入门到精通：现代前端部署与边缘计算完全实践手册">
+<meta property="og:description" content="> **版本**：v1.0　|　**适用对象**：前端工程师、全栈开发者、DevOps 与平台工程人员　|　**阅读方式**：线性阅读 + 按需查阅附录
+>
+> **阅读须知**：Vercel 平台迭代速度极快（几乎每日部署新特性），本文命令、配置项与 CLI 行为以编写时的稳定版本为准；涉及**计费模型、套餐限额、界面布局**等可能变化的领域，请以 [Vercel 官方文档](https://vercel.com/docs) 为最终依据。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://helloblog.eik.cc/post/Vercel-cong-ru-men-dao-jing-tong-%EF%BC%9A-xian-dai-qian-duan-bu-shu-yu-bian-yuan-ji-suan-wan-quan-shi-jian-shou-ce.html">
+<meta property="og:image" content="https://docs.asoe.cn/img/Hello-Logo.svg">
+<title>Vercel从入门到精通：现代前端部署与边缘计算完全实践手册</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">Vercel从入门到精通：现代前端部署与边缘计算完全实践手册</h1>
+<div class="title-right">
+    <a href="https://helloblog.eik.cc" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/techjiang/Gmeek-HelloBlog/issues/25" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><blockquote>
+<p><strong>版本</strong>：v1.0　|　<strong>适用对象</strong>：前端工程师、全栈开发者、DevOps 与平台工程人员　|　<strong>阅读方式</strong>：线性阅读 + 按需查阅附录</p>
+<p><strong>阅读须知</strong>：Vercel 平台迭代速度极快（几乎每日部署新特性），本文命令、配置项与 CLI 行为以编写时的稳定版本为准；涉及<strong>计费模型、套餐限额、界面布局</strong>等可能变化的领域，请以 <a href="https://vercel.com/docs" rel="nofollow">Vercel 官方文档</a> 为最终依据。文中所有示例代码均可安全复现。</p>
+</blockquote>
+<hr>
+<h2>目录</h2>
+<ul>
+<li><a href="#1-%E6%A6%82%E5%BF%B5%E5%9F%BA%E7%A1%80">1. 概念基础</a></li>
+<li><a href="#2-%E8%B4%A6%E5%8F%B7%E5%87%86%E5%A4%87%E4%B8%8Ecli%E5%AE%89%E8%A3%85">2. 账号准备与 CLI 安装</a></li>
+<li><a href="#3-%E9%A1%B9%E7%9B%AE%E9%83%A8%E7%BD%B2%E4%BB%8E%E9%9B%B6%E5%88%B0%E7%BA%BF%E4%B8%8A">3. 项目部署：从零到线上</a></li>
+<li><a href="#4-%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%BA%A6%E9%80%82%E9%85%8D">4. 框架深度适配</a></li>
+<li><a href="#5-serverless-functions">5. Serverless Functions</a></li>
+<li><a href="#6-edge-functions-%E4%B8%8Emiddleware">6. Edge Functions 与 Middleware</a></li>
+<li><a href="#7-%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E4%B8%8E%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86">7. 环境变量与配置管理</a></li>
+<li><a href="#8-%E5%9F%9F%E5%90%8Ddns-%E4%B8%8E%E8%AF%81%E4%B9%A6">8. 域名、DNS 与证书</a></li>
+<li><a href="#9-%E9%A2%84%E8%A7%88%E9%83%A8%E7%BD%B2%E4%B8%8E%E5%9B%A2%E9%98%9F%E5%8D%8F%E4%BD%9C">9. 预览部署与团队协作</a></li>
+<li><a href="#10-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B8%8E%E7%BC%93%E5%AD%98%E7%AD%96%E7%95%A5">10. 性能优化与缓存策略</a></li>
+<li><a href="#11-%E7%9B%91%E6%8E%A7%E5%88%86%E6%9E%90%E4%B8%8E%E5%8F%AF%E8%A7%82%E6%B5%8B%E6%80%A7">11. 监控、分析与可观测性</a></li>
+<li><a href="#12-%E5%AE%89%E5%85%A8%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5">12. 安全最佳实践</a></li>
+<li><a href="#13-cicd-%E4%B8%8E%E8%87%AA%E5%8A%A8%E5%8C%96">13. CI/CD 与自动化</a></li>
+<li><a href="#14-%E7%96%91%E9%9A%BE%E6%8E%92%E9%94%99%E6%89%8B%E5%86%8C">14. 疑难排错手册</a></li>
+<li><a href="#15-%E5%B7%A5%E7%A8%8B%E5%8C%96%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5">15. 工程化最佳实践</a></li>
+<li><a href="#%E9%99%84%E5%BD%95-a-cli-%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E8%A1%A8">附录 A. CLI 命令速查表</a></li>
+<li><a href="#%E9%99%84%E5%BD%95-b-verceljson-%E9%85%8D%E7%BD%AE%E9%80%9F%E6%9F%A5">附录 B. vercel.json 配置速查</a></li>
+<li><a href="#%E9%99%84%E5%BD%95-c-%E6%9C%AF%E8%AF%AD%E8%A1%A8">附录 C. 术语表</a></li>
+<li><a href="#%E9%99%84%E5%BD%95-d-%E5%BB%B6%E4%BC%B8%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90">附录 D. 延伸学习资源</a></li>
+</ul>
+<hr>
+<h2>1. 概念基础</h2>
+<h3>1.1 Vercel 是什么</h3>
+<p>Vercel 是一个<strong>前端云平台（Frontend Cloud）</strong>，为现代 Web 应用提供从代码推送、构建、部署、CDN 分发、边缘计算到实时分析的完整链路。它的核心设计理念是 <strong>Zero Config（零配置部署）</strong>：推代码，剩下的交给平台。</p>
+<p>Vercel 由 Next.js 的创造者构建，与 Next.js 深度集成，但它同样原生支持 React、Vue、Nuxt、Svelte、SvelteKit、Astro、Remix、Solid、Hono 等 30+ 框架。</p>
+<h3>1.2 架构概览</h3>
+<pre class="notranslate"><code class="notranslate">开发者 ──push──▶ Git Provider ──webhook──▶ Vercel Build Pipeline
+                                                │
+                                     ┌──────────┴──────────┐
+                                     ▼                      ▼
+                              静态资源（HTML/CSS/JS）    服务端代码
+                                     │                      │
+                                     ▼                      ▼
+                              Vercel CDN              ┌────┴────┐
+                              (全球边缘节点)          │ Serverless│
+                                                      │ Functions │
+                                                      └────┬────┘
+                                                           │
+                                              ┌────────────┼────────────┐
+                                              ▼            ▼            ▼
+                                         数据库      第三方 API     存储服务
+</code></pre>
+<p>三层核心能力：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>层</th>
+<th>组件</th>
+<th>运行位置</th>
+<th>冷启动</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>静态层</strong></td>
+<td>HTML、CSS、JS、图片</td>
+<td>全球 CDN 边缘节点</td>
+<td>无</td>
+</tr>
+<tr>
+<td><strong>边缘层</strong></td>
+<td>Edge Functions / Middleware</td>
+<td>边缘节点（基于 V8 隔离）</td>
+<td>极低（&lt;5ms）</td>
+</tr>
+<tr>
+<td><strong>计算层</strong></td>
+<td>Serverless Functions</td>
+<td>区域数据中心（Node.js / Python / Go / Ruby）</td>
+<td>较高（100ms–1s）</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p>理解这三层的适用场景，是用好 Vercel 的关键。</p>
+<h3>1.3 Serverless vs Edge</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>维度</th>
+<th>Serverless Functions</th>
+<th>Edge Functions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>运行时</td>
+<td>Node.js、Python、Go、Ruby</td>
+<td>V8（类似浏览器）</td>
+</tr>
+<tr>
+<td>冷启动</td>
+<td>有（100ms–1s）</td>
+<td>极低（&lt;5ms）</td>
+</tr>
+<tr>
+<td>执行时间</td>
+<td>最长 60s（Hobby）/ 300s（Pro）</td>
+<td>最长 30s</td>
+</tr>
+<tr>
+<td>内存</td>
+<td>最大 3GB</td>
+<td>极小（不适合重计算）</td>
+</tr>
+<tr>
+<td>包大小</td>
+<td>最大 250MB</td>
+<td>极小（编译后 &lt; 4MB）</td>
+</tr>
+<tr>
+<td>Node.js API</td>
+<td>完整</td>
+<td>仅 Web 标准 API（fetch、Web Crypto 等）</td>
+</tr>
+<tr>
+<td>数据库直连</td>
+<td>可（长连接）</td>
+<td>不可（需 HTTP 驱动）</td>
+</tr>
+<tr>
+<td>适用</td>
+<td>复杂业务逻辑、文件处理、长查询</td>
+<td>身份验证、A/B 测试、重定向、个性化</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><strong>选型口诀</strong>：需要 Node.js 原生 API 或数据库长连接 → Serverless；需要低延迟、全球分布、轻量逻辑 → Edge。</p>
+<h3>1.4 核心概念</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>概念</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Project（项目）</strong></td>
+<td>一个 Git 仓库对应一个 Vercel 项目</td>
+</tr>
+<tr>
+<td><strong>Deployment（部署）</strong></td>
+<td>项目的一次构建与发布快照，不可变</td>
+</tr>
+<tr>
+<td><strong>Production</strong></td>
+<td>默认生产域名对应的部署</td>
+</tr>
+<tr>
+<td><strong>Preview</strong></td>
+<td>Pull Request / 分支自动触发的预览部署</td>
+</tr>
+<tr>
+<td><strong>Instant Rollback</strong></td>
+<td>将流量瞬间切换到历史部署，无需重新构建</td>
+</tr>
+<tr>
+<td><strong>Domains</strong></td>
+<td>自定义域名绑定</td>
+</tr>
+<tr>
+<td><strong>Environment Variables</strong></td>
+<td>按环境（Development / Preview / Production）注入的变量</td>
+</tr>
+<tr>
+<td><strong>Edge Config</strong></td>
+<td>超低延迟的全球分布式键值存储</td>
+</tr>
+<tr>
+<td><strong>Blob / KV / Postgres / Redis</strong></td>
+<td>Vercel 内建的数据存储服务</td>
+</tr>
+<tr>
+<td><strong>Analytics / Speed Insights</strong></td>
+<td>内建的流量分析与 Core Web Vitals 监控</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>1.5 Vercel 与其他平台的对比</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>维度</th>
+<th>Vercel</th>
+<th>Netlify</th>
+<th>Cloudflare Pages</th>
+<th>AWS (Amplify/CF+S3)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>框架集成</td>
+<td>最深（Next.js 原生）</td>
+<td>好</td>
+<td>好</td>
+<td>一般</td>
+</tr>
+<tr>
+<td>零配置</td>
+<td>★★★★★</td>
+<td>★★★★</td>
+<td>★★★★</td>
+<td>★★</td>
+</tr>
+<tr>
+<td>Edge Functions</td>
+<td>Edge Functions / Middleware</td>
+<td>Edge Functions</td>
+<td>Workers（极强）</td>
+<td>Lambda@Edge</td>
+</tr>
+<tr>
+<td>数据库内建</td>
+<td>Postgres/Redis/Blob/KV/Edge Config</td>
+<td>无</td>
+<td>D1/KV/R2</td>
+<td>多种（但分散）</td>
+</tr>
+<tr>
+<td>全球 CDN</td>
+<td>★★★★★</td>
+<td>★★★★</td>
+<td>★★★★★</td>
+<td>★★★★★</td>
+</tr>
+<tr>
+<td>适用场景</td>
+<td>Next.js / 现代前端全栈</td>
+<td>静态站 + Jamstack</td>
+<td>边缘计算优先</td>
+<td>企业级 AWS 生态</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><strong>结论</strong>：用 Next.js 或重视开发者体验 → <strong>Vercel</strong>；边缘计算优先 → Cloudflare；已有 AWS 生态 → AWS。</p>
+<h3>1.6 计费模型</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>套餐</th>
+<th>典型能力</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Hobby</strong></td>
+<td>个人项目免费，有限制（带宽、函数执行时长、并发数等）</td>
+</tr>
+<tr>
+<td><strong>Pro</strong></td>
+<td>团队项目，更高限额，更长函数超时，更多成员席位</td>
+</tr>
+<tr>
+<td><strong>Enterprise</strong></td>
+<td>定制化 SLA、SSO、审计、专属支持</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<blockquote>
+<p><strong>注意</strong>：限额（带宽、函数调用次数、构建分钟数、Edge 请求等）会随政策调整，实施前请查阅官方定价页。</p>
+</blockquote>
+<hr>
+<h2>2. 账号准备与 CLI 安装</h2>
+<h3>2.1 注册账号</h3>
+<ol>
+<li>访问 <a href="https://vercel.com" rel="nofollow">vercel.com</a>，支持 GitHub / GitLab / Bitbucket 一键登录。</li>
+<li>创建 <strong>Team</strong>（团队）——个人使用可直接用 Default 团队。</li>
+<li>绑定 Git Provider 账号，授权仓库访问权限。</li>
+</ol>
+<h3>2.2 安装 Vercel CLI</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 使用 npm 全局安装（推荐）</span>
+npm install -g vercel
+
+<span class="pl-c"><span class="pl-c">#</span> 验证安装</span>
+vercel --version
+
+<span class="pl-c"><span class="pl-c">#</span> 登录</span>
+vercel login
+
+<span class="pl-c"><span class="pl-c">#</span> 验证登录状态</span>
+vercel whoami</pre></div>
+<p>CLI 是 Vercel 的核心交互工具，覆盖部署、配置、日志、环境变量管理等全部能力。</p>
+<h3>2.3 CLI 鉴权</h3>
+<p><code class="notranslate">vercel login</code> 会打开浏览器完成 OAuth。CI/CD 环境中使用 <strong>Token</strong>：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 在 Settings → Tokens 创建</span>
+<span class="pl-k">export</span> VERCEL_TOKEN=<span class="pl-s"><span class="pl-pds">"</span>your-token-here<span class="pl-pds">"</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> 或使用 .vercel/auth.json（不推荐提交到仓库）</span>
+vercel --token=<span class="pl-smi">$VERCEL_TOKEN</span> ...</pre></div>
+<p>安全守则：Token 绝不提交到代码仓库；CI 中使用 Secrets / Environment Variables 注入；定期轮换。</p>
+<h3>2.4 项目初始化</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 方式一：在已有项目目录中执行（推荐）</span>
+<span class="pl-c1">cd</span> my-project
+vercel link
+
+<span class="pl-c"><span class="pl-c">#</span> 方式二：克隆 Vercel 模板项目（快速体验）</span>
+vercel init
+<span class="pl-c"><span class="pl-c">#</span> 交互式选择框架模板，如 Next.js、Nuxt、Astro 等</span></pre></div>
+<p><code class="notranslate">vercel link</code> 会在本地创建 <code class="notranslate">.vercel/project.json</code>，记录项目 ID 与团队 ID，后续 <code class="notranslate">vercel</code> 命令自动关联。</p>
+<hr>
+<h2>3. 项目部署：从零到线上</h2>
+<h3>3.1 Git 集成部署（推荐）</h3>
+<p>Vercel 的核心工作流是 <strong>Git-based Deployment</strong>：</p>
+<ol>
+<li>在 Vercel Dashboard → <strong>Add New → Project</strong>。</li>
+<li>选择 Git Provider，导入仓库。</li>
+<li>Vercel 自动检测框架，预填构建命令与输出目录（通常无需修改）。</li>
+<li>配置环境变量（区分 Preview / Production）。</li>
+<li>点击 <strong>Deploy</strong>。</li>
+</ol>
+<p>之后每次 <code class="notranslate">git push</code> 到主分支自动触发生产部署；每个 Pull Request 自动创建 Preview 部署。</p>
+<h3>3.2 CLI 部署</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 预览部署（推送到临时 URL）</span>
+vercel
+
+<span class="pl-c"><span class="pl-c">#</span> 生产部署</span>
+vercel --prod
+
+<span class="pl-c"><span class="pl-c">#</span> 指定项目与团队</span>
+vercel --scope my-team
+
+<span class="pl-c"><span class="pl-c">#</span> 部署指定目录（monorepo 场景）</span>
+vercel --cwd packages/web
+
+<span class="pl-c"><span class="pl-c">#</span> 跳过确认提示</span>
+vercel --yes
+
+<span class="pl-c"><span class="pl-c">#</span> 指定构建命令与输出目录</span>
+vercel --build-command <span class="pl-s"><span class="pl-pds">"</span>pnpm build<span class="pl-pds">"</span></span> --output-directory <span class="pl-s"><span class="pl-pds">"</span>dist<span class="pl-pds">"</span></span></pre></div>
+<h3>3.3 项目设置详解</h3>
+<p>在 Dashboard → <strong>Project → Settings</strong> 中可配置：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>设置项</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Build &amp; Development Settings</strong></td>
+<td>Framework Preset、Build Command、Output Directory、Install Command、Node.js 版本</td>
+</tr>
+<tr>
+<td><strong>Environment Variables</strong></td>
+<td>按环境（Production / Preview / Development）注入变量</td>
+</tr>
+<tr>
+<td><strong>Domains</strong></td>
+<td>绑定自定义域名</td>
+</tr>
+<tr>
+<td><strong>Git Integration</strong></td>
+<td>自动部署、评论、预览 URL 等</td>
+</tr>
+<tr>
+<td><strong>Functions</strong></td>
+<td>函数区域、内存、最大执行时长</td>
+</tr>
+<tr>
+<td><strong>Security</strong></td>
+<td>密码保护、DDoS、IP 允许/拒绝、Bot 防护</td>
+</tr>
+<tr>
+<td><strong>Data</strong></td>
+<td>配置 Edge Config、Blob、KV、Postgres、Redis</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>3.4 构建配置</h3>
+<p>Vercel 自动检测框架并预填配置，通常无需手动修改。以下是常见框架的默认值：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>框架</th>
+<th>Build Command</th>
+<th>Output Directory</th>
+<th>Node.js 版本</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Next.js</td>
+<td><code class="notranslate">next build</code></td>
+<td><code class="notranslate">.next</code></td>
+<td>≥ 18.x</td>
+</tr>
+<tr>
+<td>Vite + React</td>
+<td><code class="notranslate">npm run build</code></td>
+<td><code class="notranslate">dist</code></td>
+<td>≥ 18.x</td>
+</tr>
+<tr>
+<td>Nuxt</td>
+<td><code class="notranslate">nuxt build</code></td>
+<td><code class="notranslate">.output/public</code></td>
+<td>≥ 18.x</td>
+</tr>
+<tr>
+<td>Astro</td>
+<td><code class="notranslate">astro build</code></td>
+<td><code class="notranslate">dist</code></td>
+<td>≥ 18.x</td>
+</tr>
+<tr>
+<td>SvelteKit</td>
+<td><code class="notranslate">npm run build</code></td>
+<td><code class="notranslate">.svelte-kit/output</code></td>
+<td>≥ 18.x</td>
+</tr>
+<tr>
+<td>Remix</td>
+<td><code class="notranslate">remix build</code></td>
+<td><code class="notranslate">public</code>（或 <code class="notranslate">build</code>）</td>
+<td>≥ 18.x</td>
+</tr>
+<tr>
+<td>纯静态</td>
+<td>无</td>
+<td>根目录 / <code class="notranslate">public</code></td>
+<td>—</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p>如需自定义，在 <code class="notranslate">vercel.json</code> 或 Dashboard 中覆盖：</p>
+<div class="highlight highlight-source-json"><pre class="notranslate">{
+  <span class="pl-ent">"buildCommand"</span>: <span class="pl-s"><span class="pl-pds">"</span>pnpm run build:prod<span class="pl-pds">"</span></span>,
+  <span class="pl-ent">"outputDirectory"</span>: <span class="pl-s"><span class="pl-pds">"</span>out<span class="pl-pds">"</span></span>,
+  <span class="pl-ent">"installCommand"</span>: <span class="pl-s"><span class="pl-pds">"</span>pnpm install --frozen-lockfile<span class="pl-pds">"</span></span>
+}</pre></div>
+<h3>3.5 monorepo 支持</h3>
+<p>Vercel 原生支持 Turborepo / Nx / pnpm workspaces / npm workspaces：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 从仓库根目录部署指定子项目</span>
+vercel --cwd apps/web
+
+<span class="pl-c"><span class="pl-c">#</span> 或在 Dashboard 中设置 Root Directory</span>
+<span class="pl-c"><span class="pl-c">#</span> Settings → General → Root Directory → apps/web</span></pre></div>
+<p>配合 Turborepo Remote Caching，可显著加速 monorepo 构建：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">turbo login
+turbo link
+turbo run build</pre></div>
+<hr>
+<h2>4. 框架深度适配</h2>
+<h3>4.1 Next.js（一等公民）</h3>
+<p>Vercel 对 Next.js 的支持是<strong>原生级别</strong>的，自动启用以下能力：</p>
+<ul>
+<li><strong>App Router / Pages Router</strong> 全支持。</li>
+<li><strong>Incremental Static Regeneration (ISR)</strong>：部署后增量重新生成静态页面。</li>
+<li><strong>Streaming SSR</strong>：React 18 流式渲染。</li>
+<li><strong>Route Handlers</strong>：API 路由自动映射为 Serverless / Edge Functions。</li>
+<li><strong>Server Actions</strong>：表单与数据变更的服务器端函数。</li>
+<li><strong>Image Optimization</strong>：<code class="notranslate">next/image</code> 自动接入 Vercel Image Optimization API。</li>
+<li><strong>Draft Mode</strong>：CMS 预览模式。</li>
+<li><strong>Turbopack</strong>：更快的本地开发与构建。</li>
+</ul>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> Next.js 项目部署</span>
+npx create-next-app@latest my-app
+<span class="pl-c1">cd</span> my-app
+vercel --prod</pre></div>
+<p>在 Vercel 上，Next.js 的 <code class="notranslate">getServerSideProps</code>、<code class="notranslate">getStaticProps</code>、Server Components 会被智能分配到最优运行环境。</p>
+<blockquote>
+<p><strong>版本提示</strong>：Next.js 版本迭代快，建议锁定 <code class="notranslate">next</code> 与 <code class="notranslate">react</code> 的版本号，并在升级前阅读官方 Upgrade Guide。</p>
+</blockquote>
+<h3>4.2 Vite + React / Vue / Svelte</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">npm create vite@latest my-app -- --template react-ts
+<span class="pl-c1">cd</span> my-app
+npm install
+vercel --prod</pre></div>
+<p>Vite 构建产出纯静态文件，Vercel 自动配置 SPA 路由回退：</p>
+<div class="highlight highlight-source-json"><pre class="notranslate">{
+  <span class="pl-ent">"rewrites"</span>: [
+    { <span class="pl-ent">"source"</span>: <span class="pl-s"><span class="pl-pds">"</span>/(.*)<span class="pl-pds">"</span></span>, <span class="pl-ent">"destination"</span>: <span class="pl-s"><span class="pl-pds">"</span>/index.html<span class="pl-pds">"</span></span> }
+  ]
+}</pre></div>
+<h3>4.3 Astro</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">npm create astro@latest my-app
+<span class="pl-c1">cd</span> my-app
+vercel --prod</pre></div>
+<p>Astro 的混合渲染（静态 + 按需 SSR）在 Vercel 上自动工作。使用 <code class="notranslate">@astrojs/vercel</code> 适配器：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">npx astro add vercel</pre></div>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-c">// astro.config.mjs</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-s1">defineConfig</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'astro/config'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-s1">vercel</span> <span class="pl-k">from</span> <span class="pl-s">'@astrojs/vercel/serverless'</span><span class="pl-kos">;</span>
+
+<span class="pl-k">export</span> <span class="pl-k">default</span> <span class="pl-en">defineConfig</span><span class="pl-kos">(</span><span class="pl-kos">{</span>
+  <span class="pl-c1">output</span>: <span class="pl-s">'hybrid'</span><span class="pl-kos">,</span>
+  <span class="pl-c1">adapter</span>: <span class="pl-en">vercel</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">,</span>
+<span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span></pre></div>
+<h3>4.4 Remix</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">npx create-remix@latest my-app
+<span class="pl-c1">cd</span> my-app
+vercel --prod</pre></div>
+<p>Remix 的 Loader / Action 自动映射为 Serverless Functions。使用官方适配器：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">npm install @remix-run/vercel</pre></div>
+<h3>4.5 Hono（轻量边缘框架）</h3>
+<p>Hono 极适合构建 Edge API：</p>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// api/index.ts</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">Hono</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'hono'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-s1">handle</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'hono/vercel'</span><span class="pl-kos">;</span>
+
+<span class="pl-k">const</span> <span class="pl-s1">app</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">Hono</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">basePath</span><span class="pl-kos">(</span><span class="pl-s">'/api'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+<span class="pl-s1">app</span><span class="pl-kos">.</span><span class="pl-en">get</span><span class="pl-kos">(</span><span class="pl-s">'/hello'</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-s1">c</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+  <span class="pl-k">return</span> <span class="pl-s1">c</span><span class="pl-kos">.</span><span class="pl-en">json</span><span class="pl-kos">(</span><span class="pl-kos">{</span> <span class="pl-c1">message</span>: <span class="pl-s">'Hello from Edge!'</span> <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+<span class="pl-k">export</span> <span class="pl-k">const</span> <span class="pl-c1">GET</span> <span class="pl-c1">=</span> <span class="pl-en">handle</span><span class="pl-kos">(</span><span class="pl-s1">app</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-k">export</span> <span class="pl-k">const</span> <span class="pl-c1">POST</span> <span class="pl-c1">=</span> <span class="pl-en">handle</span><span class="pl-kos">(</span><span class="pl-s1">app</span><span class="pl-kos">)</span><span class="pl-kos">;</span></pre></div>
+<h3>4.6 框架自动检测机制</h3>
+<p>Vercel 通过 <code class="notranslate">package.json</code> 中的依赖自动检测框架：</p>
+<ul>
+<li>发现 <code class="notranslate">next</code> → Next.js</li>
+<li>发现 <code class="notranslate">nuxt</code> → Nuxt</li>
+<li>发现 <code class="notranslate">@remix-run/node</code> → Remix</li>
+<li>发现 <code class="notranslate">astro</code> → Astro</li>
+<li>发现 <code class="notranslate">vite</code> + <code class="notranslate">react</code> → Vite (React)</li>
+<li>无法识别 → 静态站点</li>
+</ul>
+<p>手动覆盖：在 <code class="notranslate">vercel.json</code> 中指定 <code class="notranslate">framework</code>，或在 Dashboard → Build Settings 中选择。</p>
+<hr>
+<h2>5. Serverless Functions</h2>
+<h3>5.1 文件路由约定</h3>
+<p>在 <code class="notranslate">/api</code> 目录下的文件自动成为 API 端点：</p>
+<pre class="notranslate"><code class="notranslate">project/
+├── api/
+│   ├── hello.ts          → /api/hello
+│   ├── users/
+│   │   ├── index.ts      → /api/users
+│   │   └── [id].ts       → /api/users/:id
+│   └── health.ts         → /api/health
+├── public/
+└── vercel.json
+</code></pre>
+<h3>5.2 基础函数编写</h3>
+<p><strong>TypeScript（Node.js Runtime）</strong>：</p>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// api/hello.ts</span>
+<span class="pl-k">import</span> <span class="pl-k">type</span> <span class="pl-kos">{</span> <span class="pl-v">VercelRequest</span><span class="pl-kos">,</span> <span class="pl-v">VercelResponse</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@vercel/node'</span><span class="pl-kos">;</span>
+
+<span class="pl-k">export</span> <span class="pl-k">default</span> <span class="pl-k">function</span> <span class="pl-en">handler</span><span class="pl-kos">(</span><span class="pl-s1">req</span>: <span class="pl-smi">VercelRequest</span><span class="pl-kos">,</span> <span class="pl-s1">res</span>: <span class="pl-smi">VercelResponse</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+  <span class="pl-k">const</span> <span class="pl-kos">{</span> name <span class="pl-c1">=</span> <span class="pl-s">'World'</span> <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-s1">req</span><span class="pl-kos">.</span><span class="pl-c1">query</span><span class="pl-kos">;</span>
+  <span class="pl-s1">res</span><span class="pl-kos">.</span><span class="pl-en">status</span><span class="pl-kos">(</span><span class="pl-c1">200</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">json</span><span class="pl-kos">(</span><span class="pl-kos">{</span> <span class="pl-c1">message</span>: <span class="pl-s">`Hello, <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">name</span><span class="pl-kos">}</span></span>!`</span> <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span></pre></div>
+<p><strong>Python</strong>：</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-c"># api/hello.py</span>
+<span class="pl-k">from</span> <span class="pl-s1">http</span>.<span class="pl-s1">server</span> <span class="pl-k">import</span> <span class="pl-v">BaseHTTPRequestHandler</span>
+<span class="pl-k">import</span> <span class="pl-s1">json</span>
+
+<span class="pl-k">class</span> <span class="pl-s1">handler</span>(<span class="pl-v">BaseHTTPRequestHandler</span>):
+    <span class="pl-k">def</span> <span class="pl-en">do_GET</span>(<span class="pl-s1">self</span>):
+        <span class="pl-s1">self</span>.<span class="pl-c1">send_response</span>(<span class="pl-c1">200</span>)
+        <span class="pl-s1">self</span>.<span class="pl-c1">send_header</span>(<span class="pl-s">'Content-Type'</span>, <span class="pl-s">'application/json'</span>)
+        <span class="pl-s1">self</span>.<span class="pl-c1">end_headers</span>()
+        <span class="pl-s1">self</span>.<span class="pl-c1">wfile</span>.<span class="pl-c1">write</span>(<span class="pl-s1">json</span>.<span class="pl-c1">dumps</span>({<span class="pl-s">"message"</span>: <span class="pl-s">"Hello from Python!"</span>}).<span class="pl-c1">encode</span>())</pre></div>
+<p><strong>Go</strong>：</p>
+<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-c">// api/hello/main.go</span>
+<span class="pl-k">package</span> handler
+
+<span class="pl-k">import</span> (
+    <span class="pl-s">"encoding/json"</span>
+    <span class="pl-s">"net/http"</span>
+)
+
+<span class="pl-k">func</span> <span class="pl-s1">Handler</span>(<span class="pl-s1">w</span> http.<span class="pl-smi">ResponseWriter</span>, <span class="pl-s1">r</span> <span class="pl-c1">*</span>http.<span class="pl-smi">Request</span>) {
+    <span class="pl-s1">w</span>.<span class="pl-c1">Header</span>().<span class="pl-c1">Set</span>(<span class="pl-s">"Content-Type"</span>, <span class="pl-s">"application/json"</span>)
+    <span class="pl-s1">json</span>.<span class="pl-c1">NewEncoder</span>(<span class="pl-s1">w</span>).<span class="pl-c1">Encode</span>(<span class="pl-k">map</span>[<span class="pl-smi">string</span>]<span class="pl-smi">string</span>{<span class="pl-s">"message"</span>: <span class="pl-s">"Hello from Go!"</span>})
+}</pre></div>
+<p><strong>Ruby</strong>：</p>
+<div class="highlight highlight-source-ruby"><pre class="notranslate"><span class="pl-c"># api/hello.rb</span>
+<span class="pl-en">require</span> <span class="pl-s">'json'</span>
+
+<span class="pl-k">class</span> <span class="pl-v">Handler</span>
+  <span class="pl-k">def</span> <span class="pl-smi">self</span><span class="pl-kos">.</span><span class="pl-en">call</span><span class="pl-kos">(</span><span class="pl-s1">event</span>:<span class="pl-kos">,</span> <span class="pl-s1">context</span>:<span class="pl-kos">)</span>
+    <span class="pl-kos">{</span>
+      <span class="pl-pds">statusCode</span>: <span class="pl-c1">200</span><span class="pl-kos">,</span>
+      <span class="pl-pds">headers</span>: <span class="pl-kos">{</span> <span class="pl-s">'Content-Type'</span> <span class="pl-c1">=&gt;</span> <span class="pl-s">'application/json'</span> <span class="pl-kos">}</span><span class="pl-kos">,</span>
+      <span class="pl-pds">body</span>: <span class="pl-c1">JSON</span><span class="pl-kos">.</span><span class="pl-en">generate</span><span class="pl-kos">(</span><span class="pl-kos">{</span> <span class="pl-pds">message</span>: <span class="pl-s">'Hello from Ruby!'</span> <span class="pl-kos">}</span><span class="pl-kos">)</span>
+    <span class="pl-kos">}</span>
+  <span class="pl-k">end</span>
+<span class="pl-k">end</span></pre></div>
+<h3>5.3 请求与响应</h3>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// api/users/[id].ts</span>
+<span class="pl-k">import</span> <span class="pl-k">type</span> <span class="pl-kos">{</span> <span class="pl-v">VercelRequest</span><span class="pl-kos">,</span> <span class="pl-v">VercelResponse</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@vercel/node'</span><span class="pl-kos">;</span>
+
+<span class="pl-k">export</span> <span class="pl-k">default</span> <span class="pl-k">async</span> <span class="pl-k">function</span> <span class="pl-en">handler</span><span class="pl-kos">(</span><span class="pl-s1">req</span>: <span class="pl-smi">VercelRequest</span><span class="pl-kos">,</span> <span class="pl-s1">res</span>: <span class="pl-smi">VercelResponse</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+  <span class="pl-k">const</span> <span class="pl-kos">{</span> id <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-s1">req</span><span class="pl-kos">.</span><span class="pl-c1">query</span><span class="pl-kos">;</span>
+  <span class="pl-k">const</span> <span class="pl-s1">method</span> <span class="pl-c1">=</span> <span class="pl-s1">req</span><span class="pl-kos">.</span><span class="pl-c1">method</span><span class="pl-kos">;</span>
+
+  <span class="pl-k">switch</span> <span class="pl-kos">(</span><span class="pl-s1">method</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-k">case</span> <span class="pl-s">'GET'</span>:
+      <span class="pl-c">// 查询单个用户</span>
+      <span class="pl-k">const</span> <span class="pl-s1">user</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-en">findUser</span><span class="pl-kos">(</span><span class="pl-s1">id</span> <span class="pl-k">as</span> <span class="pl-smi">string</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+      <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-s1">user</span><span class="pl-kos">)</span> <span class="pl-k">return</span> <span class="pl-s1">res</span><span class="pl-kos">.</span><span class="pl-en">status</span><span class="pl-kos">(</span><span class="pl-c1">404</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">json</span><span class="pl-kos">(</span><span class="pl-kos">{</span> <span class="pl-c1">error</span>: <span class="pl-s">'User not found'</span> <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+      <span class="pl-k">return</span> <span class="pl-s1">res</span><span class="pl-kos">.</span><span class="pl-en">status</span><span class="pl-kos">(</span><span class="pl-c1">200</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">json</span><span class="pl-kos">(</span><span class="pl-s1">user</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+    <span class="pl-k">case</span> <span class="pl-s">'PUT'</span>:
+      <span class="pl-c">// 更新用户</span>
+      <span class="pl-k">const</span> <span class="pl-s1">body</span> <span class="pl-c1">=</span> <span class="pl-s1">req</span><span class="pl-kos">.</span><span class="pl-c1">body</span><span class="pl-kos">;</span>
+      <span class="pl-k">const</span> <span class="pl-s1">updated</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-en">updateUser</span><span class="pl-kos">(</span><span class="pl-s1">id</span> <span class="pl-k">as</span> <span class="pl-smi">string</span><span class="pl-kos">,</span> <span class="pl-s1">body</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+      <span class="pl-k">return</span> <span class="pl-s1">res</span><span class="pl-kos">.</span><span class="pl-en">status</span><span class="pl-kos">(</span><span class="pl-c1">200</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">json</span><span class="pl-kos">(</span><span class="pl-s1">updated</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+    <span class="pl-k">case</span> <span class="pl-s">'DELETE'</span>:
+      <span class="pl-k">await</span> <span class="pl-en">deleteUser</span><span class="pl-kos">(</span><span class="pl-s1">id</span> <span class="pl-k">as</span> <span class="pl-smi">string</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+      <span class="pl-k">return</span> <span class="pl-s1">res</span><span class="pl-kos">.</span><span class="pl-en">status</span><span class="pl-kos">(</span><span class="pl-c1">204</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">end</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+    <span class="pl-k">default</span>:
+      <span class="pl-s1">res</span><span class="pl-kos">.</span><span class="pl-en">setHeader</span><span class="pl-kos">(</span><span class="pl-s">'Allow'</span><span class="pl-kos">,</span> <span class="pl-kos">[</span><span class="pl-s">'GET'</span><span class="pl-kos">,</span> <span class="pl-s">'PUT'</span><span class="pl-kos">,</span> <span class="pl-s">'DELETE'</span><span class="pl-kos">]</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+      <span class="pl-k">return</span> <span class="pl-s1">res</span><span class="pl-kos">.</span><span class="pl-en">status</span><span class="pl-kos">(</span><span class="pl-c1">405</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">json</span><span class="pl-kos">(</span><span class="pl-kos">{</span> <span class="pl-c1">error</span>: <span class="pl-s">`Method <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">method</span><span class="pl-kos">}</span></span> not allowed`</span> <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span>
+<span class="pl-kos">}</span></pre></div>
+<h3>5.4 函数配置</h3>
+<p>在 <code class="notranslate">vercel.json</code> 中配置函数的行为：</p>
+<div class="highlight highlight-source-json"><pre class="notranslate">{
+  <span class="pl-ent">"functions"</span>: {
+    <span class="pl-ent">"api/heavy-task.ts"</span>: {
+      <span class="pl-ent">"memory"</span>: <span class="pl-c1">3008</span>,
+      <span class="pl-ent">"maxDuration"</span>: <span class="pl-c1">60</span>
+    },
+    <span class="pl-ent">"api/quick-check.ts"</span>: {
+      <span class="pl-ent">"maxDuration"</span>: <span class="pl-c1">5</span>
+    }
+  }
+}</pre></div>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>配置项</th>
+<th>说明</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">memory</code></td>
+<td>内存大小（MB）</td>
+<td>1024</td>
+</tr>
+<tr>
+<td><code class="notranslate">maxDuration</code></td>
+<td>最大执行时长（秒）</td>
+<td>10（Hobby）/ 15（Pro）/ 60（自定义）</td>
+</tr>
+<tr>
+<td><code class="notranslate">runtime</code></td>
+<td>运行时</td>
+<td>自动检测（nodejs / python 等）</td>
+</tr>
+<tr>
+<td><code class="notranslate">regions</code></td>
+<td>部署区域</td>
+<td><code class="notranslate">iad1</code>（美国东部），支持多区域</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>5.5 多区域部署</h3>
+<div class="highlight highlight-source-json"><pre class="notranslate">{
+  <span class="pl-ent">"functions"</span>: {
+    <span class="pl-ent">"api/*.ts"</span>: {
+      <span class="pl-ent">"regions"</span>: [<span class="pl-s"><span class="pl-pds">"</span>iad1<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>sfo1<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>hnd1<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>fra1<span class="pl-pds">"</span></span>]
+    }
+  }
+}</pre></div>
+<p>常用区域代码：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>代码</th>
+<th>位置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">iad1</code></td>
+<td>美国东部（弗吉尼亚）</td>
+</tr>
+<tr>
+<td><code class="notranslate">sfo1</code></td>
+<td>美国西部（旧金山）</td>
+</tr>
+<tr>
+<td><code class="notranslate">hnd1</code></td>
+<td>亚洲（东京）</td>
+</tr>
+<tr>
+<td><code class="notranslate">sin1</code></td>
+<td>亚洲（新加坡）</td>
+</tr>
+<tr>
+<td><code class="notranslate">fra1</code></td>
+<td>欧洲（法兰克福）</td>
+</tr>
+<tr>
+<td><code class="notranslate">lhr1</code></td>
+<td>欧洲（伦敦）</td>
+</tr>
+<tr>
+<td><code class="notranslate">syd1</code></td>
+<td>大洋洲（悉尼）</td>
+</tr>
+<tr>
+<td><code class="notranslate">bom1</code></td>
+<td>印度（孟买）</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>5.6 流式响应（Streaming）</h3>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// api/stream.ts</span>
+<span class="pl-k">import</span> <span class="pl-k">type</span> <span class="pl-kos">{</span> <span class="pl-v">VercelRequest</span><span class="pl-kos">,</span> <span class="pl-v">VercelResponse</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@vercel/node'</span><span class="pl-kos">;</span>
+
+<span class="pl-k">export</span> <span class="pl-k">default</span> <span class="pl-k">async</span> <span class="pl-k">function</span> <span class="pl-en">handler</span><span class="pl-kos">(</span><span class="pl-s1">req</span>: <span class="pl-smi">VercelRequest</span><span class="pl-kos">,</span> <span class="pl-s1">res</span>: <span class="pl-smi">VercelResponse</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+  <span class="pl-s1">res</span><span class="pl-kos">.</span><span class="pl-en">setHeader</span><span class="pl-kos">(</span><span class="pl-s">'Content-Type'</span><span class="pl-kos">,</span> <span class="pl-s">'text/event-stream'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-s1">res</span><span class="pl-kos">.</span><span class="pl-en">setHeader</span><span class="pl-kos">(</span><span class="pl-s">'Cache-Control'</span><span class="pl-kos">,</span> <span class="pl-s">'no-cache'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-s1">res</span><span class="pl-kos">.</span><span class="pl-en">setHeader</span><span class="pl-kos">(</span><span class="pl-s">'Connection'</span><span class="pl-kos">,</span> <span class="pl-s">'keep-alive'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+  <span class="pl-k">const</span> <span class="pl-s1">encoder</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">TextEncoder</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-k">const</span> <span class="pl-s1">stream</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">TransformStream</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-k">const</span> <span class="pl-s1">writer</span> <span class="pl-c1">=</span> <span class="pl-s1">stream</span><span class="pl-kos">.</span><span class="pl-c1">writable</span><span class="pl-kos">.</span><span class="pl-en">getWriter</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+  <span class="pl-c">// 模拟流式输出</span>
+  <span class="pl-en">setInterval</span><span class="pl-kos">(</span><span class="pl-k">async</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+    <span class="pl-k">await</span> <span class="pl-s1">writer</span><span class="pl-kos">.</span><span class="pl-en">write</span><span class="pl-kos">(</span><span class="pl-s1">encoder</span><span class="pl-kos">.</span><span class="pl-en">encode</span><span class="pl-kos">(</span><span class="pl-s">`data: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-c1">JSON</span><span class="pl-kos">.</span><span class="pl-en">stringify</span><span class="pl-kos">(</span><span class="pl-kos">{</span> <span class="pl-c1">time</span>: <span class="pl-v">Date</span><span class="pl-kos">.</span><span class="pl-en">now</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">}</span></span>\n\n`</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span><span class="pl-kos">,</span> <span class="pl-c1">1000</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+  <span class="pl-c">// 将流发送到客户端</span>
+  <span class="pl-k">const</span> <span class="pl-s1">reader</span> <span class="pl-c1">=</span> <span class="pl-s1">stream</span><span class="pl-kos">.</span><span class="pl-c1">readable</span><span class="pl-kos">.</span><span class="pl-en">getReader</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-k">while</span> <span class="pl-kos">(</span><span class="pl-c1">true</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-k">const</span> <span class="pl-kos">{</span> done<span class="pl-kos">,</span> value <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-s1">reader</span><span class="pl-kos">.</span><span class="pl-en">read</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">done</span><span class="pl-kos">)</span> <span class="pl-k">break</span><span class="pl-kos">;</span>
+    <span class="pl-s1">res</span><span class="pl-kos">.</span><span class="pl-en">write</span><span class="pl-kos">(</span><span class="pl-v">Buffer</span><span class="pl-kos">.</span><span class="pl-en">from</span><span class="pl-kos">(</span><span class="pl-s1">value</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span>
+<span class="pl-kos">}</span></pre></div>
+<h3>5.7 Webhook 处理</h3>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// api/webhook.ts</span>
+<span class="pl-k">import</span> <span class="pl-k">type</span> <span class="pl-kos">{</span> <span class="pl-v">VercelRequest</span><span class="pl-kos">,</span> <span class="pl-v">VercelResponse</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@vercel/node'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-s1">crypto</span> <span class="pl-k">from</span> <span class="pl-s">'crypto'</span><span class="pl-kos">;</span>
+
+<span class="pl-k">export</span> <span class="pl-k">default</span> <span class="pl-k">async</span> <span class="pl-k">function</span> <span class="pl-en">handler</span><span class="pl-kos">(</span><span class="pl-s1">req</span>: <span class="pl-smi">VercelRequest</span><span class="pl-kos">,</span> <span class="pl-s1">res</span>: <span class="pl-smi">VercelResponse</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+  <span class="pl-c">// 验证签名（以 GitHub Webhook 为例）</span>
+  <span class="pl-k">const</span> <span class="pl-s1">signature</span> <span class="pl-c1">=</span> <span class="pl-s1">req</span><span class="pl-kos">.</span><span class="pl-c1">headers</span><span class="pl-kos">[</span><span class="pl-s">'x-hub-signature-256'</span><span class="pl-kos">]</span> <span class="pl-k">as</span> <span class="pl-smi">string</span><span class="pl-kos">;</span>
+  <span class="pl-k">const</span> <span class="pl-s1">secret</span> <span class="pl-c1">=</span> <span class="pl-s1">process</span><span class="pl-kos">.</span><span class="pl-c1">env</span><span class="pl-kos">.</span><span class="pl-c1">WEBHOOK_SECRET</span><span class="pl-c1">!</span><span class="pl-kos">;</span>
+  <span class="pl-k">const</span> <span class="pl-s1">payload</span> <span class="pl-c1">=</span> <span class="pl-c1">JSON</span><span class="pl-kos">.</span><span class="pl-en">stringify</span><span class="pl-kos">(</span><span class="pl-s1">req</span><span class="pl-kos">.</span><span class="pl-c1">body</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+  <span class="pl-k">const</span> <span class="pl-s1">expected</span> <span class="pl-c1">=</span> <span class="pl-s">'sha256='</span> <span class="pl-c1">+</span> <span class="pl-s1">crypto</span>
+    <span class="pl-kos">.</span><span class="pl-en">createHmac</span><span class="pl-kos">(</span><span class="pl-s">'sha256'</span><span class="pl-kos">,</span> <span class="pl-s1">secret</span><span class="pl-kos">)</span>
+    <span class="pl-kos">.</span><span class="pl-en">update</span><span class="pl-kos">(</span><span class="pl-s1">payload</span><span class="pl-kos">)</span>
+    <span class="pl-kos">.</span><span class="pl-en">digest</span><span class="pl-kos">(</span><span class="pl-s">'hex'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+  <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">signature</span> <span class="pl-c1">!==</span> <span class="pl-s1">expected</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-k">return</span> <span class="pl-s1">res</span><span class="pl-kos">.</span><span class="pl-en">status</span><span class="pl-kos">(</span><span class="pl-c1">401</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">json</span><span class="pl-kos">(</span><span class="pl-kos">{</span> <span class="pl-c1">error</span>: <span class="pl-s">'Invalid signature'</span> <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span>
+
+  <span class="pl-c">// 处理事件</span>
+  <span class="pl-k">const</span> <span class="pl-s1">event</span> <span class="pl-c1">=</span> <span class="pl-s1">req</span><span class="pl-kos">.</span><span class="pl-c1">headers</span><span class="pl-kos">[</span><span class="pl-s">'x-github-event'</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+  <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">log</span><span class="pl-kos">(</span><span class="pl-s">`Received event: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">event</span><span class="pl-kos">}</span></span>`</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+  <span class="pl-c">// 快速返回 200，避免超时；耗时操作放后台</span>
+  <span class="pl-s1">res</span><span class="pl-kos">.</span><span class="pl-en">status</span><span class="pl-kos">(</span><span class="pl-c1">200</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">json</span><span class="pl-kos">(</span><span class="pl-kos">{</span> <span class="pl-c1">received</span>: <span class="pl-c1">true</span> <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span></pre></div>
+<hr>
+<h2>6. Edge Functions 与 Middleware</h2>
+<h3>6.1 Edge Functions</h3>
+<p>Edge Functions 运行在全球边缘节点上，基于 V8 引擎（类似浏览器环境），<strong>不支持完整的 Node.js API</strong>。</p>
+<p><strong>API Route Handler（Edge Runtime）</strong>：</p>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// api/geo.ts</span>
+<span class="pl-k">export</span> <span class="pl-k">const</span> <span class="pl-s1">config</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span> <span class="pl-c1">runtime</span>: <span class="pl-s">'edge'</span> <span class="pl-kos">}</span><span class="pl-kos">;</span>
+
+<span class="pl-k">export</span> <span class="pl-k">default</span> <span class="pl-k">function</span> <span class="pl-en">handler</span><span class="pl-kos">(</span><span class="pl-s1">request</span>: <span class="pl-smi">Request</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+  <span class="pl-k">const</span> <span class="pl-kos">{</span> geo <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-s1">request</span> <span class="pl-k">as</span> <span class="pl-smi">any</span><span class="pl-kos">;</span> <span class="pl-c">// Vercel 注入的 geo 信息</span>
+
+  <span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-v">Response</span><span class="pl-kos">(</span>
+    <span class="pl-c1">JSON</span><span class="pl-kos">.</span><span class="pl-en">stringify</span><span class="pl-kos">(</span><span class="pl-kos">{</span>
+      <span class="pl-c1">country</span>: <span class="pl-s1">geo</span><span class="pl-kos">?.</span><span class="pl-c1">country</span><span class="pl-kos">,</span>
+      <span class="pl-c1">city</span>: <span class="pl-s1">geo</span><span class="pl-kos">?.</span><span class="pl-c1">city</span><span class="pl-kos">,</span>
+      <span class="pl-c1">latitude</span>: <span class="pl-s1">geo</span><span class="pl-kos">?.</span><span class="pl-c1">latitude</span><span class="pl-kos">,</span>
+      <span class="pl-c1">longitude</span>: <span class="pl-s1">geo</span><span class="pl-kos">?.</span><span class="pl-c1">longitude</span><span class="pl-kos">,</span>
+    <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">,</span>
+    <span class="pl-kos">{</span>
+      <span class="pl-c1">headers</span>: <span class="pl-kos">{</span> <span class="pl-s">'Content-Type'</span>: <span class="pl-s">'application/json'</span> <span class="pl-kos">}</span><span class="pl-kos">,</span>
+    <span class="pl-kos">}</span>
+  <span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span></pre></div>
+<p><strong>独立 Edge Function</strong>：</p>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// edge/hello.ts</span>
+<span class="pl-k">export</span> <span class="pl-k">default</span> <span class="pl-k">function</span> <span class="pl-en">handler</span><span class="pl-kos">(</span><span class="pl-s1">request</span>: <span class="pl-smi">Request</span><span class="pl-kos">)</span>: <span class="pl-smi">Response</span> <span class="pl-kos">{</span>
+  <span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-v">Response</span><span class="pl-kos">(</span>
+    <span class="pl-s">`&lt;html&gt;&lt;body&gt;&lt;h1&gt;Hello from Edge!&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;`</span><span class="pl-kos">,</span>
+    <span class="pl-kos">{</span> <span class="pl-c1">headers</span>: <span class="pl-kos">{</span> <span class="pl-s">'Content-Type'</span>: <span class="pl-s">'text/html'</span> <span class="pl-kos">}</span> <span class="pl-kos">}</span>
+  <span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span></pre></div>
+<h3>6.2 Middleware</h3>
+<p>Middleware 在请求到达页面或 API 之前运行，适合鉴权、重定向、A/B 测试、地理路由等场景。</p>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// middleware.ts（项目根目录）</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">NextResponse</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'next/server'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-k">type</span> <span class="pl-kos">{</span> <span class="pl-v">NextRequest</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'next/server'</span><span class="pl-kos">;</span>
+
+<span class="pl-k">export</span> <span class="pl-k">function</span> <span class="pl-en">middleware</span><span class="pl-kos">(</span><span class="pl-s1">request</span>: <span class="pl-smi">NextRequest</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+  <span class="pl-c">// 1. 地理路由</span>
+  <span class="pl-k">const</span> <span class="pl-s1">country</span> <span class="pl-c1">=</span> <span class="pl-s1">request</span><span class="pl-kos">.</span><span class="pl-c1">geo</span><span class="pl-kos">?.</span><span class="pl-c1">country</span> <span class="pl-c1">||</span> <span class="pl-s">'US'</span><span class="pl-kos">;</span>
+  <span class="pl-k">const</span> <span class="pl-s1">response</span> <span class="pl-c1">=</span> <span class="pl-v">NextResponse</span><span class="pl-kos">.</span><span class="pl-en">next</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+  <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">country</span> <span class="pl-c1">===</span> <span class="pl-s">'CN'</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-k">return</span> <span class="pl-v">NextResponse</span><span class="pl-kos">.</span><span class="pl-en">redirect</span><span class="pl-kos">(</span><span class="pl-k">new</span> <span class="pl-c1">URL</span><span class="pl-kos">(</span><span class="pl-s">'/zh'</span><span class="pl-kos">,</span> <span class="pl-s1">request</span><span class="pl-kos">.</span><span class="pl-c1">url</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span>
+
+  <span class="pl-c">// 2. 鉴权检查</span>
+  <span class="pl-k">const</span> <span class="pl-s1">token</span> <span class="pl-c1">=</span> <span class="pl-s1">request</span><span class="pl-kos">.</span><span class="pl-c1">cookies</span><span class="pl-kos">.</span><span class="pl-en">get</span><span class="pl-kos">(</span><span class="pl-s">'auth-token'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-s1">token</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-s1">request</span><span class="pl-kos">.</span><span class="pl-c1">nextUrl</span><span class="pl-kos">.</span><span class="pl-c1">pathname</span><span class="pl-kos">.</span><span class="pl-en">startsWith</span><span class="pl-kos">(</span><span class="pl-s">'/dashboard'</span><span class="pl-kos">)</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-k">return</span> <span class="pl-v">NextResponse</span><span class="pl-kos">.</span><span class="pl-en">redirect</span><span class="pl-kos">(</span><span class="pl-k">new</span> <span class="pl-c1">URL</span><span class="pl-kos">(</span><span class="pl-s">'/login'</span><span class="pl-kos">,</span> <span class="pl-s1">request</span><span class="pl-kos">.</span><span class="pl-c1">url</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span>
+
+  <span class="pl-c">// 3. 注入自定义 Header</span>
+  <span class="pl-s1">response</span><span class="pl-kos">.</span><span class="pl-c1">headers</span><span class="pl-kos">.</span><span class="pl-en">set</span><span class="pl-kos">(</span><span class="pl-s">'x-request-id'</span><span class="pl-kos">,</span> <span class="pl-s1">crypto</span><span class="pl-kos">.</span><span class="pl-en">randomUUID</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-s1">response</span><span class="pl-kos">.</span><span class="pl-c1">headers</span><span class="pl-kos">.</span><span class="pl-en">set</span><span class="pl-kos">(</span><span class="pl-s">'x-geo-country'</span><span class="pl-kos">,</span> <span class="pl-s1">country</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+  <span class="pl-k">return</span> <span class="pl-s1">response</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span>
+
+<span class="pl-c">// 匹配路径（减少不必要的 Middleware 运行）</span>
+<span class="pl-k">export</span> <span class="pl-k">const</span> <span class="pl-s1">config</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>
+  <span class="pl-c1">matcher</span>: <span class="pl-kos">[</span><span class="pl-s">'/dashboard/:path*'</span><span class="pl-kos">,</span> <span class="pl-s">'/api/protected/:path*'</span><span class="pl-kos">,</span> <span class="pl-s">'/'</span><span class="pl-kos">]</span><span class="pl-kos">,</span>
+<span class="pl-kos">}</span><span class="pl-kos">;</span></pre></div>
+<p><strong>Middleware 与 Edge Functions 的区别</strong>：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>维度</th>
+<th>Middleware</th>
+<th>Edge Functions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>触发时机</td>
+<td>所有匹配请求，页面/ API 之前</td>
+<td>仅对应 API 路由</td>
+</tr>
+<tr>
+<td>用途</td>
+<td>鉴权、重定向、Header、A/B</td>
+<td>独立 API 端点</td>
+</tr>
+<tr>
+<td>响应类型</td>
+<td>可返回 NextResponse / Response</td>
+<td>Response</td>
+</tr>
+<tr>
+<td>性能影响</td>
+<td>影响所有匹配请求的延迟</td>
+<td>仅影响自身路由</td>
+</tr>
+<tr>
+<td>注意事项</td>
+<td><code class="notranslate">matcher</code> 精确匹配，避免全局执行</td>
+<td>可独立部署</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>6.3 地理与设备信息</h3>
+<p>Vercel 在请求对象中注入丰富的上下文信息：</p>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">export</span> <span class="pl-k">const</span> <span class="pl-s1">config</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span> <span class="pl-c1">runtime</span>: <span class="pl-s">'edge'</span> <span class="pl-kos">}</span><span class="pl-kos">;</span>
+
+<span class="pl-k">export</span> <span class="pl-k">default</span> <span class="pl-k">function</span> <span class="pl-en">handler</span><span class="pl-kos">(</span><span class="pl-s1">request</span>: <span class="pl-smi">Request</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+  <span class="pl-k">const</span> <span class="pl-kos">{</span> geo<span class="pl-kos">,</span> ip<span class="pl-kos">,</span> headers <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-s1">request</span> <span class="pl-k">as</span> <span class="pl-smi">any</span><span class="pl-kos">;</span>
+
+  <span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-v">Response</span><span class="pl-kos">(</span><span class="pl-c1">JSON</span><span class="pl-kos">.</span><span class="pl-en">stringify</span><span class="pl-kos">(</span><span class="pl-kos">{</span>
+    <span class="pl-c1">geo</span>: <span class="pl-kos">{</span>
+      <span class="pl-c1">country</span>: <span class="pl-s1">geo</span><span class="pl-kos">?.</span><span class="pl-c1">country</span><span class="pl-kos">,</span>
+      <span class="pl-c1">region</span>: <span class="pl-s1">geo</span><span class="pl-kos">?.</span><span class="pl-c1">region</span><span class="pl-kos">,</span>
+      <span class="pl-c1">city</span>: <span class="pl-s1">geo</span><span class="pl-kos">?.</span><span class="pl-c1">city</span><span class="pl-kos">,</span>
+      <span class="pl-c1">latitude</span>: <span class="pl-s1">geo</span><span class="pl-kos">?.</span><span class="pl-c1">latitude</span><span class="pl-kos">,</span>
+      <span class="pl-c1">longitude</span>: <span class="pl-s1">geo</span><span class="pl-kos">?.</span><span class="pl-c1">longitude</span><span class="pl-kos">,</span>
+    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+    ip<span class="pl-kos">,</span>
+    <span class="pl-c1">userAgent</span>: <span class="pl-s1">headers</span><span class="pl-kos">.</span><span class="pl-en">get</span><span class="pl-kos">(</span><span class="pl-s">'user-agent'</span><span class="pl-kos">)</span><span class="pl-kos">,</span>
+    <span class="pl-c1">acceptLanguage</span>: <span class="pl-s1">headers</span><span class="pl-kos">.</span><span class="pl-en">get</span><span class="pl-kos">(</span><span class="pl-s">'accept-language'</span><span class="pl-kos">)</span><span class="pl-kos">,</span>
+  <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">,</span> <span class="pl-kos">{</span>
+    <span class="pl-c1">headers</span>: <span class="pl-kos">{</span> <span class="pl-s">'Content-Type'</span>: <span class="pl-s">'application/json'</span> <span class="pl-kos">}</span>
+  <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span></pre></div>
+<h3>6.4 Edge Config（低延迟键值存储）</h3>
+<p>Edge Config 是 Vercel 提供的全球分布式键值存储，读取延迟极低（&lt;1ms），适合特性开关、配置下发等场景。</p>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-s1">get</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@vercel/edge-config'</span><span class="pl-kos">;</span>
+
+<span class="pl-k">export</span> <span class="pl-k">const</span> <span class="pl-s1">config</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span> <span class="pl-c1">runtime</span>: <span class="pl-s">'edge'</span> <span class="pl-kos">}</span><span class="pl-kos">;</span>
+
+<span class="pl-k">export</span> <span class="pl-k">default</span> <span class="pl-k">async</span> <span class="pl-k">function</span> <span class="pl-en">handler</span><span class="pl-kos">(</span><span class="pl-s1">request</span>: <span class="pl-smi">Request</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+  <span class="pl-c">// 读取 Edge Config</span>
+  <span class="pl-k">const</span> <span class="pl-s1">featureFlags</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-en">get</span><span class="pl-kos">(</span><span class="pl-s">'feature-flags'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+  <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">featureFlags</span><span class="pl-kos">?.</span><span class="pl-c1">newHomepage</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-k">return</span> <span class="pl-v">NextResponse</span><span class="pl-kos">.</span><span class="pl-en">redirect</span><span class="pl-kos">(</span><span class="pl-k">new</span> <span class="pl-c1">URL</span><span class="pl-kos">(</span><span class="pl-s">'/v2'</span><span class="pl-kos">,</span> <span class="pl-s1">request</span><span class="pl-kos">.</span><span class="pl-c1">url</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span>
+
+  <span class="pl-k">return</span> <span class="pl-v">NextResponse</span><span class="pl-kos">.</span><span class="pl-en">next</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span></pre></div>
+<p>创建 Edge Config：Dashboard → <strong>Storage → Edge Config → Create</strong>，然后通过 <code class="notranslate">EDGE_CONFIG</code> 环境变量关联到项目。</p>
+<h3>6.5 Edge Middleware 性能建议</h3>
+<ol>
+<li><strong>精确 <code class="notranslate">matcher</code></strong>：只匹配需要 Middleware 的路径，避免全局执行。</li>
+<li><strong>避免重计算</strong>：Edge 运行时内存小、执行时间短（30s 上限）。</li>
+<li><strong>善用 <code class="notranslate">x-middleware-next</code></strong>：不做处理时返回 <code class="notranslate">NextResponse.next()</code>。</li>
+<li><strong>缓存结果</strong>：用 Edge Config 或 KV 避免重复外部调用。</li>
+</ol>
+<hr>
+<h2>7. 环境变量与配置管理</h2>
+<h3>7.1 三级环境</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>环境</th>
+<th>用途</th>
+<th>变量来源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Development</strong></td>
+<td>本地开发</td>
+<td><code class="notranslate">.env.local</code> / <code class="notranslate">.env.development</code></td>
+</tr>
+<tr>
+<td><strong>Preview</strong></td>
+<td>Pull Request / 分支预览</td>
+<td>Dashboard 或 <code class="notranslate">vercel env</code></td>
+</tr>
+<tr>
+<td><strong>Production</strong></td>
+<td>正式生产环境</td>
+<td>Dashboard 或 <code class="notranslate">vercel env</code></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>7.2 在 Dashboard 中管理</h3>
+<p><strong>Settings → Environment Variables</strong>：</p>
+<ul>
+<li>选择目标环境（Production / Preview / Development / Preview and Production）。</li>
+<li>支持加密存储（<code class="notranslate">Sensitive</code> 标记后不可回读）。</li>
+<li>变量在构建阶段和运行时均可使用（可指定 <code class="notranslate">Build Time</code> / <code class="notranslate">Runtime</code> / <code class="notranslate">Both</code>）。</li>
+</ul>
+<h3>7.3 用 CLI 管理</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 列出所有环境变量</span>
+vercel env ls
+
+<span class="pl-c"><span class="pl-c">#</span> 添加变量（交互式）</span>
+vercel env add DATABASE_URL
+<span class="pl-c"><span class="pl-c">#</span> 提示选择环境：Production / Preview / Development / All</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 添加指定环境</span>
+vercel env add API_KEY production
+
+<span class="pl-c"><span class="pl-c">#</span> 读取变量值</span>
+vercel env pull .env.local
+
+<span class="pl-c"><span class="pl-c">#</span> 删除变量</span>
+vercel env rm DATABASE_URL production
+
+<span class="pl-c"><span class="pl-c">#</span> 从 .env 文件批量导入</span>
+vercel env pull .env.production --environment=production</pre></div>
+<h3>7.4 本地开发</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 拉取 Preview / Production 环境变量到本地</span>
+vercel env pull .env.local
+
+<span class="pl-c"><span class="pl-c">#</span> 使用本地变量运行开发服务器</span>
+vercel dev</pre></div>
+<p><code class="notranslate">.env.local</code> 不会被提交到 Git（已在 <code class="notranslate">.gitignore</code> 中排除），确保安全。</p>
+<h3>7.5 在代码中使用</h3>
+<p><strong>Serverless Functions（Node.js）</strong>：</p>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">export</span> <span class="pl-k">default</span> <span class="pl-k">function</span> <span class="pl-en">handler</span><span class="pl-kos">(</span><span class="pl-s1">req</span><span class="pl-kos">,</span> <span class="pl-s1">res</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+  <span class="pl-k">const</span> <span class="pl-s1">apiKey</span> <span class="pl-c1">=</span> <span class="pl-s1">process</span><span class="pl-kos">.</span><span class="pl-c1">env</span><span class="pl-kos">.</span><span class="pl-c1">DATABASE_URL</span><span class="pl-kos">;</span>
+  <span class="pl-c">// ...</span>
+<span class="pl-kos">}</span></pre></div>
+<p><strong>Edge Functions</strong>：</p>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">export</span> <span class="pl-k">const</span> <span class="pl-s1">config</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span> <span class="pl-c1">runtime</span>: <span class="pl-s">'edge'</span> <span class="pl-kos">}</span><span class="pl-kos">;</span>
+
+<span class="pl-k">export</span> <span class="pl-k">default</span> <span class="pl-k">function</span> <span class="pl-en">handler</span><span class="pl-kos">(</span><span class="pl-s1">request</span>: <span class="pl-smi">Request</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+  <span class="pl-c">// Edge Runtime 中使用 import.meta.env 或 process.env</span>
+  <span class="pl-k">const</span> <span class="pl-s1">apiKey</span> <span class="pl-c1">=</span> <span class="pl-s1">process</span><span class="pl-kos">.</span><span class="pl-c1">env</span><span class="pl-kos">.</span><span class="pl-c1">API_KEY</span><span class="pl-kos">;</span>
+  <span class="pl-c">// ...</span>
+<span class="pl-kos">}</span></pre></div>
+<p><strong>前端（构建时注入）</strong>：</p>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// 仅暴露 NEXT_PUBLIC_ / VITE_ 前缀的变量到客户端</span>
+<span class="pl-k">const</span> <span class="pl-s1">apiUrl</span> <span class="pl-c1">=</span> <span class="pl-s1">process</span><span class="pl-kos">.</span><span class="pl-c1">env</span><span class="pl-kos">.</span><span class="pl-c1">NEXT_PUBLIC_API_URL</span><span class="pl-kos">;</span> <span class="pl-c">// Next.js</span>
+<span class="pl-k">const</span> <span class="pl-s1">apiUrl</span> <span class="pl-c1">=</span> <span class="pl-k">import</span><span class="pl-kos">.</span>meta<span class="pl-kos">.</span><span class="pl-c1">env</span><span class="pl-kos">.</span><span class="pl-c1">VITE_API_URL</span><span class="pl-kos">;</span>    <span class="pl-c">// Vite</span></pre></div>
+<blockquote>
+<p><strong>安全红线</strong>：任何非 <code class="notranslate">NEXT_PUBLIC_</code> / <code class="notranslate">VITE_</code> 前缀的变量不会暴露到客户端。<strong>绝不要在前端代码中使用无前缀的变量名来存储密钥。</strong></p>
+</blockquote>
+<h3>7.6 环境变量最佳实践</h3>
+<ol>
+<li><strong>最小权限</strong>：开发用的数据库连接串不要注入生产环境。</li>
+<li><strong>敏感标记</strong>：密钥、Token 等标记为 <code class="notranslate">Sensitive</code>，防止误泄漏。</li>
+<li><strong>前后端分离</strong>：前端用 <code class="notranslate">NEXT_PUBLIC_</code> / <code class="notranslate">VITE_</code>，后端用无前缀变量。</li>
+<li><strong>本地隔离</strong>：开发用 <code class="notranslate">.env.local</code>，不与生产共享。</li>
+<li><strong>审计与轮换</strong>：定期审查环境变量清单，轮换长期密钥。</li>
+</ol>
+<hr>
+<h2>8. 域名、DNS 与证书</h2>
+<h3>8.1 添加自定义域名</h3>
+<ol>
+<li><strong>Dashboard → Project → Settings → Domains → Add</strong>。</li>
+<li>输入域名（如 <code class="notranslate">app.example.com</code>）。</li>
+<li>选择域名用途：
+<ul>
+<li><strong>Production</strong>：指向生产部署。</li>
+<li><strong>Preview</strong>：预览部署的通配域名（<code class="notranslate">*.preview.example.com</code>）。</li>
+</ul>
+</li>
+<li>Vercel 提供 DNS 配置指引（通常为 CNAME 或 A 记录）。</li>
+</ol>
+<h3>8.2 DNS 配置</h3>
+<p><strong>推荐方式（CNAME）</strong>：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>记录类型</th>
+<th>名称</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">CNAME</code></td>
+<td><code class="notranslate">app</code></td>
+<td><code class="notranslate">cname.vercel-dns.com</code></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><strong>子域名方式（A 记录）</strong>：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>记录类型</th>
+<th>名称</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">A</code></td>
+<td><code class="notranslate">app</code></td>
+<td><code class="notranslate">76.76.21.21</code></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><strong>根域名（Apex）方式</strong>：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>记录类型</th>
+<th>名称</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">A</code></td>
+<td><code class="notranslate">@</code></td>
+<td><code class="notranslate">76.76.21.21</code></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<blockquote>
+<p>根域名无法使用 CNAME（大多数 DNS 服务商不支持），需使用 A 记录。Vercel 提供的 IP <code class="notranslate">76.76.21.21</code> 为 Anycast 地址，自动路由到最近节点。</p>
+</blockquote>
+<h3>8.3 SSL 证书</h3>
+<p>Vercel <strong>自动为所有绑定的域名签发并续期 Let's Encrypt 证书</strong>，无需手动操作。</p>
+<p>高级需求：</p>
+<ul>
+<li><strong>Wildcard 证书</strong>：需通过 DNS 验证（CNAME TXT 记录），通常在 Enterprise 套餐中支持。</li>
+<li><strong>自定义证书</strong>：Enterprise 客户可上传自己的证书。</li>
+</ul>
+<h3>8.4 域名重定向与重写</h3>
+<div class="highlight highlight-source-json"><pre class="notranslate">{
+  <span class="pl-ent">"redirects"</span>: [
+    {
+      <span class="pl-ent">"source"</span>: <span class="pl-s"><span class="pl-pds">"</span>/old-page<span class="pl-pds">"</span></span>,
+      <span class="pl-ent">"destination"</span>: <span class="pl-s"><span class="pl-pds">"</span>/new-page<span class="pl-pds">"</span></span>,
+      <span class="pl-ent">"permanent"</span>: <span class="pl-c1">true</span>
+    },
+    {
+      <span class="pl-ent">"source"</span>: <span class="pl-s"><span class="pl-pds">"</span>/blog/:slug<span class="pl-pds">"</span></span>,
+      <span class="pl-ent">"destination"</span>: <span class="pl-s"><span class="pl-pds">"</span>/articles/:slug<span class="pl-pds">"</span></span>,
+      <span class="pl-ent">"permanent"</span>: <span class="pl-c1">false</span>
+    }
+  ],
+  <span class="pl-ent">"rewrites"</span>: [
+    {
+      <span class="pl-ent">"source"</span>: <span class="pl-s"><span class="pl-pds">"</span>/api/:path*<span class="pl-pds">"</span></span>,
+      <span class="pl-ent">"destination"</span>: <span class="pl-s"><span class="pl-pds">"</span>/api/handler.ts<span class="pl-pds">"</span></span>
+    }
+  ],
+  <span class="pl-ent">"headers"</span>: [
+    {
+      <span class="pl-ent">"source"</span>: <span class="pl-s"><span class="pl-pds">"</span>/(.*)<span class="pl-pds">"</span></span>,
+      <span class="pl-ent">"headers"</span>: [
+        {
+          <span class="pl-ent">"key"</span>: <span class="pl-s"><span class="pl-pds">"</span>X-Content-Type-Options<span class="pl-pds">"</span></span>,
+          <span class="pl-ent">"value"</span>: <span class="pl-s"><span class="pl-pds">"</span>nosniff<span class="pl-pds">"</span></span>
+        },
+        {
+          <span class="pl-ent">"key"</span>: <span class="pl-s"><span class="pl-pds">"</span>Strict-Transport-Security<span class="pl-pds">"</span></span>,
+          <span class="pl-ent">"value"</span>: <span class="pl-s"><span class="pl-pds">"</span>max-age=63072000; includeSubDomains<span class="pl-pds">"</span></span>
+        }
+      ]
+    }
+  ]
+}</pre></div>
+<h3>8.5 多域名与子域名路由</h3>
+<div class="highlight highlight-source-json"><pre class="notranslate">{
+  <span class="pl-ent">"rewrites"</span>: [
+    {
+      <span class="pl-ent">"source"</span>: <span class="pl-s"><span class="pl-pds">"</span>/:path*<span class="pl-pds">"</span></span>,
+      <span class="pl-ent">"has"</span>: [
+        {
+          <span class="pl-ent">"type"</span>: <span class="pl-s"><span class="pl-pds">"</span>host<span class="pl-pds">"</span></span>,
+          <span class="pl-ent">"value"</span>: <span class="pl-s"><span class="pl-pds">"</span>blog.example.com<span class="pl-pds">"</span></span>
+        }
+      ],
+      <span class="pl-ent">"destination"</span>: <span class="pl-s"><span class="pl-pds">"</span>/blog/:path*<span class="pl-pds">"</span></span>
+    }
+  ]
+}</pre></div>
+<hr>
+<h2>9. 预览部署与团队协作</h2>
+<h3>9.1 预览部署机制</h3>
+<p>每次 <code class="notranslate">git push</code> 到非主分支、或创建 Pull Request 时，Vercel 自动创建一个<strong>唯一 URL</strong> 的预览部署：</p>
+<pre class="notranslate"><code class="notranslate">https://my-app-git-feature-branch-username.vercel.app
+</code></pre>
+<p>预览部署包含：</p>
+<ul>
+<li>完整的构建产物。</li>
+<li>独立的 Preview 环境变量。</li>
+<li>部署日志与构建详情。</li>
+<li><strong>Deployment Preview Comment</strong>：自动在 PR 中留言，附预览链接、截图、性能评分。</li>
+</ul>
+<h3>9.2 预览 URL 分享</h3>
+<ul>
+<li>每个预览部署的 URL 是<strong>永久可访问</strong>的（除非项目删除）。</li>
+<li>可配置<strong>密码保护</strong>：Settings → Security → Password Protection。</li>
+<li>可配置 <strong>Vercel Authentication</strong>：仅团队成员可访问预览。</li>
+</ul>
+<h3>9.3 Instant Rollback</h3>
+<p>一键将生产流量切换到任意历史部署：</p>
+<ol>
+<li>Dashboard → <strong>Deployments</strong>。</li>
+<li>找到目标历史部署。</li>
+<li>点击 <strong>Promote to Production</strong>（或 <strong>Instant Rollback</strong>）。</li>
+</ol>
+<p><strong>无需重新构建</strong>——历史部署的产物已存储，切换只是指针移动，通常在数秒内生效。</p>
+<h3>9.4 团队协作</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>功能</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Comments</strong></td>
+<td>在预览部署页面标注 UI 问题</td>
+</tr>
+<tr>
+<td><strong>Deployment Protection</strong></td>
+<td>密码保护 / Vercel Auth / IP 白名单</td>
+</tr>
+<tr>
+<td><strong>Project Roles</strong></td>
+<td>Owner / Member / Viewer</td>
+</tr>
+<tr>
+<td><strong>Team Analytics</strong></td>
+<td>团队级别的流量与性能概览</td>
+</tr>
+<tr>
+<td><strong>Concurrent Builds</strong></td>
+<td>Pro 套餐支持多项目同时构建</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>9.5 Git 集成增强</h3>
+<p>在 <strong>Settings → Git</strong> 中配置：</p>
+<ul>
+<li><strong>Deploy Hooks</strong>：外部系统触发部署的 Webhook URL。</li>
+<li><strong>Ignored Build Step</strong>：仅当指定路径变更时才触发构建（monorepo 必备）。</li>
+<li><strong>Connected Repositories</strong>：一个项目可关联多个仓库。</li>
+<li><strong>Commit Comments</strong>：部署状态自动标注到 commit。</li>
+</ul>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> Deploy Hook 示例：外部 CMS 更新后触发重新构建</span>
+curl -X POST <span class="pl-s"><span class="pl-pds">"</span>https://api.vercel.com/v1/integrations/deploy/HOOK_ID<span class="pl-pds">"</span></span></pre></div>
+<hr>
+<h2>10. 性能优化与缓存策略</h2>
+<h3>10.1 CDN 与缓存</h3>
+<p>Vercel 的静态资源自动通过全球 CDN 分发，默认缓存策略：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>资源类型</th>
+<th>缓存行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>带 hash 的静态文件（JS/CSS/图片）</td>
+<td><code class="notranslate">Cache-Control: public, max-age=31536000, immutable</code></td>
+</tr>
+<tr>
+<td>HTML 文件</td>
+<td>不缓存或短缓存（确保及时更新）</td>
+</tr>
+<tr>
+<td>Serverless Function 响应</td>
+<td>默认不缓存（可通过 <code class="notranslate">Cache-Control</code> 自定义）</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p>自定义缓存头：</p>
+<div class="highlight highlight-source-json"><pre class="notranslate">{
+  <span class="pl-ent">"headers"</span>: [
+    {
+      <span class="pl-ent">"source"</span>: <span class="pl-s"><span class="pl-pds">"</span>/static/(.*)<span class="pl-pds">"</span></span>,
+      <span class="pl-ent">"headers"</span>: [
+        {
+          <span class="pl-ent">"key"</span>: <span class="pl-s"><span class="pl-pds">"</span>Cache-Control<span class="pl-pds">"</span></span>,
+          <span class="pl-ent">"value"</span>: <span class="pl-s"><span class="pl-pds">"</span>public, max-age=31536000, immutable<span class="pl-pds">"</span></span>
+        }
+      ]
+    },
+    {
+      <span class="pl-ent">"source"</span>: <span class="pl-s"><span class="pl-pds">"</span>/api/feed<span class="pl-pds">"</span></span>,
+      <span class="pl-ent">"headers"</span>: [
+        {
+          <span class="pl-ent">"key"</span>: <span class="pl-s"><span class="pl-pds">"</span>Cache-Control<span class="pl-pds">"</span></span>,
+          <span class="pl-ent">"value"</span>: <span class="pl-s"><span class="pl-pds">"</span>s-maxage=60, stale-while-revalidate=300<span class="pl-pds">"</span></span>
+        }
+      ]
+    }
+  ]
+}</pre></div>
+<h3>10.2 ISR（增量静态再生）</h3>
+<p>Next.js 的 ISR 在 Vercel 上是<strong>零配置可用</strong>的：</p>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// app/blog/[slug]/page.tsx</span>
+<span class="pl-k">export</span> <span class="pl-k">async</span> <span class="pl-k">function</span> <span class="pl-en">generateStaticParams</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+  <span class="pl-k">const</span> <span class="pl-s1">posts</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-en">fetchPosts</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-k">return</span> <span class="pl-s1">posts</span><span class="pl-kos">.</span><span class="pl-en">map</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-s1">post</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">(</span><span class="pl-kos">{</span> <span class="pl-c1">slug</span>: <span class="pl-s1">post</span><span class="pl-kos">.</span><span class="pl-c1">slug</span> <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span>
+
+<span class="pl-k">export</span> <span class="pl-k">default</span> <span class="pl-k">async</span> <span class="pl-k">function</span> <span class="pl-v">BlogPost</span><span class="pl-kos">(</span><span class="pl-kos">{</span> params <span class="pl-kos">}</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+  <span class="pl-k">const</span> <span class="pl-s1">post</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-en">fetchPost</span><span class="pl-kos">(</span><span class="pl-s1">params</span><span class="pl-kos">.</span><span class="pl-c1">slug</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-c">// ...</span>
+<span class="pl-kos">}</span>
+
+<span class="pl-c">// 指定再生成间隔</span>
+<span class="pl-k">export</span> <span class="pl-k">const</span> <span class="pl-s1">revalidate</span> <span class="pl-c1">=</span> <span class="pl-c1">60</span><span class="pl-kos">;</span> <span class="pl-c">// 60 秒后重新生成</span></pre></div>
+<p>在 Vercel 上，ISR 使用 <strong>Tag-based Revalidation</strong>，可以精确失效特定页面：</p>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-s1">revalidateTag</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'next/cache'</span><span class="pl-kos">;</span>
+
+<span class="pl-k">export</span> <span class="pl-k">async</span> <span class="pl-k">function</span> <span class="pl-c1">POST</span><span class="pl-kos">(</span><span class="pl-s1">request</span>: <span class="pl-smi">Request</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+  <span class="pl-k">const</span> <span class="pl-kos">{</span> slug <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-s1">request</span><span class="pl-kos">.</span><span class="pl-en">json</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-en">revalidateTag</span><span class="pl-kos">(</span><span class="pl-s">`post-<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">slug</span><span class="pl-kos">}</span></span>`</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-k">return</span> <span class="pl-v">Response</span><span class="pl-kos">.</span><span class="pl-en">json</span><span class="pl-kos">(</span><span class="pl-kos">{</span> <span class="pl-c1">revalidated</span>: <span class="pl-c1">true</span> <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span></pre></div>
+<h3>10.3 Image Optimization</h3>
+<p>Vercel 内建图片优化，自动进行格式转换（WebP / AVIF）、尺寸裁剪、质量压缩：</p>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// Next.js</span>
+<span class="pl-k">import</span> <span class="pl-v">Image</span> <span class="pl-k">from</span> <span class="pl-s">'next/image'</span><span class="pl-kos">;</span>
+
+<span class="pl-k">export</span> <span class="pl-k">default</span> <span class="pl-k">function</span> <span class="pl-v">Avatar</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+  <span class="pl-k">return</span> <span class="pl-kos">(</span>
+    <span class="pl-c1">&lt;</span><span class="pl-smi">Image</span>
+      <span class="pl-s1">src</span><span class="pl-c1">=</span><span class="pl-s">"/avatar.jpg"</span>
+      <span class="pl-s1">alt</span><span class="pl-c1">=</span><span class="pl-s">"Avatar"</span>
+      <span class="pl-s1">width</span><span class="pl-c1">=</span><span class="pl-kos">{</span><span class="pl-c1">200</span><span class="pl-kos">}</span>
+      <span class="pl-smi">height</span><span class="pl-c1">=</span><span class="pl-kos">{</span><span class="pl-c1">200</span><span class="pl-kos">}</span>
+      <span class="pl-s1">priority</span>
+      <span class="pl-smi">placeholder</span><span class="pl-c1">=</span><span class="pl-s">"blur"</span>
+    <span class="pl-c1">/</span><span class="pl-c1">&gt;</span>
+  <span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span></pre></div>
+<p>配置图片域名白名单（<code class="notranslate">next.config.js</code>）：</p>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-smi">module</span><span class="pl-kos">.</span><span class="pl-c1">exports</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>
+  <span class="pl-c1">images</span>: <span class="pl-kos">{</span>
+    <span class="pl-c1">remotePatterns</span>: <span class="pl-kos">[</span>
+      <span class="pl-kos">{</span> <span class="pl-c1">protocol</span>: <span class="pl-s">'https'</span><span class="pl-kos">,</span> <span class="pl-c1">hostname</span>: <span class="pl-s">'cdn.example.com'</span> <span class="pl-kos">}</span><span class="pl-kos">,</span>
+      <span class="pl-kos">{</span> <span class="pl-c1">protocol</span>: <span class="pl-s">'https'</span><span class="pl-kos">,</span> <span class="pl-c1">hostname</span>: <span class="pl-s">'images.unsplash.com'</span> <span class="pl-kos">}</span><span class="pl-kos">,</span>
+    <span class="pl-kos">]</span><span class="pl-kos">,</span>
+  <span class="pl-kos">}</span><span class="pl-kos">,</span>
+<span class="pl-kos">}</span><span class="pl-kos">;</span></pre></div>
+<h3>10.4 字体优化</h3>
+<p>Next.js 的 <code class="notranslate">next/font</code> 在 Vercel 上自动内联字体文件，消除 FOIT/FOUT：</p>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">Inter</span><span class="pl-kos">,</span> <span class="pl-v">JetBrains_Mono</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'next/font/google'</span><span class="pl-kos">;</span>
+
+<span class="pl-k">const</span> <span class="pl-s1">inter</span> <span class="pl-c1">=</span> <span class="pl-v">Inter</span><span class="pl-kos">(</span><span class="pl-kos">{</span> <span class="pl-c1">subsets</span>: <span class="pl-kos">[</span><span class="pl-s">'latin'</span><span class="pl-kos">]</span><span class="pl-kos">,</span> <span class="pl-c1">display</span>: <span class="pl-s">'swap'</span> <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-k">const</span> <span class="pl-s1">mono</span> <span class="pl-c1">=</span> <span class="pl-v">JetBrains_Mono</span><span class="pl-kos">(</span><span class="pl-kos">{</span> <span class="pl-c1">subsets</span>: <span class="pl-kos">[</span><span class="pl-s">'latin'</span><span class="pl-kos">]</span><span class="pl-kos">,</span> <span class="pl-c1">display</span>: <span class="pl-s">'swap'</span> <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+<span class="pl-k">export</span> <span class="pl-k">default</span> <span class="pl-k">function</span> <span class="pl-v">RootLayout</span><span class="pl-kos">(</span><span class="pl-kos">{</span> children <span class="pl-kos">}</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+  <span class="pl-k">return</span> <span class="pl-kos">(</span>
+    <span class="pl-c1">&lt;</span><span class="pl-smi">html</span> <span class="pl-s1">lang</span><span class="pl-c1">=</span><span class="pl-s">"zh-CN"</span> <span class="pl-s1">className</span><span class="pl-c1">=</span><span class="pl-kos">{</span><span class="pl-s1">inter</span><span class="pl-kos">.</span><span class="pl-smi">className</span><span class="pl-kos">}</span><span class="pl-c1">&gt;</span>
+      <span class="pl-c1">&lt;</span><span class="pl-smi">body</span><span class="pl-c1">&gt;</span>
+        <span class="pl-kos">{</span>children<span class="pl-kos">}</span>
+      <span class="pl-c1">&lt;</span><span class="pl-pds"><span class="pl-c1">/</span><span class="pl-s">b</span><span class="pl-s">o</span><span class="pl-s">d</span><span class="pl-s">y</span><span class="pl-s">&gt;</span></span>
+<span class="pl-pds">    <span class="pl-c1">&lt;</span><span class="pl-c1">/</span>html</span><span class="pl-c1">&gt;</span>
+  <span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span></pre></div>
+<h3>10.5 构建优化</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> Turborepo Remote Caching（monorepo）</span>
+turbo login
+turbo link
+
+<span class="pl-c"><span class="pl-c">#</span> Next.js Turbopack（开发模式）</span>
+npx next dev --turbo
+
+<span class="pl-c"><span class="pl-c">#</span> 固定 Node.js 版本（避免构建不一致）</span>
+<span class="pl-c"><span class="pl-c">#</span> Settings → Node.js Version → 20.x</span></pre></div>
+<p>在 <code class="notranslate">vercel.json</code> 中启用构建缓存：</p>
+<div class="highlight highlight-source-json"><pre class="notranslate">{
+  <span class="pl-ent">"buildCommand"</span>: <span class="pl-s"><span class="pl-pds">"</span>turbo run build<span class="pl-pds">"</span></span>,
+  <span class="pl-ent">"installCommand"</span>: <span class="pl-s"><span class="pl-pds">"</span>pnpm install --frozen-lockfile<span class="pl-pds">"</span></span>
+}</pre></div>
+<h3>10.6 性能清单</h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 静态资源带 hash 且使用 <code class="notranslate">immutable</code> 缓存</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> HTML 页面使用 <code class="notranslate">stale-while-revalidate</code></li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> ISR 精确设置 <code class="notranslate">revalidate</code> 间隔</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 图片使用 <code class="notranslate">next/image</code> 或 <code class="notranslate">&lt;picture&gt;</code> + WebP/AVIF</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 字体内联，<code class="notranslate">display: swap</code></li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> JS Bundle 通过 <code class="notranslate">dynamic import</code> 代码分割</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 函数响应开启 <code class="notranslate">Cache-Control</code></li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> Edge Config 下发配置，避免重复调用数据库</li>
+</ul>
+<hr>
+<h2>11. 监控、分析与可观测性</h2>
+<h3>11.1 Vercel Analytics</h3>
+<p><strong>Dashboard → Analytics</strong>：</p>
+<ul>
+<li><strong>Web Analytics</strong>：页面浏览量、唯一访客、流量来源、地理分布。</li>
+<li><strong>Speed Insights</strong>：Core Web Vitals（LCP、FID/INP、CLS）真实用户数据。</li>
+</ul>
+<p>安装（Next.js）：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">npm install @vercel/analytics</pre></div>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// app/layout.tsx</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">Analytics</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@vercel/analytics/react'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">SpeedInsights</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@vercel/speed-insights/next'</span><span class="pl-kos">;</span>
+
+<span class="pl-k">export</span> <span class="pl-k">default</span> <span class="pl-k">function</span> <span class="pl-v">RootLayout</span><span class="pl-kos">(</span><span class="pl-kos">{</span> children <span class="pl-kos">}</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+  <span class="pl-k">return</span> <span class="pl-kos">(</span>
+    <span class="pl-c1">&lt;</span><span class="pl-smi">html</span><span class="pl-c1">&gt;</span>
+      <span class="pl-c1">&lt;</span><span class="pl-smi">body</span><span class="pl-c1">&gt;</span>
+        <span class="pl-kos">{</span>children<span class="pl-kos">}</span>
+        <span class="pl-c1">&lt;</span><span class="pl-v">Analytics</span> <span class="pl-c1">/</span><span class="pl-c1">&gt;</span>
+        <span class="pl-c1">&lt;</span><span class="pl-smi">SpeedInsights</span> <span class="pl-c1">/</span><span class="pl-c1">&gt;</span>
+      <span class="pl-c1">&lt;</span><span class="pl-c1">/</span><span class="pl-smi">body</span><span class="pl-c1">&gt;</span>
+    <span class="pl-c1">&lt;</span><span class="pl-c1">/</span><span class="pl-smi">html</span><span class="pl-c1">&gt;</span>
+  <span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span></pre></div>
+<h3>11.2 日志查看</h3>
+<p><strong>Dashboard → Deployments → [选择部署] → Functions</strong>：</p>
+<ul>
+<li>实时函数日志（stdout / stderr）。</li>
+<li>按函数、按请求过滤。</li>
+<li>查看响应时间、内存使用。</li>
+</ul>
+<p>CLI 查看日志：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 查看最新生产部署日志</span>
+vercel logs
+
+<span class="pl-c"><span class="pl-c">#</span> 查看指定部署日志</span>
+vercel logs --url https://my-app.vercel.app
+
+<span class="pl-c"><span class="pl-c">#</span> 实时跟踪日志</span>
+vercel logs --follow
+
+<span class="pl-c"><span class="pl-c">#</span> 按函数过滤</span>
+vercel logs --query <span class="pl-s"><span class="pl-pds">"</span>path=/api/users<span class="pl-pds">"</span></span></pre></div>
+<h3>11.3 第三方监控集成</h3>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// Sentry 示例</span>
+<span class="pl-k">import</span> <span class="pl-c1">*</span> <span class="pl-k">as</span> <span class="pl-v">Sentry</span> <span class="pl-k">from</span> <span class="pl-s">'@sentry/nextjs'</span><span class="pl-kos">;</span>
+
+<span class="pl-v">Sentry</span><span class="pl-kos">.</span><span class="pl-en">init</span><span class="pl-kos">(</span><span class="pl-kos">{</span>
+  <span class="pl-c1">dsn</span>: <span class="pl-s1">process</span><span class="pl-kos">.</span><span class="pl-c1">env</span><span class="pl-kos">.</span><span class="pl-c1">SENTRY_DSN</span><span class="pl-kos">,</span>
+  <span class="pl-c1">tracesSampleRate</span>: <span class="pl-c1">0.1</span><span class="pl-kos">,</span>
+<span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+<span class="pl-k">export</span> <span class="pl-k">default</span> <span class="pl-k">function</span> <span class="pl-en">handleError</span><span class="pl-kos">(</span><span class="pl-s1">error</span>: <span class="pl-smi">Error</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+  <span class="pl-v">Sentry</span><span class="pl-kos">.</span><span class="pl-en">captureException</span><span class="pl-kos">(</span><span class="pl-s1">error</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span></pre></div>
+<p>常用集成：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>工具</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sentry</td>
+<td>错误追踪与性能监控</td>
+</tr>
+<tr>
+<td>Datadog / New Relic</td>
+<td>APM 与基础设施监控</td>
+</tr>
+<tr>
+<td>LogRocket</td>
+<td>前端会话回放</td>
+</tr>
+<tr>
+<td>PostHog</td>
+<td>产品分析与特性开关</td>
+</tr>
+<tr>
+<td>Axiom</td>
+<td>日志聚合与查询</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>11.4 健康检查</h3>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// api/health.ts</span>
+<span class="pl-k">export</span> <span class="pl-k">default</span> <span class="pl-k">async</span> <span class="pl-k">function</span> <span class="pl-en">handler</span><span class="pl-kos">(</span><span class="pl-s1">req</span><span class="pl-kos">,</span> <span class="pl-s1">res</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+  <span class="pl-k">const</span> <span class="pl-s1">checks</span>: <span class="pl-smi">Record</span><span class="pl-c1">&lt;</span><span class="pl-smi">string</span><span class="pl-kos">,</span> <span class="pl-smi">string</span><span class="pl-c1">&gt;</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span><span class="pl-kos">}</span><span class="pl-kos">;</span>
+
+  <span class="pl-c">// 数据库连接</span>
+  <span class="pl-k">try</span> <span class="pl-kos">{</span>
+    <span class="pl-k">await</span> <span class="pl-s1">db</span><span class="pl-kos">.</span><span class="pl-en">query</span><span class="pl-kos">(</span><span class="pl-s">'SELECT 1'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-s1">checks</span><span class="pl-kos">.</span><span class="pl-c1">database</span> <span class="pl-c1">=</span> <span class="pl-s">'healthy'</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span> <span class="pl-k">catch</span> <span class="pl-kos">{</span>
+    <span class="pl-s1">checks</span><span class="pl-kos">.</span><span class="pl-c1">database</span> <span class="pl-c1">=</span> <span class="pl-s">'unhealthy'</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span>
+
+  <span class="pl-c">// 外部依赖</span>
+  <span class="pl-k">try</span> <span class="pl-kos">{</span>
+    <span class="pl-k">await</span> <span class="pl-en">fetch</span><span class="pl-kos">(</span><span class="pl-s">'https://api.external.com/ping'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-s1">checks</span><span class="pl-kos">.</span><span class="pl-c1">externalApi</span> <span class="pl-c1">=</span> <span class="pl-s">'healthy'</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span> <span class="pl-k">catch</span> <span class="pl-kos">{</span>
+    <span class="pl-s1">checks</span><span class="pl-kos">.</span><span class="pl-c1">externalApi</span> <span class="pl-c1">=</span> <span class="pl-s">'unhealthy'</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span>
+
+  <span class="pl-k">const</span> <span class="pl-s1">healthy</span> <span class="pl-c1">=</span> <span class="pl-v">Object</span><span class="pl-kos">.</span><span class="pl-en">values</span><span class="pl-kos">(</span><span class="pl-s1">checks</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">every</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-s1">v</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">v</span> <span class="pl-c1">===</span> <span class="pl-s">'healthy'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+  <span class="pl-s1">res</span><span class="pl-kos">.</span><span class="pl-en">status</span><span class="pl-kos">(</span><span class="pl-s1">healthy</span> ? <span class="pl-c1">200</span> : <span class="pl-c1">503</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">json</span><span class="pl-kos">(</span><span class="pl-kos">{</span>
+    <span class="pl-c1">status</span>: <span class="pl-s1">healthy</span> ? <span class="pl-s">'healthy'</span> : <span class="pl-s">'degraded'</span><span class="pl-kos">,</span>
+    checks<span class="pl-kos">,</span>
+    <span class="pl-c1">timestamp</span>: <span class="pl-k">new</span> <span class="pl-v">Date</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">toISOString</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">,</span>
+  <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span></pre></div>
+<hr>
+<h2>12. 安全最佳实践</h2>
+<h3>12.1 安全头</h3>
+<div class="highlight highlight-source-json"><pre class="notranslate">{
+  <span class="pl-ent">"headers"</span>: [
+    {
+      <span class="pl-ent">"source"</span>: <span class="pl-s"><span class="pl-pds">"</span>/(.*)<span class="pl-pds">"</span></span>,
+      <span class="pl-ent">"headers"</span>: [
+        {
+          <span class="pl-ent">"key"</span>: <span class="pl-s"><span class="pl-pds">"</span>X-Content-Type-Options<span class="pl-pds">"</span></span>,
+          <span class="pl-ent">"value"</span>: <span class="pl-s"><span class="pl-pds">"</span>nosniff<span class="pl-pds">"</span></span>
+        },
+        {
+          <span class="pl-ent">"key"</span>: <span class="pl-s"><span class="pl-pds">"</span>X-Frame-Options<span class="pl-pds">"</span></span>,
+          <span class="pl-ent">"value"</span>: <span class="pl-s"><span class="pl-pds">"</span>DENY<span class="pl-pds">"</span></span>
+        },
+        {
+          <span class="pl-ent">"key"</span>: <span class="pl-s"><span class="pl-pds">"</span>X-XSS-Protection<span class="pl-pds">"</span></span>,
+          <span class="pl-ent">"value"</span>: <span class="pl-s"><span class="pl-pds">"</span>1; mode=block<span class="pl-pds">"</span></span>
+        },
+        {
+          <span class="pl-ent">"key"</span>: <span class="pl-s"><span class="pl-pds">"</span>Referrer-Policy<span class="pl-pds">"</span></span>,
+          <span class="pl-ent">"value"</span>: <span class="pl-s"><span class="pl-pds">"</span>strict-origin-when-cross-origin<span class="pl-pds">"</span></span>
+        },
+        {
+          <span class="pl-ent">"key"</span>: <span class="pl-s"><span class="pl-pds">"</span>Permissions-Policy<span class="pl-pds">"</span></span>,
+          <span class="pl-ent">"value"</span>: <span class="pl-s"><span class="pl-pds">"</span>camera=(), microphone=(), geolocation=()<span class="pl-pds">"</span></span>
+        },
+        {
+          <span class="pl-ent">"key"</span>: <span class="pl-s"><span class="pl-pds">"</span>Content-Security-Policy<span class="pl-pds">"</span></span>,
+          <span class="pl-ent">"value"</span>: <span class="pl-s"><span class="pl-pds">"</span>default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://api.example.com<span class="pl-pds">"</span></span>
+        },
+        {
+          <span class="pl-ent">"key"</span>: <span class="pl-s"><span class="pl-pds">"</span>Strict-Transport-Security<span class="pl-pds">"</span></span>,
+          <span class="pl-ent">"value"</span>: <span class="pl-s"><span class="pl-pds">"</span>max-age=63072000; includeSubDomains; preload<span class="pl-pds">"</span></span>
+        }
+      ]
+    }
+  ]
+}</pre></div>
+<h3>12.2 CORS 配置</h3>
+<p>在 API 函数中手动设置：</p>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">export</span> <span class="pl-k">default</span> <span class="pl-k">function</span> <span class="pl-en">handler</span><span class="pl-kos">(</span><span class="pl-s1">req</span><span class="pl-kos">,</span> <span class="pl-s1">res</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+  <span class="pl-c">// 允许的来源</span>
+  <span class="pl-k">const</span> <span class="pl-s1">allowedOrigins</span> <span class="pl-c1">=</span> <span class="pl-kos">[</span><span class="pl-s">'https://app.example.com'</span><span class="pl-kos">,</span> <span class="pl-s">'https://admin.example.com'</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+  <span class="pl-k">const</span> <span class="pl-s1">origin</span> <span class="pl-c1">=</span> <span class="pl-s1">req</span><span class="pl-kos">.</span><span class="pl-c1">headers</span><span class="pl-kos">.</span><span class="pl-c1">origin</span><span class="pl-kos">;</span>
+
+  <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">origin</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-s1">allowedOrigins</span><span class="pl-kos">.</span><span class="pl-en">includes</span><span class="pl-kos">(</span><span class="pl-s1">origin</span><span class="pl-kos">)</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-s1">res</span><span class="pl-kos">.</span><span class="pl-en">setHeader</span><span class="pl-kos">(</span><span class="pl-s">'Access-Control-Allow-Origin'</span><span class="pl-kos">,</span> <span class="pl-s1">origin</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-s1">res</span><span class="pl-kos">.</span><span class="pl-en">setHeader</span><span class="pl-kos">(</span><span class="pl-s">'Access-Control-Allow-Methods'</span><span class="pl-kos">,</span> <span class="pl-s">'GET, POST, PUT, DELETE, OPTIONS'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-s1">res</span><span class="pl-kos">.</span><span class="pl-en">setHeader</span><span class="pl-kos">(</span><span class="pl-s">'Access-Control-Allow-Headers'</span><span class="pl-kos">,</span> <span class="pl-s">'Content-Type, Authorization'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-s1">res</span><span class="pl-kos">.</span><span class="pl-en">setHeader</span><span class="pl-kos">(</span><span class="pl-s">'Access-Control-Allow-Credentials'</span><span class="pl-kos">,</span> <span class="pl-s">'true'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-s1">res</span><span class="pl-kos">.</span><span class="pl-en">setHeader</span><span class="pl-kos">(</span><span class="pl-s">'Vary'</span><span class="pl-kos">,</span> <span class="pl-s">'Origin'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span>
+
+  <span class="pl-c">// 预检请求</span>
+  <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">req</span><span class="pl-kos">.</span><span class="pl-c1">method</span> <span class="pl-c1">===</span> <span class="pl-s">'OPTIONS'</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-k">return</span> <span class="pl-s1">res</span><span class="pl-kos">.</span><span class="pl-en">status</span><span class="pl-kos">(</span><span class="pl-c1">204</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">end</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span>
+
+  <span class="pl-c">// 业务逻辑</span>
+  <span class="pl-s1">res</span><span class="pl-kos">.</span><span class="pl-en">status</span><span class="pl-kos">(</span><span class="pl-c1">200</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">json</span><span class="pl-kos">(</span><span class="pl-kos">{</span> <span class="pl-c1">message</span>: <span class="pl-s">'OK'</span> <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span></pre></div>
+<h3>12.3 身份验证</h3>
+<p><strong>推荐方案</strong>（按场景选择）：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>方案</th>
+<th>适用</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Vercel Authentication</strong></td>
+<td>内部工具、预览环境</td>
+<td>零代码集成，仅限团队成员</td>
+</tr>
+<tr>
+<td><strong>Auth.js (NextAuth)</strong></td>
+<td>全栈应用</td>
+<td>开源、多提供商、灵活</td>
+</tr>
+<tr>
+<td><strong>Clerk</strong></td>
+<td>快速集成</td>
+<td>托管式用户管理</td>
+</tr>
+<tr>
+<td><strong>Supabase Auth</strong></td>
+<td>Supabase 生态</td>
+<td>Postgres RLS + Auth 一体</td>
+</tr>
+<tr>
+<td><strong>自定义 JWT</strong></td>
+<td>高度定制</td>
+<td>需自行实现刷新、吊销</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// middleware.ts - 鉴权守卫</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">NextResponse</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'next/server'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-k">type</span> <span class="pl-kos">{</span> <span class="pl-v">NextRequest</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'next/server'</span><span class="pl-kos">;</span>
+
+<span class="pl-k">export</span> <span class="pl-k">function</span> <span class="pl-en">middleware</span><span class="pl-kos">(</span><span class="pl-s1">request</span>: <span class="pl-smi">NextRequest</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+  <span class="pl-k">const</span> <span class="pl-s1">token</span> <span class="pl-c1">=</span> <span class="pl-s1">request</span><span class="pl-kos">.</span><span class="pl-c1">cookies</span><span class="pl-kos">.</span><span class="pl-en">get</span><span class="pl-kos">(</span><span class="pl-s">'session'</span><span class="pl-kos">)</span><span class="pl-kos">?.</span><span class="pl-c1">value</span><span class="pl-kos">;</span>
+
+  <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-s1">token</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-s1">request</span><span class="pl-kos">.</span><span class="pl-c1">nextUrl</span><span class="pl-kos">.</span><span class="pl-c1">pathname</span><span class="pl-kos">.</span><span class="pl-en">startsWith</span><span class="pl-kos">(</span><span class="pl-s">'/dashboard'</span><span class="pl-kos">)</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-k">return</span> <span class="pl-v">NextResponse</span><span class="pl-kos">.</span><span class="pl-en">redirect</span><span class="pl-kos">(</span><span class="pl-k">new</span> <span class="pl-c1">URL</span><span class="pl-kos">(</span><span class="pl-s">'/login'</span><span class="pl-kos">,</span> <span class="pl-s1">request</span><span class="pl-kos">.</span><span class="pl-c1">url</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span>
+
+  <span class="pl-k">return</span> <span class="pl-v">NextResponse</span><span class="pl-kos">.</span><span class="pl-en">next</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span>
+
+<span class="pl-k">export</span> <span class="pl-k">const</span> <span class="pl-s1">config</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>
+  <span class="pl-c1">matcher</span>: <span class="pl-kos">[</span><span class="pl-s">'/dashboard/:path*'</span><span class="pl-kos">]</span><span class="pl-kos">,</span>
+<span class="pl-kos">}</span><span class="pl-kos">;</span></pre></div>
+<h3>12.4 Rate Limiting</h3>
+<p>Vercel 本身不提供内建限流（截至编写时），需在应用层或第三方实现：</p>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-c">// api/limited.ts - 简易内存限流（示例，生产建议用 Redis）</span>
+<span class="pl-k">const</span> <span class="pl-s1">rateLimit</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">Map</span><span class="pl-c1">&lt;</span><span class="pl-smi">string</span><span class="pl-kos">,</span> <span class="pl-kos">{</span> <span class="pl-c1">count</span>: <span class="pl-smi">number</span><span class="pl-kos">;</span> <span class="pl-c1">resetTime</span>: <span class="pl-smi">number</span> <span class="pl-kos">}</span><span class="pl-c1">&gt;</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+<span class="pl-k">export</span> <span class="pl-k">default</span> <span class="pl-k">function</span> <span class="pl-en">handler</span><span class="pl-kos">(</span><span class="pl-s1">req</span><span class="pl-kos">,</span> <span class="pl-s1">res</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+  <span class="pl-k">const</span> <span class="pl-s1">ip</span> <span class="pl-c1">=</span> <span class="pl-s1">req</span><span class="pl-kos">.</span><span class="pl-c1">headers</span><span class="pl-kos">[</span><span class="pl-s">'x-forwarded-for'</span><span class="pl-kos">]</span> <span class="pl-c1">||</span> <span class="pl-s1">req</span><span class="pl-kos">.</span><span class="pl-c1">socket</span><span class="pl-kos">.</span><span class="pl-c1">remoteAddress</span><span class="pl-kos">;</span>
+  <span class="pl-k">const</span> <span class="pl-s1">now</span> <span class="pl-c1">=</span> <span class="pl-v">Date</span><span class="pl-kos">.</span><span class="pl-en">now</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-k">const</span> <span class="pl-s1">windowMs</span> <span class="pl-c1">=</span> <span class="pl-c1">60</span> <span class="pl-c1">*</span> <span class="pl-c1">1000</span><span class="pl-kos">;</span> <span class="pl-c">// 1 分钟</span>
+  <span class="pl-k">const</span> <span class="pl-s1">maxRequests</span> <span class="pl-c1">=</span> <span class="pl-c1">60</span><span class="pl-kos">;</span>
+
+  <span class="pl-k">const</span> <span class="pl-s1">record</span> <span class="pl-c1">=</span> <span class="pl-s1">rateLimit</span><span class="pl-kos">.</span><span class="pl-en">get</span><span class="pl-kos">(</span><span class="pl-s1">ip</span> <span class="pl-k">as</span> <span class="pl-smi">string</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">record</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-s1">now</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">record</span><span class="pl-kos">.</span><span class="pl-c1">resetTime</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">record</span><span class="pl-kos">.</span><span class="pl-c1">count</span> <span class="pl-c1">&gt;=</span> <span class="pl-s1">maxRequests</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+      <span class="pl-k">return</span> <span class="pl-s1">res</span><span class="pl-kos">.</span><span class="pl-en">status</span><span class="pl-kos">(</span><span class="pl-c1">429</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">json</span><span class="pl-kos">(</span><span class="pl-kos">{</span> <span class="pl-c1">error</span>: <span class="pl-s">'Too Many Requests'</span> <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+    <span class="pl-s1">record</span><span class="pl-kos">.</span><span class="pl-c1">count</span><span class="pl-c1">++</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span> <span class="pl-k">else</span> <span class="pl-kos">{</span>
+    <span class="pl-s1">rateLimit</span><span class="pl-kos">.</span><span class="pl-en">set</span><span class="pl-kos">(</span><span class="pl-s1">ip</span> <span class="pl-k">as</span> <span class="pl-smi">string</span><span class="pl-kos">,</span> <span class="pl-kos">{</span> <span class="pl-c1">count</span>: <span class="pl-c1">1</span><span class="pl-kos">,</span> <span class="pl-c1">resetTime</span>: <span class="pl-s1">now</span> <span class="pl-c1">+</span> <span class="pl-s1">windowMs</span> <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span>
+
+  <span class="pl-s1">res</span><span class="pl-kos">.</span><span class="pl-en">status</span><span class="pl-kos">(</span><span class="pl-c1">200</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">json</span><span class="pl-kos">(</span><span class="pl-kos">{</span> <span class="pl-c1">message</span>: <span class="pl-s">'OK'</span> <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span></pre></div>
+<p>生产环境推荐使用 Upstash Redis 或 Vercel KV 实现分布式限流。</p>
+<h3>12.5 密钥保护</h3>
+<ol>
+<li>密钥存放于 <strong>Environment Variables</strong>，标记为 <code class="notranslate">Sensitive</code>。</li>
+<li>不要在代码中硬编码密钥。</li>
+<li>不要在客户端代码中暴露后端密钥。</li>
+<li>定期轮换 API Key 与 Token。</li>
+<li>使用 Vercel 的 <strong>Secret Scanning</strong> 自动检测泄露（部分套餐支持）。</li>
+</ol>
+<h3>12.6 DDoS 与 Bot 防护</h3>
+<p>Vercel 内建基础 DDoS 防护。高级需求：</p>
+<ul>
+<li><strong>Vercel WAF</strong>（Enterprise）：自定义规则、IP 黑名单。</li>
+<li><strong>Cloudflare 代理</strong>：在 Vercel 前加 Cloudflare，双重防护。</li>
+<li><strong>Bot Detection</strong>：<code class="notranslate">vercel.json</code> 中配置 IP 允许/拒绝：</li>
+</ul>
+<div class="highlight highlight-source-json"><pre class="notranslate">{
+  <span class="pl-ent">"crons"</span>: [],
+  <span class="pl-ent">"firewall"</span>: {
+    <span class="pl-ent">"ipRules"</span>: [
+      { <span class="pl-ent">"ip"</span>: <span class="pl-s"><span class="pl-pds">"</span>192.168.1.0/24<span class="pl-pds">"</span></span>, <span class="pl-ent">"action"</span>: <span class="pl-s"><span class="pl-pds">"</span>allow<span class="pl-pds">"</span></span> },
+      { <span class="pl-ent">"ip"</span>: <span class="pl-s"><span class="pl-pds">"</span>10.0.0.1<span class="pl-pds">"</span></span>, <span class="pl-ent">"action"</span>: <span class="pl-s"><span class="pl-pds">"</span>deny<span class="pl-pds">"</span></span> }
+    ]
+  }
+}</pre></div>
+<blockquote>
+<p>注：<code class="notranslate">firewall</code> 配置项在不同套餐中可用性不同，请以官方文档为准。</p>
+</blockquote>
+<hr>
+<h2>13. CI/CD 与自动化</h2>
+<h3>13.1 Vercel 内建的 CI/CD</h3>
+<p>Vercel 的 Git 集成<strong>本身就是 CI/CD</strong>：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>触发</th>
+<th>动作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">git push</code> 到主分支</td>
+<td>自动构建 + 部署到生产</td>
+</tr>
+<tr>
+<td><code class="notranslate">git push</code> 到非主分支</td>
+<td>自动构建 + 部署到预览</td>
+</tr>
+<tr>
+<td>创建 Pull Request</td>
+<td>自动构建 + 部署到预览 + PR 评论</td>
+</tr>
+<tr>
+<td>合并 Pull Request</td>
+<td>自动部署到生产</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>13.2 自定义构建流程</h3>
+<p>在 <code class="notranslate">vercel.json</code> 中定义构建命令：</p>
+<div class="highlight highlight-source-json"><pre class="notranslate">{
+  <span class="pl-ent">"buildCommand"</span>: <span class="pl-s"><span class="pl-pds">"</span>npm run lint &amp;&amp; npm run test:ci &amp;&amp; npm run build<span class="pl-pds">"</span></span>,
+  <span class="pl-ent">"installCommand"</span>: <span class="pl-s"><span class="pl-pds">"</span>npm ci<span class="pl-pds">"</span></span>,
+  <span class="pl-ent">"outputDirectory"</span>: <span class="pl-s"><span class="pl-pds">"</span>dist<span class="pl-pds">"</span></span>
+}</pre></div>
+<p>在 <code class="notranslate">package.json</code> 中定义完整脚本：</p>
+<div class="highlight highlight-source-json"><pre class="notranslate">{
+  <span class="pl-ent">"scripts"</span>: {
+    <span class="pl-ent">"lint"</span>: <span class="pl-s"><span class="pl-pds">"</span>eslint . --max-warnings 0<span class="pl-pds">"</span></span>,
+    <span class="pl-ent">"test:ci"</span>: <span class="pl-s"><span class="pl-pds">"</span>vitest run --coverage<span class="pl-pds">"</span></span>,
+    <span class="pl-ent">"build"</span>: <span class="pl-s"><span class="pl-pds">"</span>next build<span class="pl-pds">"</span></span>,
+    <span class="pl-ent">"type-check"</span>: <span class="pl-s"><span class="pl-pds">"</span>tsc --noEmit<span class="pl-pds">"</span></span>
+  }
+}</pre></div>
+<h3>13.3 使用 GitHub Actions 增强</h3>
+<p>对于需要额外步骤（如 E2E 测试、安全扫描）的场景：</p>
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> .github/workflows/ci.yml</span>
+<span class="pl-ent">name</span>: <span class="pl-s">CI</span>
+
+<span class="pl-ent">on</span>:
+  <span class="pl-ent">pull_request</span>:
+    <span class="pl-ent">branches</span>: <span class="pl-s">[main]</span>
+
+<span class="pl-ent">jobs</span>:
+  <span class="pl-ent">test</span>:
+    <span class="pl-ent">runs-on</span>: <span class="pl-s">ubuntu-latest</span>
+    <span class="pl-ent">steps</span>:
+      - <span class="pl-ent">uses</span>: <span class="pl-s">actions/checkout@v4</span>
+      - <span class="pl-ent">uses</span>: <span class="pl-s">actions/setup-node@v4</span>
+        <span class="pl-ent">with</span>:
+          <span class="pl-ent">node-version</span>: <span class="pl-c1">20</span>
+          <span class="pl-ent">cache</span>: <span class="pl-s">npm</span>
+      - <span class="pl-ent">run</span>: <span class="pl-s">npm ci</span>
+      - <span class="pl-ent">run</span>: <span class="pl-s">npm run lint</span>
+      - <span class="pl-ent">run</span>: <span class="pl-s">npm run type-check</span>
+      - <span class="pl-ent">run</span>: <span class="pl-s">npm run test:ci</span>
+
+  <span class="pl-ent">e2e</span>:
+    <span class="pl-ent">needs</span>: <span class="pl-s">test</span>
+    <span class="pl-ent">runs-on</span>: <span class="pl-s">ubuntu-latest</span>
+    <span class="pl-ent">steps</span>:
+      - <span class="pl-ent">uses</span>: <span class="pl-s">actions/checkout@v4</span>
+      - <span class="pl-ent">uses</span>: <span class="pl-s">actions/setup-node@v4</span>
+        <span class="pl-ent">with</span>:
+          <span class="pl-ent">node-version</span>: <span class="pl-c1">20</span>
+          <span class="pl-ent">cache</span>: <span class="pl-s">npm</span>
+      - <span class="pl-ent">run</span>: <span class="pl-s">npm ci</span>
+      - <span class="pl-ent">name</span>: <span class="pl-s">Get Preview URL</span>
+        <span class="pl-ent">id</span>: <span class="pl-s">preview</span>
+        <span class="pl-ent">run</span>: <span class="pl-s">|</span>
+<span class="pl-s">          echo "url=https://my-app-git-${GITHUB_HEAD_REF}-username.vercel.app" &gt;&gt; $GITHUB_OUTPUT</span>
+<span class="pl-s"></span>      - <span class="pl-ent">run</span>: <span class="pl-s">npx playwright test</span>
+        <span class="pl-ent">env</span>:
+          <span class="pl-ent">BASE_URL</span>: <span class="pl-s">${{ steps.preview.outputs.url }}</span></pre></div>
+<h3>13.4 Deploy Hooks</h3>
+<p>外部系统触发部署：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 在 Dashboard → Settings → Deploy Hooks 创建</span>
+<span class="pl-c"><span class="pl-c">#</span> 然后使用 curl 或代码触发</span>
+curl -X POST <span class="pl-s"><span class="pl-pds">"</span>https://api.vercel.com/v1/integrations/deploy/HOOK_ID<span class="pl-pds">"</span></span></pre></div>
+<h3>13.5 Monorepo 构建优化</h3>
+<p>使用 Turborepo Remote Caching 加速 CI：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> turbo.json</span>
+{
+  <span class="pl-s"><span class="pl-pds">"</span>remoteCache<span class="pl-pds">"</span></span>: {
+    <span class="pl-s"><span class="pl-pds">"</span>signature<span class="pl-pds">"</span></span>: <span class="pl-c1">true</span>
+  }
+}</pre></div>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 在 CI 中设置</span>
+<span class="pl-k">export</span> TURBO_TOKEN=<span class="pl-s"><span class="pl-pds">"</span>your-token<span class="pl-pds">"</span></span>
+<span class="pl-k">export</span> TURBO_TEAM=<span class="pl-s"><span class="pl-pds">"</span>your-team<span class="pl-pds">"</span></span>
+turbo run build --remote-only</pre></div>
+<h3>13.6 预览 URL 获取（脚本化）</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 使用 Vercel CLI 获取部署 URL</span>
+vercel --prod --yes
+<span class="pl-c"><span class="pl-c">#</span> 输出: https://my-app-abc123.vercel.app</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 使用 API 获取</span>
+curl -H <span class="pl-s"><span class="pl-pds">"</span>Authorization: Bearer <span class="pl-smi">$VERCEL_TOKEN</span><span class="pl-pds">"</span></span> \
+  <span class="pl-s"><span class="pl-pds">"</span>https://api.vercel.com/v6/deployments?projectId=<span class="pl-smi">$PROJECT_ID</span>&amp;target=production&amp;limit=1<span class="pl-pds">"</span></span>
+<span class="pl-c"><span class="pl-c">#</span> 响应中的 deployments[0].url 即为最新部署 URL</span></pre></div>
+<hr>
+<h2>14. 疑难排错手册</h2>
+<h3>14.1 构建失败</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>症状</th>
+<th>原因</th>
+<th>解决</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">Module not found</code></td>
+<td>依赖缺失 / 路径错误</td>
+<td>检查 <code class="notranslate">package.json</code> 与 <code class="notranslate">tsconfig.json</code> 路径</td>
+</tr>
+<tr>
+<td><code class="notranslate">Out of memory</code></td>
+<td>构建内存不足</td>
+<td>拆分构建、减少 bundle、升级套餐</td>
+</tr>
+<tr>
+<td><code class="notranslate">Build timeout</code></td>
+<td>构建超时</td>
+<td>优化构建速度、使用缓存、拆分 monorepo</td>
+</tr>
+<tr>
+<td><code class="notranslate">Syntax error</code></td>
+<td>Node.js 版本不兼容</td>
+<td>在设置中指定 Node.js 版本</td>
+</tr>
+<tr>
+<td><code class="notranslate">Permission denied</code></td>
+<td>安装脚本权限</td>
+<td>检查 <code class="notranslate">installCommand</code> 与依赖版本</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>14.2 函数超时</h3>
+<pre class="notranslate"><code class="notranslate">504 Gateway Timeout
+</code></pre>
+<ul>
+<li>检查 <code class="notranslate">maxDuration</code> 配置（<code class="notranslate">vercel.json</code> → <code class="notranslate">functions</code>）。</li>
+<li>检查是否进行了同步阻塞操作（如大文件读取）。</li>
+<li>检查外部 API 响应时间。</li>
+<li>升级套餐以获得更长执行时长。</li>
+</ul>
+<h3>14.3 预览部署显示旧代码</h3>
+<ol>
+<li>检查分支名是否正确推送到远程。</li>
+<li>检查 Ignored Build Step 是否误跳过了构建。</li>
+<li>清除浏览器缓存（静态资源可能被缓存）。</li>
+<li>在 Dashboard 中检查部署列表，确认是否有新部署生成。</li>
+</ol>
+<h3>14.4 环境变量未生效</h3>
+<ol>
+<li>确认变量添加到了正确的环境（Production / Preview / Development）。</li>
+<li>修改环境变量后<strong>需要重新部署</strong>才生效（仅运行时变量可在下次函数调用时使用）。</li>
+<li>前端变量必须有 <code class="notranslate">NEXT_PUBLIC_</code> / <code class="notranslate">VITE_</code> 前缀。</li>
+<li>检查变量名拼写（大小写敏感）。</li>
+</ol>
+<h3>14.5 自定义域名不生效</h3>
+<ol>
+<li>等待 DNS 传播（最长 48 小时，通常 5–30 分钟）。</li>
+<li>检查 CNAME / A 记录值是否正确。</li>
+<li>检查域名是否已验证（Dashboard → Domains）。</li>
+<li>根域名必须用 A 记录（<code class="notranslate">76.76.21.21</code>），不能用 CNAME。</li>
+</ol>
+<h3>14.6 Middleware 意外触发</h3>
+<ul>
+<li>确保 <code class="notranslate">config.matcher</code> 精确匹配目标路径。</li>
+<li>使用正则排除静态资源：<code class="notranslate">matcher: ['/((?!_next/static|_next/image|favicon.ico).*)']</code>。</li>
+</ul>
+<h3>14.7 图片优化报错</h3>
+<pre class="notranslate"><code class="notranslate">Error: The requested resource isn't a valid image
+</code></pre>
+<ul>
+<li>确认远程图片域名已加入 <code class="notranslate">next.config.js</code> 的 <code class="notranslate">remotePatterns</code>。</li>
+<li>确认图片 URL 可访问（非 404）。</li>
+<li>确认图片格式受支持（JPEG、PNG、WebP、AVIF、GIF）。</li>
+</ul>
+<h3>14.8 常见 HTTP 错误速查</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>错误码</th>
+<th>含义</th>
+<th>常见原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">404</code></td>
+<td>页面不存在</td>
+<td>路由配置错误、文件缺失</td>
+</tr>
+<tr>
+<td><code class="notranslate">500</code></td>
+<td>服务器内部错误</td>
+<td>函数异常、环境变量缺失</td>
+</tr>
+<tr>
+<td><code class="notranslate">502</code></td>
+<td>网关错误</td>
+<td>函数崩溃、冷启动超时</td>
+</tr>
+<tr>
+<td><code class="notranslate">504</code></td>
+<td>网关超时</td>
+<td>函数执行超时</td>
+</tr>
+<tr>
+<td><code class="notranslate">429</code></td>
+<td>请求过多</td>
+<td>超出配额、限流触发</td>
+</tr>
+<tr>
+<td><code class="notranslate">DEPLOYMENT_NOT_FOUND</code></td>
+<td>部署不存在</td>
+<td>URL 错误、部署已删除</td>
+</tr>
+<tr>
+<td><code class="notranslate">FUNCTION_INVOCATION_TIMEOUT</code></td>
+<td>函数超时</td>
+<td><code class="notranslate">maxDuration</code> 不足</td>
+</tr>
+<tr>
+<td><code class="notranslate">FUNCTION_INVOCATION_FAILED</code></td>
+<td>函数失败</td>
+<td>代码异常、依赖缺失</td>
+</tr>
+<tr>
+<td><code class="notranslate">DEPLOYMENT_DISABLED</code></td>
+<td>部署已禁用</td>
+<td>手动禁用、账户问题</td>
+</tr>
+<tr>
+<td><code class="notranslate">EDGE_FUNCTION_INVOCATION_TIMEOUT</code></td>
+<td>Edge 函数超时</td>
+<td>Edge 执行超 30s</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<h2>15. 工程化最佳实践</h2>
+<h3>15.1 项目初始化检查单</h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> <code class="notranslate">README.md</code>：一句话定位 + 5 分钟上手</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> <code class="notranslate">LICENSE</code>：明确许可</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> <code class="notranslate">.gitignore</code>：排除 <code class="notranslate">.env.local</code>、<code class="notranslate">.vercel/</code>、<code class="notranslate">node_modules/</code></li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> <code class="notranslate">vercel.json</code>：配置构建命令、缓存头、安全头</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> CI 流水线：至少包含 lint + type-check + test</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 环境变量：三级隔离，敏感值标记 Sensitive</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 自定义域名 + SSL：已配置并验证</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 监控：Analytics + Speed Insights 已接入</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 安全头：CSP、HSTS、X-Frame-Options 等已配置</li>
+</ul>
+<h3>15.2 部署流程最佳实践</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>环节</th>
+<th>做法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>提交</td>
+<td>小步提交、规范信息（Conventional Commits）</td>
+</tr>
+<tr>
+<td>构建</td>
+<td>锁定 Node.js 版本、使用 <code class="notranslate">npm ci</code></td>
+</tr>
+<tr>
+<td>测试</td>
+<td>lint + type-check + unit test + e2e test</td>
+</tr>
+<tr>
+<td>预览</td>
+<td>每个 PR 自动预览，人工验证后合并</td>
+</tr>
+<tr>
+<td>生产</td>
+<td>合并主分支自动部署</td>
+</tr>
+<tr>
+<td>回滚</td>
+<td>使用 Instant Rollback，不重新构建</td>
+</tr>
+<tr>
+<td>监控</td>
+<td>Speed Insights 持续跟踪 Core Web Vitals</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>15.3 安全检查单</h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 安全头（CSP、HSTS、X-Frame-Options 等）已配置</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> CORS 只允许必要来源</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 密钥存储于 Environment Variables，未硬编码</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> API 端点有鉴权（Middleware 或函数内检查）</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> Rate Limiting 已实现</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 依赖定期更新（Dependabot / Renovate）</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 预览环境启用密码保护（内部项目）</li>
+</ul>
+<h3>15.4 性能检查单</h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 静态资源带 hash 且 <code class="notranslate">immutable</code> 缓存</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 图片使用 <code class="notranslate">next/image</code> 或优化后格式</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 字体内联，<code class="notranslate">display: swap</code></li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> ISR 合理设置 <code class="notranslate">revalidate</code></li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> JS Bundle &lt; 200KB（gzip 后）</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> Core Web Vitals 均达标（LCP &lt; 2.5s、INP &lt; 200ms、CLS &lt; 0.1）</li>
+</ul>
+<h3>15.5 成本优化</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>策略</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>启用 ISR</td>
+<td>减少 Serverless Function 调用</td>
+</tr>
+<tr>
+<td>合理设置缓存</td>
+<td>减少源站请求</td>
+</tr>
+<tr>
+<td>优化构建时间</td>
+<td>使用 Turborepo Cache、固定依赖版本</td>
+</tr>
+<tr>
+<td>控制函数内存</td>
+<td>按需分配，不要默认 3GB</td>
+</tr>
+<tr>
+<td>清理旧部署</td>
+<td>定期删除不需要的预览部署</td>
+</tr>
+<tr>
+<td>监控用量</td>
+<td>Dashboard → Usage 查看实时消耗</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>15.6 学习路径</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>阶段</th>
+<th>目标</th>
+<th>重点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>入门（1–2 天）</td>
+<td>部署一个静态站点</td>
+<td>CLI、Git 集成、自定义域名</td>
+</tr>
+<tr>
+<td>进阶（1–2 周）</td>
+<td>构建全栈应用</td>
+<td>Serverless Functions、环境变量、预览部署</td>
+</tr>
+<tr>
+<td>熟练（1–2 月）</td>
+<td>优化与监控</td>
+<td>Edge Functions、Middleware、ISR、Analytics</td>
+</tr>
+<tr>
+<td>精通（3 月+）</td>
+<td>平台治理</td>
+<td>安全策略、CI/CD 自动化、多项目架构、成本优化</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<h2>附录 A. CLI 命令速查表</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">vercel login</code></td>
+<td>登录</td>
+</tr>
+<tr>
+<td><code class="notranslate">vercel whoami</code></td>
+<td>查看当前用户</td>
+</tr>
+<tr>
+<td><code class="notranslate">vercel link</code></td>
+<td>关联本地项目与远程项目</td>
+</tr>
+<tr>
+<td><code class="notranslate">vercel</code></td>
+<td>创建预览部署</td>
+</tr>
+<tr>
+<td><code class="notranslate">vercel --prod</code></td>
+<td>创建生产部署</td>
+</tr>
+<tr>
+<td><code class="notranslate">vercel --yes</code></td>
+<td>跳过交互式确认</td>
+</tr>
+<tr>
+<td><code class="notranslate">vercel --cwd &lt;dir&gt;</code></td>
+<td>指定工作目录</td>
+</tr>
+<tr>
+<td><code class="notranslate">vercel --scope &lt;team&gt;</code></td>
+<td>指定团队</td>
+</tr>
+<tr>
+<td><code class="notranslate">vercel --token &lt;t&gt;</code></td>
+<td>使用指定 Token</td>
+</tr>
+<tr>
+<td><code class="notranslate">vercel dev</code></td>
+<td>本地开发服务器</td>
+</tr>
+<tr>
+<td><code class="notranslate">vercel build</code></td>
+<td>本地构建（不部署）</td>
+</tr>
+<tr>
+<td><code class="notranslate">vercel logs</code></td>
+<td>查看函数日志</td>
+</tr>
+<tr>
+<td><code class="notranslate">vercel logs --follow</code></td>
+<td>实时跟踪日志</td>
+</tr>
+<tr>
+<td><code class="notranslate">vercel env ls</code></td>
+<td>列出环境变量</td>
+</tr>
+<tr>
+<td><code class="notranslate">vercel env add &lt;name&gt;</code></td>
+<td>添加环境变量</td>
+</tr>
+<tr>
+<td><code class="notranslate">vercel env rm &lt;name&gt; &lt;env&gt;</code></td>
+<td>删除环境变量</td>
+</tr>
+<tr>
+<td><code class="notranslate">vercel env pull &lt;file&gt;</code></td>
+<td>拉取环境变量到本地文件</td>
+</tr>
+<tr>
+<td><code class="notranslate">vercel domains add &lt;domain&gt;</code></td>
+<td>添加域名</td>
+</tr>
+<tr>
+<td><code class="notranslate">vercel domains ls</code></td>
+<td>列出域名</td>
+</tr>
+<tr>
+<td><code class="notranslate">vercel projects ls</code></td>
+<td>列出项目</td>
+</tr>
+<tr>
+<td><code class="notranslate">vercel inspect &lt;url&gt;</code></td>
+<td>查看部署详情</td>
+</tr>
+<tr>
+<td><code class="notranslate">vercel promote &lt;url&gt;</code></td>
+<td>提升预览部署到生产</td>
+</tr>
+<tr>
+<td><code class="notranslate">vercel rollback [url]</code></td>
+<td>回滚到指定部署</td>
+</tr>
+<tr>
+<td><code class="notranslate">vercel remove &lt;project&gt;</code></td>
+<td>移除项目</td>
+</tr>
+<tr>
+<td><code class="notranslate">vercel init</code></td>
+<td>从模板创建项目</td>
+</tr>
+<tr>
+<td><code class="notranslate">vercel --version</code></td>
+<td>查看 CLI 版本</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<h2>附录 B. vercel.json 配置速查</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>配置项</th>
+<th>作用</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">buildCommand</code></td>
+<td>自定义构建命令</td>
+<td><code class="notranslate">"npm run build"</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">installCommand</code></td>
+<td>自定义安装命令</td>
+<td><code class="notranslate">"npm ci"</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">outputDirectory</code></td>
+<td>构建输出目录</td>
+<td><code class="notranslate">"dist"</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">framework</code></td>
+<td>手动指定框架</td>
+<td><code class="notranslate">"nextjs"</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">devCommand</code></td>
+<td>本地开发命令</td>
+<td><code class="notranslate">"npm run dev"</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">cleanUrls</code></td>
+<td>移除 URL 中的 <code class="notranslate">.html</code></td>
+<td><code class="notranslate">true</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">trailingSlash</code></td>
+<td>是否保留尾部斜杠</td>
+<td><code class="notranslate">false</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">rewrites</code></td>
+<td>URL 重写规则</td>
+<td><code class="notranslate">[{"source":"/api/:path*","destination":"/api/handler.ts"}]</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">redirects</code></td>
+<td>URL 重定向规则</td>
+<td><code class="notranslate">[{"source":"/old","destination":"/new","permanent":true}]</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">headers</code></td>
+<td>自定义 HTTP 头</td>
+<td>见安全头配置</td>
+</tr>
+<tr>
+<td><code class="notranslate">functions</code></td>
+<td>函数级配置</td>
+<td><code class="notranslate">{"api/h.ts":{"memory":1024,"maxDuration":30}}</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">crons</code></td>
+<td>定时任务</td>
+<td><code class="notranslate">[{"path":"/api/cron","schedule":"0 * * * *"}]</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">regions</code></td>
+<td>默认部署区域</td>
+<td><code class="notranslate">["iad1","hnd1"]</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">env</code></td>
+<td>构建时变量</td>
+<td><code class="notranslate">{"MY_VAR":"value"}</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">build.env</code></td>
+<td>构建专用变量</td>
+<td><code class="notranslate">{"NODE_ENV":"production"}</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">dataCache</code></td>
+<td>数据缓存配置</td>
+<td>见 ISR 相关文档</td>
+</tr>
+<tr>
+<td><code class="notranslate">firewall</code></td>
+<td>IP 允许/拒绝</td>
+<td>见安全章节</td>
+</tr>
+<tr>
+<td><code class="notranslate">images</code></td>
+<td>图片优化配置</td>
+<td><code class="notranslate">{"sizes":[640,1024],"formats":["image/webp"]}</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">preventBlocking</code></td>
+<td>阻止第三方脚本阻塞渲染</td>
+<td><code class="notranslate">true</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">skipGitHubConnectDuringLink</code></td>
+<td>CLI 跳过 GitHub 连接</td>
+<td><code class="notranslate">true</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">installCommand</code></td>
+<td>自定义安装命令</td>
+<td><code class="notranslate">"pnpm install --frozen-lockfile"</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">outputDirectory</code></td>
+<td>输出目录</td>
+<td><code class="notranslate">"dist"</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">cleanUrls</code></td>
+<td>清理 URL 后缀</td>
+<td><code class="notranslate">true</code></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<h2>附录 C. 术语表</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>术语</th>
+<th>释义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Deployment</strong></td>
+<td>项目的一次构建与发布快照，不可变</td>
+</tr>
+<tr>
+<td><strong>Preview Deployment</strong></td>
+<td>非主分支 / PR 触发的预览环境</td>
+</tr>
+<tr>
+<td><strong>Production</strong></td>
+<td>生产环境的当前活跃部署</td>
+</tr>
+<tr>
+<td><strong>Instant Rollback</strong></td>
+<td>将流量切换到历史部署，无需重新构建</td>
+</tr>
+<tr>
+<td><strong>Serverless Function</strong></td>
+<td>按需执行的服务端函数（Node.js / Python / Go / Ruby）</td>
+</tr>
+<tr>
+<td><strong>Edge Function</strong></td>
+<td>运行在边缘节点的轻量函数（V8 运行时）</td>
+</tr>
+<tr>
+<td><strong>Middleware</strong></td>
+<td>在请求到达页面/API 之前运行的拦截器</td>
+</tr>
+<tr>
+<td><strong>Edge Config</strong></td>
+<td>超低延迟的全球分布式键值存储</td>
+</tr>
+<tr>
+<td><strong>ISR</strong></td>
+<td>增量静态再生（Incremental Static Regeneration）</td>
+</tr>
+<tr>
+<td><strong>CDN</strong></td>
+<td>内容分发网络（Content Delivery Network）</td>
+</tr>
+<tr>
+<td><strong>Build Cache</strong></td>
+<td>构建过程中可复用的缓存产物</td>
+</tr>
+<tr>
+<td><strong>Deploy Hook</strong></td>
+<td>外部触发部署的 Webhook URL</td>
+</tr>
+<tr>
+<td><strong>Ignored Build Step</strong></td>
+<td>控制是否跳过构建的脚本</td>
+</tr>
+<tr>
+<td><strong>Environment Variable</strong></td>
+<td>按环境注入的配置变量</td>
+</tr>
+<tr>
+<td><strong>Project</strong></td>
+<td>一个 Git 仓库对应的 Vercel 项目</td>
+</tr>
+<tr>
+<td><strong>Team</strong></td>
+<td>团队工作空间</td>
+</tr>
+<tr>
+<td><strong>Speed Insights</strong></td>
+<td>真实用户 Core Web Vitals 监控</td>
+</tr>
+<tr>
+<td><strong>Blob Storage</strong></td>
+<td>Vercel 对象存储</td>
+</tr>
+<tr>
+<td><strong>KV Storage</strong></td>
+<td>Vercel 键值存储</td>
+</tr>
+<tr>
+<td><strong>Vercel Postgres</strong></td>
+<td>Vercel 托管 PostgreSQL</td>
+</tr>
+<tr>
+<td><strong>Vercel Redis</strong></td>
+<td>Vercel 托管 Redis</td>
+</tr>
+<tr>
+<td><strong>Turbopack</strong></td>
+<td>Rust 编写的快速构建工具</td>
+</tr>
+<tr>
+<td><strong>Streaming SSR</strong></td>
+<td>React 18 流式服务端渲染</td>
+</tr>
+<tr>
+<td><strong>Zero Config</strong></td>
+<td>零配置部署理念</td>
+</tr>
+<tr>
+<td><strong>Cron Job</strong></td>
+<td>定时任务</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<h2>附录 D. 延伸学习资源</h2>
+<ol>
+<li><strong>Vercel 官方文档</strong> — <a href="https://vercel.com/docs" rel="nofollow">vercel.com/docs</a><br>
+平台功能、CLI 参考、框架指南的最终依据。</li>
+<li><strong>Vercel 博客</strong> — <a href="https://vercel.com/blog" rel="nofollow">vercel.com/blog</a><br>
+新特性发布、性能优化、工程实践分享。</li>
+<li><strong>Next.js 官方文档</strong> — <a href="https://nextjs.org/docs" rel="nofollow">nextjs.org/docs</a><br>
+Next.js 在 Vercel 上是一等公民，理解 Next.js 等于理解 Vercel 的核心能力。</li>
+<li><strong>Vercel Templates</strong> — <a href="https://vercel.com/templates" rel="nofollow">vercel.com/templates</a><br>
+精选项目模板，一键部署体验。</li>
+<li><strong>Turborepo 文档</strong> — <a href="https://turbo.build" rel="nofollow">turbo.build</a><br>
+Monorepo 构建优化与 Remote Caching。</li>
+<li><strong>Web Vitals 指南</strong> — <a href="https://web.dev/vitals" rel="nofollow">web.dev/vitals</a><br>
+Core Web Vitals 的权威定义与优化方法。</li>
+<li><strong>MDN Web Docs</strong> — <a href="https://developer.mozilla.org" rel="nofollow">developer.mozilla.org</a><br>
+Web 标准 API 参考（Edge Functions 基于 Web 标准）。</li>
+<li><strong>Hono 文档</strong> — <a href="https://hono.dev" rel="nofollow">hono.dev</a><br>
+轻量边缘框架，适合构建 Vercel Edge Functions。</li>
+<li><strong>Auth.js (NextAuth)</strong> — <a href="https://authjs.dev" rel="nofollow">authjs.dev</a><br>
+全栈应用身份验证方案。</li>
+</ol>
+<hr>
+<blockquote>
+<p><strong>结语</strong>：Vercel 的价值不在于「又一个部署平台」，而在于它把<strong>构建、部署、分发、计算、监控</strong>统一到一条极简的开发者体验链路中。请把核心心法记住：<strong>Git 是唯一的部署入口；不可变部署是安全的基石；边缘优先是性能的方向；零配置是效率的来源。</strong> 工具会迭代、套餐会变化、界面会改版，但「推送即部署、一键即回滚、全球即分发」这三条原则，会在任何现代 Web 项目中持续生效。</p>
+</blockquote></div>
+<div style="font-size:small;margin-top:8px;float:right;">转载请注明出处</div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://helloblog.eik.cc">你好博客</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if("09/25/2026"!=""){
+    var startSite=new Date("09/25/2026");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行 "+diffDay+" 天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","techjiang/Gmeek-HelloBlog");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script><script src='https://blog.meekdai.com/Gmeek/plugins/lightbox.js'></script>
+
+</html>
