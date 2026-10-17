@@ -1,5 +1,118 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>你好博客</title><link>https://helloblog.eik.cc</link><description>你好博客，你好世界！</description><copyright>你好博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://docs.asoe.cn/img/Hello-Logo.svg</url><title>avatar</title><link>https://helloblog.eik.cc</link></image><lastBuildDate>Sat, 17 Oct 2026 06:56:12 +0000</lastBuildDate><managingEditor>你好博客</managingEditor><ttl>60</ttl><webMaster>你好博客</webMaster><item><title>Windows7 2025蛇年专版正式发布</title><link>https://helloblog.eik.cc/post/Windows7%202025-she-nian-zhuan-ban-zheng-shi-fa-bu.html</link><description>![Image](https://github.com/user-attachments/assets/0170770a-ea24-4642-9b34-341ed86eaa8f)
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>你好博客</title><link>https://helloblog.eik.cc</link><description>你好博客，你好世界！</description><copyright>你好博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://docs.asoe.cn/img/Hello-Logo.svg</url><title>avatar</title><link>https://helloblog.eik.cc</link></image><lastBuildDate>Sat, 17 Oct 2026 06:57:19 +0000</lastBuildDate><managingEditor>你好博客</managingEditor><ttl>60</ttl><webMaster>你好博客</webMaster><item><title>2025.kali linux配置中文界面教程</title><link>https://helloblog.eik.cc/post/2025.kali%20linux-pei-zhi-zhong-wen-jie-mian-jiao-cheng.html</link><description>![Image](https://github.com/user-attachments/assets/914ec562-61ad-4fe4-a787-3a6e64991d42)
+
+## 2025.kali linux配置中文界面教程
+### 一、系统更新与中文包安装
+
+1. **更新软件源**
+   确保系统处于最新状态：
+
+   bash
+
+   ```bash
+   sudo apt update &amp;&amp; sudo apt upgrade -y
+   ```
+
+2. **安装核心中文支持包**
+   Kali 2025可能整合了新的语言包命名方式，建议安装以下组合包：
+
+   bash
+
+   ```bash
+   sudo apt install locales language-pack-zh-hans kde-l10n-zhcn  # 基础+桌面扩展中文
+   ```
+
+------
+
+### 二、语言环境配置
+
+1. **生成中文locale**
+   编辑语言配置文件：
+
+   bash
+
+   ```bash
+   sudo nano /etc/locale.gen
+   ```
+
+   取消注释以下行（删除行首的`#`）：
+
+   ```
+   zh_CN.UTF-8 UTF-8  
+   zh_CN.GBK GBK
+   ```
+
+   生成语言环境：
+
+   bash
+
+   ```bash
+   sudo locale-gen
+   ```
+
+2. **设置默认语言**
+   快速设置命令（适用于Kali 2025）：
+
+   bash
+
+   ```bash
+   sudo update-locale LANG=zh_CN.UTF-8 LC_ALL=zh_CN.UTF-8
+   ```
+
+------
+
+### 三、桌面环境适配
+
+1. **GNOME桌面专用配置**
+   如果使用GNOME：
+
+   bash
+
+   ```bash
+   gsettings set org.gnome.system.locale region 'zh_CN.UTF-8'
+   ```
+
+2. **XFCE/KDE桌面**
+   通过图形化设置：
+
+   bash
+
+   ```bash
+   sudo apt install system-config-language  # 安装语言切换器
+   sudo system-config-language  # 选择中文并应用
+   ```
+
+------
+
+### 四、深度汉化与优化
+
+1. **完整汉化包**
+
+   bash
+
+   ```bash
+   sudo apt install $(apt search kali-l10n | grep zh-CN | awk -F/ '{print $1}')
+   ```
+
+2. **中文字体支持**
+   安装常用字体：
+
+   bash
+
+   ```bash
+   sudo apt install fonts-wqy-zenhei fonts-noto-cjk-extra
+   ```
+
+3. **输入法支持**
+   推荐安装Fcitx5：
+
+   bash
+
+   ```bash
+   sudo apt install fcitx5 fcitx5-chinese-addons fcitx5-config-qt
+   ```
+
+   完成后重启系统生效。</description><guid isPermaLink="true">https://helloblog.eik.cc/post/2025.kali%20linux-pei-zhi-zhong-wen-jie-mian-jiao-cheng.html</guid><pubDate>Sat, 17 Oct 2026 06:56:51 +0000</pubDate></item><item><title>Windows7 2025蛇年专版正式发布</title><link>https://helloblog.eik.cc/post/Windows7%202025-she-nian-zhuan-ban-zheng-shi-fa-bu.html</link><description>![Image](https://github.com/user-attachments/assets/0170770a-ea24-4642-9b34-341ed86eaa8f)
 # 电脑科学集团
 
 ![Image](https://github.com/user-attachments/assets/8cc92747-843c-4b41-a811-e1e326eb0013)
