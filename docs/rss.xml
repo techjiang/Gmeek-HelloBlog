@@ -1,5 +1,24 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>你好博客</title><link>https://helloblog.eik.cc</link><description>你好博客，你好世界！</description><copyright>你好博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://docs.asoe.cn/img/Hello-Logo.svg</url><title>avatar</title><link>https://helloblog.eik.cc</link></image><lastBuildDate>Sat, 17 Oct 2026 06:45:43 +0000</lastBuildDate><managingEditor>你好博客</managingEditor><ttl>60</ttl><webMaster>你好博客</webMaster><item><title>kali linux系统安装.讲解</title><link>https://helloblog.eik.cc/post/kali%20linux-xi-tong-an-zhuang-.-jiang-jie.html</link><description>乐乐ti电脑科学 哔哩哔哩：1768832152
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>你好博客</title><link>https://helloblog.eik.cc</link><description>你好博客，你好世界！</description><copyright>你好博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://docs.asoe.cn/img/Hello-Logo.svg</url><title>avatar</title><link>https://helloblog.eik.cc</link></image><lastBuildDate>Sat, 17 Oct 2026 06:46:57 +0000</lastBuildDate><managingEditor>你好博客</managingEditor><ttl>60</ttl><webMaster>你好博客</webMaster><item><title>kali系统U盘制作教程</title><link>https://helloblog.eik.cc/post/kali-xi-tong-U-pan-zhi-zuo-jiao-cheng.html</link><description>![_ _logo_font20240915_uugai com-5404027-17264030599955](https://github.com/user-attachments/assets/917a3de7-81cd-443a-b731-f02c296a4340)
+
+乐乐-电脑科学    保护中国网络安全，就是保护我们自己
+                                                                                 ———乐乐   微信：18059345542
+
+乐乐ti电脑科学 bilibili：1768832152          乐乐 快手：PEL888250
+kali liunx镜像下载链接：
+https://www.123pan.com/s/IszVjv-58ooH.html提取码:lele
+kali系统镜像官方官网下载：
+https://www.kali.org/get-kali/#kali-platforms
+kali liunx是 黑客/编程/学习  系统
+![20200421201719870](https://github.com/user-attachments/assets/ce1c7912-fbf2-443f-943d-950ce31035ec)
+系统镜像烧入工具下载链接：
+https://www.123pan.com/s/IszVjv-CdmoH.html提取码:lele
+烧入工具官方官网下载：
+https://rufus.ie/downloads/
+
+https://github.com/user-attachments/assets/f465a412-29e0-458b-9bd2-51e7245e0e66
+教程：
+打开Rufus&gt;插入“大于8G”U盘&gt;“选择”下载好的kali镜像&gt;“格式化选项”默认不动&gt;点击“开始”&gt;点击“OK”&gt;等待完成&gt;重启电脑狂按你自己电脑的“快速启动项或调试BSOS启动项&gt;即可开启kali liunx的大陆。</description><guid isPermaLink="true">https://helloblog.eik.cc/post/kali-xi-tong-U-pan-zhi-zuo-jiao-cheng.html</guid><pubDate>Sat, 17 Oct 2026 06:46:25 +0000</pubDate></item><item><title>kali linux系统安装.讲解</title><link>https://helloblog.eik.cc/post/kali%20linux-xi-tong-an-zhuang-.-jiang-jie.html</link><description>乐乐ti电脑科学 哔哩哔哩：1768832152
 乐乐   快手：PEL888250
 Kali Linux 是一个基于 Debian 的 Linux 发行版
 kali linux官方U盘镜像下载链接：
