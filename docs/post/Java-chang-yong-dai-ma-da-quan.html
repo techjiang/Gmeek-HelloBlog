@@ -1428,8 +1428,8 @@ java -jar app.jar</pre></div>
 <span class="pl-c">// 常用格式</span>
 <span class="pl-smi">DateTimeFormatter</span>.<span class="pl-smi">ISO_DATE</span>             <span class="pl-c">// 2024-01-15</span>
 <span class="pl-s1">DateTimeFormatter</span>.<span class="pl-c1">ISO_DATE_TIME</span>        <span class="pl-c">// 2024-01-15T10:30:00</span>
-<span class="pl-s1">DateTimeFormatter</span>.<span class="pl-s1">ofPattern</span>("<span class="pl-s1">yyyy年MM月dd日</span><span class="pl-s">")</span>
-<span class="pl-s">DateTimeFormatter.ofPattern("</span><span class="pl-c1">HH</span>:<span class="pl-s1">mm</span>:<span class="pl-s1">ss</span>")</pre></div>
+<span class="pl-s1">DateTimeFormatter</span>.<span class="pl-s1">ofPattern</span>(<span class="pl-s">"yyyy年MM月dd日"</span>)
+<span class="pl-smi">DateTimeFormatter</span>.<span class="pl-en">ofPattern</span>(<span class="pl-s">"HH:mm:ss"</span>)</pre></div>
 <hr>
 <h2>十四、JDBC 数据库操作</h2>
 <div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">java</span>.<span class="pl-s1">sql</span>.*;
@@ -1761,7 +1761,7 @@ java -jar app.jar</pre></div>
 <span class="pl-k">record</span> <span class="pl-s1">Point</span>(<span class="pl-smi">double</span> <span class="pl-s1">x</span>, <span class="pl-smi">double</span> <span class="pl-s1">y</span>) {}
 
 <span class="pl-c">// 9. 使用 Sealed Classes（Java 17+）</span>
-<span class="pl-k">sealed</span> <span class="pl-k">interface</span> <span class="pl-smi">Shape</span> permits <span class="pl-smi">Circle</span>, <span class="pl-smi">Square</span> {}
+<span class="pl-k">sealed</span> <span class="pl-k">interface</span> <span class="pl-smi">Shape</span> <span class="pl-k">permits</span> <span class="pl-smi">Circle</span>, <span class="pl-smi">Square</span> {}
 <span class="pl-k">record</span> <span class="pl-s1">Circle</span>(<span class="pl-smi">double</span> <span class="pl-s1">r</span>) <span class="pl-k">implements</span> <span class="pl-smi">Shape</span> {}
 <span class="pl-k">record</span> <span class="pl-s1">Square</span>(<span class="pl-smi">double</span> <span class="pl-s1">s</span>) <span class="pl-k">implements</span> <span class="pl-smi">Shape</span> {}
 
